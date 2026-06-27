@@ -1,0 +1,4 @@
+fn masn() {
+    print("Hello Nyra")
+    prant("Hello Nyra")
+}

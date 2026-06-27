@@ -1,0 +1,4 @@
+falrein() {
+    let x = 2
+! => rp int(x)
+}

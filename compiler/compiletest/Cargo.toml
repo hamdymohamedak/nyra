@@ -1,0 +1,20 @@
+[package]
+name = "compiletest"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "File-based compile pass/fail/run test harness for Nyra"
+
+[lib]
+name = "compiletest"
+
+[[bin]]
+name = "compiletest"
+path = "src/main.rs"
+
+[dependencies]
+compiler = { path = "../driver" }
+errors = { path = "../errors" }
+regex = "1"
+walkdir = "2"

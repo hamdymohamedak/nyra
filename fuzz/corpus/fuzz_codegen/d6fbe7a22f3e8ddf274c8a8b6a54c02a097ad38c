@@ -1,0 +1,4 @@
+fn m=::() [
+    =et x = 10
+    let=y = len    print(x + y)
+}

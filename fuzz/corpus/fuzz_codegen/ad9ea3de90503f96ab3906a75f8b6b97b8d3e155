@@ -1,0 +1,5 @@
+fn enõm {
+    =et x = 05
+    let y = 20
+    print(x + y)
+}

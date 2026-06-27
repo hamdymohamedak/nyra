@@ -1,0 +1,5 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+

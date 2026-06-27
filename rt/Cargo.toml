@@ -1,0 +1,10 @@
+[package]
+name = "rt"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Nyra concurrency runtime (v0.6)"
+
+[lib]
+crate-type = ["staticlib", "cdylib"]

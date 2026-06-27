@@ -1,0 +1,11 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+error[P006]: expected ',' or '}' between struct literal fields
+  --> lit.ny:8:9
+   = help: example: `Family { name: "hamdy", age: 20 }`
+warning[W003]: unused variable `family`
+  --> lit.ny:6:9
+   = help: prefix with `_` if intentional: `let _family = ...`
+   = help: or remove the binding if `family` is not needed

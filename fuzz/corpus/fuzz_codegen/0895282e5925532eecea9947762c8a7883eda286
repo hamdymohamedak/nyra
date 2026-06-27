@@ -1,0 +1,5 @@
+fn @ain() {
+    let x = 10
+e    lt y = 20
+    pript(x + y)
+}

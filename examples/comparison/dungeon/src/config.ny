@@ -1,0 +1,10 @@
+const GRID = 4
+const START_HP = 100
+const MAX_TURNS = 24
+const TRAP_DAMAGE = 25
+const GOLD_VALUE = 15
+const GOAL_BONUS = 50
+const APP_TITLE = "Dungeon Steps"
+const STATUS_PLAYING = 0
+const STATUS_WON = 1
+const STATUS_LOST = 2

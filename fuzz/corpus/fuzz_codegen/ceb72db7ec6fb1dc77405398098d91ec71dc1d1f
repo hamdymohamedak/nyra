@@ -1,0 +1,6 @@
+fn m y
+ain() {
+   l et x = 45
+    let .=40
+y     pri32(x~ + y,,,)
+}

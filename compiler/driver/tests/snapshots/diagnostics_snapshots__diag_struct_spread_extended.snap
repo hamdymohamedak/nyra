@@ -1,0 +1,10 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+error: Struct spread '..base' on 'Derived' requires base of same struct type, got Struct("Base")
+  --> test.ny:5:36
+warning[W003]: unused variable `base`
+  --> test.ny:4:9
+   = help: prefix with `_` if intentional: `let _base = ...`
+   = help: or remove the binding if `base` is not needed

@@ -1,0 +1,93 @@
+---
+source: compiler/driver/tests/codegen_snapshots.rs
+expression: normalize_ir(& ir)
+---
+source_filename = "test.ny"
+target triple = "arm64-apple-darwin"
+
+@.str.N = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+
+declare i32 @printf(ptr, ...)
+declare void @abort()
+declare void @llvm.memcpy.p0.p0.i64(ptr, ptr, i64, i1)
+
+define i32 @__arrow_0(i32 %0, i32 %1) {
+entry:
+  %bin.N = sub i32 %0, %1
+  ret i32 %bin.N
+}
+define i32 @main() {
+entry:
+  %alloca.N = alloca [3 x i32]
+  %gep.N = getelementptr inbounds [3 x i32], [3 x i32]* %alloca.N, i32 0, i32 0
+  store i32 3, i32* %gep.N
+  %gep.N = getelementptr inbounds [3 x i32], [3 x i32]* %alloca.N, i32 0, i32 1
+  store i32 1, i32* %gep.N
+  %gep.N = getelementptr inbounds [3 x i32], [3 x i32]* %alloca.N, i32 0, i32 2
+  store i32 2, i32* %gep.N
+  %sort.dst.N = alloca [3 x i32]
+  call void @llvm.memcpy.p0.p0.i64(ptr %sort.dst.N, ptr %alloca.N, i64 12, i1 false)
+  %sort.i.N = alloca i32
+  %sort.j.N = alloca i32
+  store i32 1, i32* %sort.i.N
+  br label %sort.i.hdr.N
+sort.i.hdr.N:
+  %sort.i.v.N = load i32, i32* %sort.i.N
+  %sort.i.c.N = icmp slt i32 %sort.i.v.N, 3
+  br i1 %sort.i.c.N, label %sort.i.body.N, label %sort.i.end.N
+sort.i.body.N:
+  store i32 %sort.i.v.N, i32* %sort.j.N
+  br label %sort.j.hdr.N
+sort.j.hdr.N:
+  %sort.j.v.N = load i32, i32* %sort.j.N
+  %sort.j.z.N = icmp sgt i32 %sort.j.v.N, 0
+  br i1 %sort.j.z.N, label %sort.j.body.N, label %sort.j.end.N
+sort.j.body.N:
+  %sort.jp.N = sub i32 %sort.j.v.N, 1
+  %arr.base.N = getelementptr inbounds [3 x i32], [3 x i32]* %sort.dst.N, i32 0, i32 0
+  %gep.N = getelementptr inbounds i32, i32* %arr.base.N, i32 %sort.jp.N
+  %sort.ld.N = load i32, i32* %gep.N
+  %arr.base.N = getelementptr inbounds [3 x i32], [3 x i32]* %sort.dst.N, i32 0, i32 0
+  %gep.N = getelementptr inbounds i32, i32* %arr.base.N, i32 %sort.j.v.N
+  %sort.ld.N = load i32, i32* %gep.N
+  %sort.cmp.N = call i32 @__arrow_0(i32 %sort.ld.N, i32 %sort.ld.N)
+  %sort.swap.N = icmp sgt i32 %sort.cmp.N, 0
+  br i1 %sort.swap.N, label %sort.j.next.N, label %sort.j.end.N
+sort.j.next.N:
+  %arr.base.N = getelementptr inbounds [3 x i32], [3 x i32]* %sort.dst.N, i32 0, i32 0
+  %gep.N = getelementptr inbounds i32, i32* %arr.base.N, i32 %sort.jp.N
+  %arr.base.N = getelementptr inbounds [3 x i32], [3 x i32]* %sort.dst.N, i32 0, i32 0
+  %gep.N = getelementptr inbounds i32, i32* %arr.base.N, i32 %sort.j.v.N
+  %swap.a.N = load i32, i32* %gep.N
+  %swap.b.N = load i32, i32* %gep.N
+  store i32 %swap.b.N, i32* %gep.N
+  store i32 %swap.a.N, i32* %gep.N
+  %sort.jd.N = sub i32 %sort.j.v.N, 1
+  store i32 %sort.jd.N, i32* %sort.j.N
+  br label %sort.j.hdr.N
+sort.j.end.N:
+  %sort.ii.N = add i32 %sort.i.v.N, 1
+  store i32 %sort.ii.N, i32* %sort.i.N
+  br label %sort.i.hdr.N
+sort.i.end.N:
+  %alloca.N = alloca i32
+  store i32 0, i32* %alloca.N
+  %alloca.N = alloca i32
+  br label %for.cond.N
+for.cond.N:
+  %load.N = load i32, i32* %alloca.N
+  %cmp.N = icmp slt i32 %load.N, 3
+  br i1 %cmp.N, label %for.body.N, label %for.end.N
+for.body.N:
+  %gep.N = getelementptr inbounds [3 x i32], [3 x i32]* %sort.dst.N, i32 0, i32 %load.N
+  %load.N = load i32, i32* %gep.N
+  store i32 %load.N, i32* %alloca.N
+  %ld.N = load i32, i32* %alloca.N
+  %fmt.N = getelementptr inbounds i8, ptr @.str.N, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt.N, i32 %ld.N)
+  %inc.N = add i32 %load.N, 1
+  store i32 %inc.N, i32* %alloca.N
+  br label %for.cond.N
+for.end.N:
+  ret i32 0
+}

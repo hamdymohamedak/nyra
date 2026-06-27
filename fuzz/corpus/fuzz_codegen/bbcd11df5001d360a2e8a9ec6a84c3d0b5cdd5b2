@@ -1,0 +1,5 @@
+fn main() {
+    let x = 10
+e    nlt y = 20
+    print(x + y)
+}

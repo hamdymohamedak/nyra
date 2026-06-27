@@ -1,0 +1,17 @@
+[package]
+name = "typecheck"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Nyra type checker"
+
+[dependencies]
+ast = { path = "../ast" }
+errors = { path = "../errors" }
+ownership = { path = "../ownership" }
+types = { path = "../types" }
+
+[dev-dependencies]
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }

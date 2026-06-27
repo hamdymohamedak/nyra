@@ -1,0 +1,903 @@
+# Example corpus manifest for integration tests.
+# path is relative to workspace root (NyraProgrammingLangauge/).
+
+[[case]]
+id = "syntax_hello"
+path = "examples/syntax/hello.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "Hello Nyra\nHello Nyra"
+
+[[case]]
+id = "syntax_math"
+path = "examples/syntax/math.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "30"
+
+[[case]]
+id = "syntax_arrays"
+path = "examples/syntax/arrays.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "syntax_for_in"
+path = "examples/syntax/for_in.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "10\n20\n30\n4\n78\n121\n114\n97"
+
+[[case]]
+id = "syntax_string_methods"
+path = "examples/syntax/string_methods.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "hello,nyra,world\n1\n1\n1\nhello\nnyra\nworld\nfoo-baz\nNYRA\nnyra"
+
+[[case]]
+id = "syntax_date_basics"
+path = "examples/syntax/date_basics.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "syntax_array_sort"
+path = "examples/syntax/array_sort.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "1\n2\n5\n8\n10\n10"
+
+[[case]]
+id = "syntax_array_of_structs"
+path = "examples/syntax/array_of_structs.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "Number is 1 and color is red\nNumber is 2 and color is blue\nNumber is 14 and color is green"
+
+[[case]]
+id = "syntax_tuples"
+path = "examples/syntax/tuples.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "1\n1"
+
+[[case]]
+id = "syntax_vectors"
+path = "examples/syntax/vectors.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "2\n10"
+nyra_home_empty = true
+
+[[case]]
+id = "syntax_hashmap"
+path = "examples/syntax/hashmap.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "100\n1"
+nyra_home_empty = true
+
+[[case]]
+id = "syntax_async_hello"
+path = "examples/syntax/async_hello.ny"
+mode = "file"
+tier = "extended"
+run = true
+expect_stdout = "42"
+
+[[case]]
+id = "syntax_spawn_channel"
+path = "examples/syntax/spawn_channel.ny"
+mode = "file"
+tier = "extended"
+run = true
+expect_stdout = "42"
+
+[[case]]
+id = "syntax_buffered_io"
+path = "examples/syntax/buffered_io.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "lines:\n1\n2\n3"
+
+[[case]]
+id = "syntax_input"
+path = "examples/syntax/input.ny"
+mode = "file"
+tier = "core"
+run = false
+ir_contains = ["stdin_read_line"]
+
+[[case]]
+id = "syntax_template_strings"
+path = "examples/syntax/template_strings.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "Hello, hamdy\nHello hamdy\nHello hamdy, age 25"
+
+[[case]]
+id = "syntax_mem"
+path = "examples/syntax/mem.ny"
+mode = "file"
+tier = "core"
+run = false
+ir_contains = ["mem_start", "mem_end"]
+
+[[case]]
+id = "syntax_time"
+path = "examples/syntax/time.ny"
+mode = "file"
+tier = "core"
+run = false
+ir_contains = ["time_start", "time_end"]
+
+[[case]]
+id = "comparison_hello"
+path = "examples/comparison/hello/hello.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "comparison_sum_loop_small"
+path = "examples/comparison/loop/sum_loop_small.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "499500"
+ir_contains = ["while.cond"]
+
+[[case]]
+id = "comparison_sum_loop"
+path = "examples/comparison/loop/sum_loop.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "comparison_sum_loop_nofold"
+path = "examples/comparison/loop_nofold/sum_loop_nofold.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "comparison_fib"
+path = "examples/comparison/fib/fib.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "751659594"
+
+[[case]]
+id = "comparison_arithmetic_sum"
+path = "examples/comparison/arithmetic/sum.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "comparison_nested"
+path = "examples/comparison/nested/nested.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "comparison_struct_sum"
+path = "examples/comparison/struct_sum/struct_sum.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "comparison_dungeon"
+path = "examples/comparison/dungeon"
+mode = "project"
+tier = "core"
+run = false
+
+[[case]]
+id = "language_features_demo"
+path = "examples/language_features/demo.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "1"
+
+[[case]]
+id = "v0_2_demo"
+path = "examples/v0_2/demo.ny"
+mode = "file"
+tier = "extended"
+expect_compile = false
+run = false
+
+[[case]]
+id = "tooling_diag_json"
+path = "examples/tooling/diag_json.ny"
+mode = "file"
+tier = "core"
+expect_compile = false
+run = false
+
+[[case]]
+id = "tooling_diag_json_typed"
+path = "examples/tooling/diag_json.typed.ny"
+mode = "file"
+tier = "core"
+expect_compile = false
+run = false
+
+[[case]]
+id = "project_calculator"
+path = "examples/projects/calculator"
+mode = "project"
+tier = "core"
+run = false
+ir_contains = ["%Calculator = type"]
+
+[[case]]
+id = "project_tcp_echo_server"
+path = "examples/projects/tcp_echo/server.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "project_tcp_echo_client"
+path = "examples/projects/tcp_echo/client.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "project_http_hello"
+path = "examples/projects/http_hello/main.ny"
+mode = "file"
+tier = "extended"
+run = true
+expect_stdout = "1"
+
+[[case]]
+id = "project_http_hello_server"
+path = "examples/projects/http_hello/server_main.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "project_https_smoke"
+path = "examples/projects/https_smoke/main.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "project_read_file"
+path = "examples/projects/read_file/main.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "stdlib_demo"
+path = "examples/stdlib/demo"
+mode = "project"
+tier = "core"
+run = false
+
+[[case]]
+id = "stdlib_extended"
+path = "examples/stdlib/extended"
+mode = "project"
+tier = "extended"
+run = false
+
+[[case]]
+id = "stdlib_vec_smoke"
+path = "examples/stdlib/vec_smoke"
+mode = "project"
+tier = "core"
+run = false
+
+[[case]]
+id = "ffi_export_greet"
+path = "examples/ffi/export_greet/main.ny"
+mode = "file"
+tier = "core"
+run = false
+ir_contains = ["define"]
+
+[[case]]
+id = "ffi_call_libc"
+path = "examples/ffi/call_libc/main.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "ffi_hello_from_rust"
+path = "examples/ffi/hello_from_rust/main.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "unsafe_raw_memory"
+path = "examples/unsafe/raw_memory/main.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "os_asm"
+path = "examples/os/asm/main.ny"
+mode = "file"
+tier = "extended"
+run = false
+ir_contains = ["asm sideeffect"]
+
+[[case]]
+id = "os_battery"
+path = "examples/os/battery/main.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "os_platform"
+path = "examples/os/platform/main.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "os_minimal_main"
+path = "examples/os/minimal/main.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "os_minimal_getenv"
+path = "examples/os/minimal/getenv.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "os_minimal_getenv2"
+path = "examples/os/minimal/getenv2.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "os_minimal_import_os"
+path = "examples/os/minimal/import_os.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "os_minimal_name"
+path = "examples/os/minimal/name.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "bridge_main"
+path = "examples/bridge/main.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "packages_ny_sqlite"
+path = "examples/packages/ny-sqlite"
+mode = "project"
+tier = "extended"
+run = false
+
+[[case]]
+id = "packages_ny_serde"
+path = "examples/packages/ny-serde"
+mode = "project"
+tier = "extended"
+run = false
+
+[[case]]
+id = "packages_ny_toml"
+path = "examples/packages/ny-toml"
+mode = "project"
+tier = "extended"
+run = false
+
+[[case]]
+id = "serde_json_pkg"
+path = "examples/serde_json_pkg"
+mode = "project"
+tier = "extended"
+run = false
+
+[[case]]
+id = "serde_json_pkg_root"
+path = "examples/serde_json_pkg.ny"
+mode = "file"
+tier = "extended"
+run = false
+
+[[case]]
+id = "smoke_test_test"
+path = "examples/smoke_test_test.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "builtins_math_main"
+path = "examples/builtins/math/main.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "builtins_array_main"
+path = "examples/builtins/array/main.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "4\n2\n10\n2\n4"
+
+[[case]]
+id = "builtins_string_main"
+path = "examples/builtins/string/main.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "NYRA LANG  \n  nyra lang  \n1\n3\nhello nyra\nNyra Lang"
+
+[[case]]
+id = "builtins_json_main"
+path = "examples/builtins/json/main.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "{\"name\":\"hamdy\"}\nhamdy"
+
+# --- Per-method built-in examples (examples/builtins/) ---
+
+[[case]]
+id = "builtins_io_print"
+path = "examples/builtins/io/print.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "42\nNyra"
+
+[[case]]
+id = "builtins_io_write"
+path = "examples/builtins/io/write.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "ok"
+
+[[case]]
+id = "builtins_io_println"
+path = "examples/builtins/io/println.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "line"
+
+[[case]]
+id = "builtins_io_flush"
+path = "examples/builtins/io/flush.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "okdone"
+
+[[case]]
+id = "builtins_io_input"
+path = "examples/builtins/io/input.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "builtins_date"
+path = "examples/builtins/date/date.ny"
+mode = "file"
+tier = "core"
+run = false
+
+[[case]]
+id = "builtins_str_length"
+path = "examples/builtins/strings/length.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "3"
+
+[[case]]
+id = "builtins_str_len"
+path = "examples/builtins/strings/len.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "3"
+
+[[case]]
+id = "builtins_str_split"
+path = "examples/builtins/strings/split.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "3\na\nb\nc"
+
+[[case]]
+id = "builtins_str_trim"
+path = "examples/builtins/strings/trim.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "hello"
+
+[[case]]
+id = "builtins_str_contains"
+path = "examples/builtins/strings/contains.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "1\n0"
+
+[[case]]
+id = "builtins_str_starts_with"
+path = "examples/builtins/strings/starts_with.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "1\n0"
+
+[[case]]
+id = "builtins_str_ends_with"
+path = "examples/builtins/strings/ends_with.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "1\n0"
+
+[[case]]
+id = "builtins_str_replace"
+path = "examples/builtins/strings/replace.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "foo-baz"
+
+[[case]]
+id = "builtins_str_to_upper"
+path = "examples/builtins/strings/to_upper.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "NYRA"
+
+[[case]]
+id = "builtins_str_to_lower"
+path = "examples/builtins/strings/to_lower.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "nyra"
+
+[[case]]
+id = "builtins_str_clone"
+path = "examples/builtins/strings/clone.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "copy me\ncopy me"
+
+[[case]]
+id = "builtins_arr_length"
+path = "examples/builtins/arrays/length.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "4"
+
+[[case]]
+id = "builtins_arr_len"
+path = "examples/builtins/arrays/len.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "4"
+
+[[case]]
+id = "builtins_arr_sort"
+path = "examples/builtins/arrays/sort.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "1\n2\n5\n8\n10\n10"
+
+[[case]]
+id = "builtins_arr_for_in"
+path = "examples/builtins/arrays/for_in.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "1\n2\n3"
+
+[[case]]
+id = "builtins_split_list_length"
+path = "examples/builtins/split_list/length.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "2"
+
+[[case]]
+id = "builtins_split_list_for_in"
+path = "examples/builtins/split_list/for_in.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "a\nb"
+
+[[case]]
+id = "builtins_for_in_range"
+path = "examples/builtins/for_in/range.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "0\n1\n2\n3"
+
+[[case]]
+id = "builtins_for_in_string_chars"
+path = "examples/builtins/for_in/string_chars.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "65\n66"
+
+[[case]]
+id = "builtins_timing_time"
+path = "examples/builtins/timing/time.ny"
+mode = "file"
+tier = "core"
+run = false
+ir_contains = ["time_start", "time_end"]
+
+[[case]]
+id = "builtins_timing_mem"
+path = "examples/builtins/timing/mem.ny"
+mode = "file"
+tier = "core"
+run = false
+ir_contains = ["mem_start", "mem_end"]
+
+[[case]]
+id = "builtins_spawn"
+path = "examples/builtins/spawn/spawn.ny"
+mode = "file"
+tier = "core"
+run = false
+ir_contains = ["spawn_capture"]
+
+[[case]]
+id = "builtins_stdlib_array_push"
+path = "examples/builtins/stdlib/array_push.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "2"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_array_pop"
+path = "examples/builtins/stdlib/array_pop.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "20\n1"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_array_map"
+path = "examples/builtins/stdlib/array_map.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "6\n8"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_array_filter"
+path = "examples/builtins/stdlib/array_filter.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "1\n2"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_array_reduce"
+path = "examples/builtins/stdlib/array_reduce.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "30"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_array_find"
+path = "examples/builtins/stdlib/array_find.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "2"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_string_to_upper"
+path = "examples/builtins/stdlib/string_to_upper.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "NYRA"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_string_to_lower"
+path = "examples/builtins/stdlib/string_to_lower.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "nyra"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_string_includes"
+path = "examples/builtins/stdlib/string_includes.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "1"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_string_split"
+path = "examples/builtins/stdlib/string_split.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "2"
+nyra_home_empty = true
+
+[[case]]
+id = "syntax_array_sort_by"
+path = "examples/syntax/array_sort_by.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout_contains = "Number is 1"
+nyra_home_empty = true
+
+[[case]]
+id = "syntax_string_replace"
+path = "examples/syntax/string_replace.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "f00\nA_S_K_A_N_D_E_R\nf0o"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_string_replace"
+path = "examples/builtins/stdlib/string_replace.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "foo-baz"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_trim"
+path = "examples/builtins/stdlib/string_trim.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "hi"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_math_max"
+path = "examples/builtins/stdlib/math_max.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "10"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_math_min"
+path = "examples/builtins/stdlib/math_min.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "3"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_math_round"
+path = "examples/builtins/stdlib/math_round.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "7"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_math_floor"
+path = "examples/builtins/stdlib/math_floor.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "7"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_math_ceil"
+path = "examples/builtins/stdlib/math_ceil.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "7"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_math_random"
+path = "examples/builtins/stdlib/math_random.ny"
+mode = "file"
+tier = "core"
+run = false
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_json_stringify"
+path = "examples/builtins/stdlib/json_stringify.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "{\"name\":\"hamdy\"}"
+nyra_home_empty = true
+
+[[case]]
+id = "builtins_stdlib_json_parse"
+path = "examples/builtins/stdlib/json_parse.ny"
+mode = "file"
+tier = "core"
+run = true
+expect_stdout = "hamdy"
+nyra_home_empty = true

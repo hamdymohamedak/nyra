@@ -1,0 +1,15 @@
+{
+  "recommendations": {
+    "extensions": []
+  },
+  "configuration": {
+    "files.associations": {
+      "*.ny": "nyra",
+      "*.nyra": "nyra"
+    },
+    "[nyra]": {
+      "editor.formatOnSave": true,
+      "editor.tabSize": 4
+    }
+  }
+}

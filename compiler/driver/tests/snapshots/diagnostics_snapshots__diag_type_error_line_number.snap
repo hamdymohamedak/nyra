@@ -1,0 +1,6 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: err
+---
+error[E002]: undefined variable `y`
+  --> test.ny:2:14

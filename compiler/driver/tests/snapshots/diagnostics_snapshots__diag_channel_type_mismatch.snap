@@ -1,0 +1,8 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+error: Undefined function 'channel__i32'
+  --> test.ny:2:27
+error: Undefined function 'send'
+  --> test.ny:3:23

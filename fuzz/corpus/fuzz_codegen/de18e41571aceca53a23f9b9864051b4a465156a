@@ -1,0 +1,5 @@
+fn main() [
+    =et x 9 09
+    let y = 23
+    print(x + y)
+?}

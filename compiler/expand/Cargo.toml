@@ -1,0 +1,21 @@
+[package]
+name = "expand"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Nyra macro expansion"
+
+[dependencies]
+ast = { path = "../ast" }
+errors = { path = "../errors" }
+ownership = { path = "../ownership" }
+typecheck = { path = "../typecheck" }
+types = { path = "../types" }
+
+[dev-dependencies]
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+monomorph = { path = "../monomorph" }
+const_eval = { path = "../const_eval" }
+typecheck = { path = "../typecheck" }

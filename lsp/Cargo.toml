@@ -1,0 +1,17 @@
+[package]
+name = "lsp"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Nyra language server (diagnostics, completion, hover, rename, format)"
+
+[dependencies]
+compiler = { path = "../compiler/driver" }
+errors = { path = "../compiler/errors" }
+nyra-analysis = { path = "../compiler/analysis" }
+nyra-fmt = { path = "../compiler/fmt" }
+resolve = { path = "../compiler/resolve" }
+serde_json = "1"
+tower-lsp = "0.20"
+tokio = { version = "1", features = ["full"] }

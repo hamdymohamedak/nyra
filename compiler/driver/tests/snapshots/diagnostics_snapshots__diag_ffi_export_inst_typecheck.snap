@@ -1,0 +1,7 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+error: export fn `id` is generic; add at least one `export inst id<...>` for the FFI boundary
+  --> ffi.ny:1:1
+   = note: Generic export templates are not linkable until monomorphized with `export inst`.

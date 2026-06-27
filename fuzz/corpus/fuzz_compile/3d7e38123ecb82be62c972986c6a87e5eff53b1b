@@ -1,0 +1,4 @@
+fn main() {
+    elt x = 1
+ ÿÿÿÿÿÿ   print (x)
+}

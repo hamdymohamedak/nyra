@@ -1,0 +1,40 @@
+---
+source: compiler/driver/tests/codegen_snapshots.rs
+expression: normalize_ir(& ir)
+---
+source_filename = "test.ny"
+target triple = "arm64-apple-darwin"
+
+@.str.N = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+
+%SpawnCap.main.N = type { i32 }
+
+declare i32 @printf(ptr, ...)
+declare i32 @spawn_capture(ptr, ptr, i64)
+declare ptr @malloc(i64)
+declare void @abort()
+declare void @free(ptr)
+declare void @llvm.memcpy.p0.p0.i64(ptr, ptr, i64, i1)
+
+define i32 @main() {
+entry:
+  %spawn.cap.N = alloca %SpawnCap.main.N
+  %spawn.gep.N = getelementptr inbounds %SpawnCap.main.N, %SpawnCap.main.N* %spawn.cap.N, i64 0, i32 0
+  store i32 %99, i32* %spawn.gep.N
+  %spawn.heap.N = call ptr @malloc(i64 8)
+  call void @llvm.memcpy.p0.p0.i64(ptr %spawn.heap.N, ptr %spawn.cap.N, i64 8, i1 false)
+  call i32 @spawn_capture(ptr @__spawn_main_0, ptr %spawn.heap.N, i64 8)
+  ret i32 0
+}
+define void @__spawn_main_0(ptr %raw) {
+entry:
+  %cap.bc.N = bitcast ptr %raw to %SpawnCap.main.N*
+  %cap.fld.N = getelementptr inbounds %SpawnCap.main.N, %SpawnCap.main.N* %cap.bc.N, i64 0, i32 0
+  %cap.local.N = alloca i32
+  %cap.ld.N = load i32, i32* %cap.fld.N
+  store i32 %cap.ld.N, i32* %cap.local.N
+  %ld.N = load i32, i32* %cap.local.N
+  %fmt.N = getelementptr inbounds i8, ptr @.str.N, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt.N, i32 %ld.N)
+  ret void
+}

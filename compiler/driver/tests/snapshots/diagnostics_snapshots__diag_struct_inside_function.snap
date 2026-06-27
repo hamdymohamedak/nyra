@@ -1,0 +1,20 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+error[P015]: `struct` definitions must be at the top level of the file, not inside a function or block
+  --> learn.ny:2:5
+   = help: example:
+struct Family {
+    name: string
+    age: i32
+}
+
+fn main() {
+    let family = Family { name: "hamdy", age: 20 }
+}
+error[E005]: unknown struct `Family`
+  --> learn.ny:7:65
+   = help: declare it first: `struct Family { ... }`
+error: Field access requires struct or tuple value
+  --> learn.ny:8:18

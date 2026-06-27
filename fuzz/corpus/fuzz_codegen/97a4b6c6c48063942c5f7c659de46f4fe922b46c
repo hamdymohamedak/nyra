@@ -1,0 +1,5 @@
+fn main() {
+    let x = 10
+ Ù  letH y = 20
+   t(x + y)
+}

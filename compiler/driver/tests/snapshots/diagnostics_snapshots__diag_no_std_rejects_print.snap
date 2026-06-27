@@ -1,0 +1,8 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+error: Expected '[' after '#'
+  --> test.ny:1:1
+error: print is not available in no_std programs (use extern I/O or UART)
+  --> <source>:1:1

@@ -1,0 +1,4 @@
+fn main() {
+    let x = 10
+e    lt y = r5*    print(x + y)
+}

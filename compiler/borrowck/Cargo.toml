@@ -1,0 +1,20 @@
+[package]
+name = "borrowck"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Nyra borrow checker"
+
+[dependencies]
+ast = { path = "../ast" }
+errors = { path = "../errors" }
+ownership = { path = "../ownership" }
+types = { path = "../types" }
+
+[dev-dependencies]
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+expand = { path = "../expand" }
+monomorph = { path = "../monomorph" }
+const_eval = { path = "../const_eval" }

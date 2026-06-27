@@ -1,0 +1,11 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+error: Undefined function 'free'
+  --> test.ny:3:11
+error: manual free('s') on owned value; Nyra auto-drops at scope end (double-free risk)
+  --> test.ny:3:11
+   = note: Remove free unless this is FFI escape hatch code
+error[E012]: `s` was moved into `free()` at line 3
+  --> test.ny:4:11

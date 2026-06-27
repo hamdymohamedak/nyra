@@ -1,0 +1,28 @@
+---
+source: compiler/driver/tests/codegen_snapshots.rs
+expression: normalize_ir(& ir)
+---
+source_filename = "test.ny"
+target triple = "arm64-apple-darwin"
+
+@.str.N = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+
+%Tuple2_i32_i32 = type { i32, i32 }
+
+declare i32 @printf(ptr, ...)
+declare void @abort()
+declare void @llvm.memcpy.p0.p0.i64(ptr, ptr, i64, i1)
+
+define i32 @main() {
+entry:
+  %alloca.N = alloca %Tuple2_i32_i32
+  %gep.N = getelementptr inbounds %Tuple2_i32_i32, %Tuple2_i32_i32* %alloca.N, i32 0, i32 0
+  store i32 1, i32* %gep.N
+  %gep.N = getelementptr inbounds %Tuple2_i32_i32, %Tuple2_i32_i32* %alloca.N, i32 0, i32 1
+  store i32 2, i32* %gep.N
+  %gep.N = getelementptr inbounds %Tuple2_i32_i32, %Tuple2_i32_i32* %alloca.N, i32 0, i32 0
+  %load.N = load i32, i32* %gep.N
+  %fmt.N = getelementptr inbounds i8, ptr @.str.N, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt.N, i32 %load.N)
+  ret i32 0
+}

@@ -1,0 +1,9 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+error[E003]: type mismatch: variable `p` expected *i32 but found i32
+  --> test.ny:2:9
+   = help: change the type annotation or the value assigned to `p`
+error: Deref of raw pointer requires unsafe
+  --> test.ny:3:15

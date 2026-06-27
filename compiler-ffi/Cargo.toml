@@ -1,0 +1,16 @@
+[package]
+name = "compiler-ffi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "In-process Nyra compiler C API (cdylib)"
+
+[lib]
+name = "nyra_compiler"
+crate-type = ["cdylib"]
+
+[dependencies]
+compiler = { path = "../compiler/driver" }
+errors = { path = "../compiler/errors" }
+serde_json = "1"

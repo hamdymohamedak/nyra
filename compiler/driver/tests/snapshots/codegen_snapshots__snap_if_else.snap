@@ -1,0 +1,28 @@
+---
+source: compiler/driver/tests/codegen_snapshots.rs
+expression: normalize_ir(& ir)
+---
+source_filename = "test.ny"
+target triple = "arm64-apple-darwin"
+
+@.str.N = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+
+declare i32 @printf(ptr, ...)
+declare void @abort()
+declare void @llvm.memcpy.p0.p0.i64(ptr, ptr, i64, i1)
+
+define i32 @main() {
+entry:
+  %bin.N = icmp eq i32 1, 1
+  br i1 %bin.N, label %then.N, label %else.N
+then.N:
+  %fmt.N = getelementptr inbounds i8, ptr @.str.N, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt.N, i32 1)
+  br label %endif.N
+else.N:
+  %fmt.N = getelementptr inbounds i8, ptr @.str.N, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt.N, i32 0)
+  br label %endif.N
+endif.N:
+  ret i32 0
+}

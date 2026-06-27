@@ -1,0 +1,7 @@
+fn main() {
+    let x = 10
+ Ù  l= 10
+ Ù  let y = 20
+    pÿr1et y = 52
+    pÿr6nt(x + y)
+}

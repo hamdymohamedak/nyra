@@ -1,0 +1,126 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 3 * * 0"
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-all:
+    name: make test-all
+    runs-on: ubuntu-latest
+    env:
+      TEST_SAN: "1"
+      TEST_PERF: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Install nightly (fuzz smoke)
+        run: rustup toolchain install nightly
+
+      - name: Cache cargo-fuzz
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/cargo-fuzz
+          key: cargo-fuzz-${{ runner.os }}-v1
+
+      - name: Install cargo-fuzz
+        run: |
+          if ! command -v cargo-fuzz >/dev/null 2>&1; then
+            cargo install cargo-fuzz --locked
+          fi
+
+      - name: System dependencies
+        run: sudo apt-get update && sudo apt-get install -y clang lld wasi-libc python3
+
+      - name: Full Nyra test suite (incl. sanitizer + perf + cross)
+        run: make test-all
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build workspace
+        run: cargo build --workspace --release
+
+      - name: Analysis + driver tests
+        run: cargo test -p nyra-analysis -p compiler --lib
+
+      - name: Package smoke (Windows asset layout)
+        shell: bash
+        run: make package-release VERSION=1.1.0-test TRIPLE=x86_64-pc-windows-msvc
+
+      - name: DAP smoke
+        run: cargo build -p nyra-dap
+
+  benchmark:
+    name: make bench (quick)
+    runs-on: ubuntu-latest
+    needs: test-all
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: System dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang golang nodejs python3
+
+      - name: Cross-language benchmark (quick subset)
+        env:
+          BENCH_QUICK: "1"
+          BENCH_RUNS: "3"
+          BENCH_SKIP_PGO: "1"
+          BENCH_LANG_COOLDOWN: "0"
+          BENCH_SERVE: "0"
+          BENCH_NO_OPEN: "1"
+          BENCH_UPDATE_README: "0"
+        run: make bench
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            examples/comparison/results/latest.txt
+            examples/comparison/results/latest.html
+            examples/comparison/results/data.tsv
+
+  fuzz:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Install nightly
+        run: rustup toolchain install nightly
+
+      - name: Install cargo-fuzz
+        run: cargo install cargo-fuzz --locked
+
+      - name: Fuzz nightly gate
+        run: make test-fuzz-nightly

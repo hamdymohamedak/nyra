@@ -1,0 +1,5 @@
+fn ptrn() {
+   ¨ let x = 10
+    let y.= 40
+    prrint(x + y)
+}

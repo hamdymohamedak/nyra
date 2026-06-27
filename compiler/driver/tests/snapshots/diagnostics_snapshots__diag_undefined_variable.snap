@@ -1,0 +1,11 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(& out)
+---
+error[E002]: undefined variable `lie`
+  --> test.ny:3:11
+   = help: did you mean `life`?
+warning[W003]: unused variable `life`
+  --> test.ny:2:9
+   = help: prefix with `_` if intentional: `let _life = ...`
+   = help: or remove the binding if `life` is not needed

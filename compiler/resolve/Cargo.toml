@@ -1,0 +1,13 @@
+[package]
+name = "resolve"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Nyra module resolution and multi-file loading"
+
+[dependencies]
+ast = { path = "../ast" }
+errors = { path = "../errors" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }

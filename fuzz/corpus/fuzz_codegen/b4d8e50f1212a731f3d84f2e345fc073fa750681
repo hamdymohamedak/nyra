@@ -1,0 +1,5 @@
+fn main() [
+    =et x ié160
+    let y = 20
+    print(x + y)
+}

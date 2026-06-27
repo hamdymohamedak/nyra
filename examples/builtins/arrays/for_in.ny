@@ -1,0 +1,6 @@
+fn main() {
+    let arr = [1, 2, 3]
+    for n in arr {
+        print(n)
+    }
+}

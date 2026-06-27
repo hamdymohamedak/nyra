@@ -1,0 +1,16 @@
+[package]
+name = "ownership"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Nyra ownership analysis (drop plan, NLL, Send/Sync)"
+
+[dependencies]
+ast = { path = "../ast" }
+errors = { path = "../errors" }
+types = { path = "../types" }
+
+[dev-dependencies]
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }

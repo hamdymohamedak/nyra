@@ -1,0 +1,15 @@
+[package]
+name = "monomorph"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Nyra monomorphization"
+
+[dependencies]
+ast = { path = "../ast" }
+errors = { path = "../errors" }
+
+[dev-dependencies]
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }

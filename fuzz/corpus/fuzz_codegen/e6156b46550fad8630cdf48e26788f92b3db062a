@@ -1,0 +1,5 @@
+fn main()!{
+    let x = 10
+    let y = ‹+try(
+int(x + y)
+}m

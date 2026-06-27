@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Resolve target/debug/nyra for test scripts (avoids hundreds of `cargo run -p cli` spawns).
+set -euo pipefail
+
+_nyra_bin_repo_root() {
+  local here
+  here="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+  printf '%s' "$here"
+}
+
+# Export NYRA_BIN (absolute path to the nyra executable). Builds cli once if missing.
+nyra_export_cli() {
+  local root="${NYRA_ROOT:-$(_nyra_bin_repo_root)}"
+  local bin="${NYRA_BIN:-$root/target/debug/nyra}"
+  if [[ ! -x "$bin" ]]; then
+    (cd "$root" && cargo build -q -p cli)
+  fi
+  if [[ ! -x "$bin" ]]; then
+    echo "nyra-bin: missing executable: $bin" >&2
+    return 1
+  fi
+  export NYRA_ROOT="$root"
+  export NYRA_BIN="$bin"
+  export NYRA="$bin"
+}

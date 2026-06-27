@@ -1,0 +1,10 @@
+// run-stdout: 25
+fn main() {
+    let mut count = 0
+    for i in 0..5 {
+        for j in 0..5 {
+            count = count + 1
+        }
+    }
+    print(count)
+}

@@ -1,0 +1,3 @@
+fn mainet x = 10
+    let y = ‹+try(
+int(x + y) let(x f+ y)

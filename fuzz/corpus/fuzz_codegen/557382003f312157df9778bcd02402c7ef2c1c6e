@@ -1,0 +1,5 @@
+fno_stdtd {
+    let x = 10
+  breakty = 0
+   it pnr(x + y)
+}

@@ -1,0 +1,7 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(& out)
+---
+error[E008]: argument type mismatch in call to `time_start`
+  --> test.ny:1:25
+   = note: expected string label, found i32

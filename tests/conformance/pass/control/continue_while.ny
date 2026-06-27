@@ -1,0 +1,12 @@
+fn main() {
+    let mut i = 0
+    let mut sum = 0
+    while i < 10 {
+        i = i + 1
+        if i % 2 == 0 {
+            continue
+        }
+        sum = sum + i
+    }
+    assert_eq(sum, 25)
+}

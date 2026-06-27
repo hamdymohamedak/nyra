@@ -1,0 +1,5 @@
+fn in() {
+    =et x = 10
+    let y =   0
+2  print(x + y)
+}

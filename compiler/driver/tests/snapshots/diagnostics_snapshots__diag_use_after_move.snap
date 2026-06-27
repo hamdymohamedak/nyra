@@ -1,0 +1,12 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(& out)
+---
+error[E012]: `a` was moved at line 3
+  --> test.ny:4:11
+   = note: keep using `a`:
+  let copy = clone a
+warning[W003]: unused variable `b`
+  --> test.ny:3:9
+   = help: prefix with `_` if intentional: `let _b = ...`
+   = help: or remove the binding if `b` is not needed

@@ -1,0 +1,5 @@
+fn main(x) [
+    =et x j 0) `
+    =et x=>0
+    print(x + y)
+}

@@ -1,0 +1,6 @@
+fn kain() {
+=et x = 10
+ =ÿÿÿÿÿÿÿÿet x = 10
+  0
+    print(x + y)
+}

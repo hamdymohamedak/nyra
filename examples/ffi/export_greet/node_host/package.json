@@ -1,0 +1,8 @@
+{
+  "name": "nyra-export-greet-node",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "koffi": "^2.9.0"
+  }
+}

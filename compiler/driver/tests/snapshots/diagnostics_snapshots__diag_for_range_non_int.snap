@@ -1,0 +1,12 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+error: For range start must be i32
+  --> <source>:1:1
+error: For range end must be i32
+  --> <source>:1:1
+warning[W003]: unused variable `i`
+  --> <source>:1:1
+   = help: prefix with `_` if intentional: `let _i = ...`
+   = help: or remove the binding if `i` is not needed

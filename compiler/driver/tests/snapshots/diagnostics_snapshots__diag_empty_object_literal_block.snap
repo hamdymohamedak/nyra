@@ -1,0 +1,12 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+error[P002]: a standalone `{ }` block is not an expression
+  --> obj.ny:2:13
+   = note: blocks run statements; they do not produce anonymous objects
+   = help: use a struct literal: `MyType { field: value }`
+warning[W003]: unused variable `x`
+  --> obj.ny:2:9
+   = help: prefix with `_` if intentional: `let _x = ...`
+   = help: or remove the binding if `x` is not needed

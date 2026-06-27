@@ -1,0 +1,38 @@
+[workspace]
+resolver = "2"
+members = [
+    "cli",
+    "lsp",
+    "dap",
+    "compiler/fmt",
+    "compiler/analysis",
+    "bindgen",
+    "c-bindgen",
+    "pkg",
+    "pkg-registry",
+    "rt",
+    "compiler/driver",
+    "compiler/lint",
+    "compiler/ast",
+    "compiler/lexer",
+    "compiler/parser",
+    "compiler/resolve",
+    "compiler/expand",
+    "compiler/types",
+    "compiler/ownership",
+    "compiler/typecheck",
+    "compiler/borrowck",
+    "compiler/const_eval",
+    "compiler/monomorph",
+    "compiler/codegen",
+    "compiler/compiletest",
+    "compiler/fuzz-gen",
+    "compiler-ffi",
+]
+default-members = ["cli"]
+
+[workspace.package]
+version = "1.36.6"
+edition = "2021"
+license = "Proprietary"
+authors = ["Nyra Contributors"]

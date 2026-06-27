@@ -1,0 +1,39 @@
+---
+source: compiler/driver/tests/codegen_snapshots.rs
+expression: normalize_ir(& ir)
+---
+source_filename = "test.ny"
+target triple = "arm64-apple-darwin"
+
+@.str.N = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+
+declare i32 @printf(ptr, ...)
+declare void @abort()
+declare void @llvm.memcpy.p0.p0.i64(ptr, ptr, i64, i1)
+
+define i32 @main() {
+entry:
+  br label %while.cond.N
+while.cond.N:
+  %loop.phi.N = phi i32 [0, %entry], [%loop.in.N, %endif.N]
+  %bin.N = icmp slt i32 %loop.phi.N, 10
+  br i1 %bin.N, label %while.body.N, label %while.end.N
+while.body.N:
+  %bin.N = add i32 %loop.phi.N, 1
+  %bin.N = icmp eq i32 %bin.N, 3
+  br i1 %bin.N, label %then.N, label %else.N
+then.N:
+  br label %while.end.N
+after.break.N:
+  unreachable
+else.N:
+  br label %endif.N
+endif.N:
+  %loop.in.N = add i32 0, %bin.N
+  br label %while.cond.N
+while.end.N:
+  %loop.exit.N = phi i32 [%loop.phi.N, %while.cond.N], [%bin.N, %then.N]
+  %fmt.N = getelementptr inbounds i8, ptr @.str.N, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt.N, i32 %loop.exit.N)
+  ret i32 0
+}

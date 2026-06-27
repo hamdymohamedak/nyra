@@ -1,0 +1,6 @@
+fn main() {
+   let x = 15
+e    lt y = 22
+ (` () {
+   let x = 20
+e  }

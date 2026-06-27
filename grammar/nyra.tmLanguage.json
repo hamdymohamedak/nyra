@@ -1,0 +1,49 @@
+{
+  "name": "Nyra",
+  "scopeName": "source.nyra",
+  "fileTypes": ["ny", "nyra"],
+  "uuid": "nyra-tmgrammar-v0.3.0",
+  "patterns": [
+    {
+      "name": "comment.block.nyra",
+      "begin": "/\\*",
+      "end": "\\*/"
+    },
+    {
+      "name": "comment.line.double-slash.nyra",
+      "match": "//.*$"
+    },
+    {
+      "name": "string.quoted.double.nyra",
+      "match": "\"([^\"\\\\]|\\\\.)*\""
+    },
+    {
+      "name": "constant.numeric.nyra",
+      "match": "\\b[0-9][0-9_]*\\b"
+    },
+    {
+      "name": "constant.language.nyra",
+      "match": "\\b(true|false)\\b"
+    },
+    {
+      "name": "storage.type.nyra",
+      "match": "\\b(i32|bool|string|void)\\b"
+    },
+    {
+      "name": "keyword.other.nyra",
+      "match": "\\b(async|await|trait|macro|defer|unsafe|asm|as|const|test|module|impl|self|extern|export|import|no_std)\\b"
+    },
+    {
+      "name": "keyword.control.nyra",
+      "match": "\\b(fn|let|mut|if|else|while|for|in|return|match|spawn|print|time_start|time_end|mem_start|mem_end|enum|struct)\\b"
+    },
+    {
+      "name": "keyword.operator.nyra",
+      "match": "(=>|->|\\.\\.|&&|\\|\\||==|!=|<=|>=|[+\\-*/%&])"
+    },
+    {
+      "name": "entity.name.type.lifetime.nyra",
+      "match": "'[a-zA-Z_][a-zA-Z0-9_]*"
+    }
+  ]
+}

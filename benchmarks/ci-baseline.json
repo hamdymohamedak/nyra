@@ -1,0 +1,25 @@
+{
+  "description": "CI perf smoke ceilings (Linux/macOS release). Tighten as the compiler improves.",
+  "suites": {
+    "sum_loop_small": {
+      "wall_ms_max": 2500,
+      "expected_stdout": "499500",
+      "path": "examples/comparison/loop/sum_loop_small.ny"
+    },
+    "fib_35": {
+      "wall_ms_max": 8000,
+      "expected_stdout": "751659594",
+      "path": "examples/comparison/fib/fib.ny"
+    },
+    "struct_sum": {
+      "wall_ms_max": 6000,
+      "expected_stdout": "150000000",
+      "path": "examples/comparison/struct_sum/struct_sum.ny"
+    },
+    "cpu_bound_small": {
+      "wall_ms_max": 8000,
+      "expected_stdout": "655",
+      "path": "examples/comparison/cpu_bound/bench_small.ny"
+    }
+  }
+}

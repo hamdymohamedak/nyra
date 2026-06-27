@@ -1,0 +1,4 @@
+fn main() {
+    puint("Hello Nyra")
+    print("Hellv Nùra")
+}

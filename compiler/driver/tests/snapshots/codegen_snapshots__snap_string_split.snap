@@ -1,0 +1,33 @@
+---
+source: compiler/driver/tests/codegen_snapshots.rs
+expression: normalize_ir(& ir)
+---
+source_filename = "test.ny"
+target triple = "arm64-apple-darwin"
+
+@.str.N = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+@.str.N = private unnamed_addr constant [2 x i8] c",\00", align 1
+@.str.N = private unnamed_addr constant [6 x i8] c"a,b,c\00", align 1
+
+declare i32 @printf(ptr, ...)
+declare i32 @vec_str_len(ptr)
+declare ptr @str_split(ptr, ptr)
+declare void @abort()
+declare void @llvm.memcpy.p0.p0.i64(ptr, ptr, i64, i1)
+declare void @vec_str_free(ptr)
+
+define i32 @main() {
+entry:
+  %str.N = getelementptr inbounds i8, ptr @.str.N, i64 0
+  %str.N = getelementptr inbounds i8, ptr @.str.N, i64 0
+  %split.N = call ptr @str_split(ptr %str.N, ptr %str.N)
+  %alloca.N = alloca ptr
+  store ptr %split.N, ptr %alloca.N
+  %ld.N = load ptr, ptr %alloca.N
+  %vec_strlen.N = call i32 @vec_str_len(ptr %ld.N)
+  %fmt.N = getelementptr inbounds i8, ptr @.str.N, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt.N, i32 %vec_strlen.N)
+  %ld.N = load ptr, ptr %alloca.N
+  call void @vec_str_free(ptr %ld.N)
+  ret i32 0
+}

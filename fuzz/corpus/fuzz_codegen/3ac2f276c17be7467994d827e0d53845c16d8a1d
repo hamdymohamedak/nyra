@@ -1,0 +1,5 @@
+fn mai)n( {
+    let x = 10
+e    lt y = r0
+    print(x + y)
+}

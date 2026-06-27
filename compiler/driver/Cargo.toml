@@ -1,0 +1,35 @@
+[package]
+name = "compiler"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Nyra language compiler (driver and public API)"
+
+[dependencies]
+ast = { path = "../ast" }
+borrowck = { path = "../borrowck" }
+codegen = { path = "../codegen" }
+const_eval = { path = "../const_eval" }
+errors = { path = "../errors" }
+expand = { path = "../expand" }
+lexer = { path = "../lexer" }
+monomorph = { path = "../monomorph" }
+ownership = { path = "../ownership" }
+parser = { path = "../parser" }
+lint = { path = "../lint" }
+resolve = { path = "../resolve" }
+typecheck = { path = "../typecheck" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+fuzz-gen = { path = "../fuzz-gen" }
+compiletest = { path = "../compiletest" }
+pretty_assertions = "1"
+toml = "0.8"
+serde = { version = "1", features = ["derive"] }
+assert_cmd = "2"
+predicates = "3"
+insta = { version = "1", features = ["filters"] }
+errors = { path = "../errors" }

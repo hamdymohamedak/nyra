@@ -1,0 +1,27 @@
+[package]
+name = "cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Nyra command-line tool (build, run, check)"
+
+[[bin]]
+name = "nyra"
+path = "src/main.rs"
+
+[dependencies]
+compiler = { path = "../compiler/driver" }
+errors = { path = "../compiler/errors" }
+nyra-analysis = { path = "../compiler/analysis" }
+nyra-fmt = { path = "../compiler/fmt" }
+nyra-dap = { path = "../dap" }
+nyra-c-bindgen = { path = "../c-bindgen" }
+lsp = { path = "../lsp" }
+pkg = { path = "../pkg" }
+serde_json = "1"
+clap = { version = "4", features = ["derive"] }
+dirs = "5"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+notify = "6"
+toml = "0.8"

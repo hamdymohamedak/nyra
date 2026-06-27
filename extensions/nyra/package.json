@@ -1,0 +1,207 @@
+{
+  "name": "nyra",
+  "displayName": "Nyra",
+  "description": "Nyra language support: LSP, semantic tokens, inlay hints, test explorer, debugger",
+  "version": "1.36.0",
+  "publisher": "nyra-lang",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hamdymohamedak/Nyra"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Debuggers",
+    "Testing"
+  ],
+  "keywords": ["nyra", "lsp", "debugger"],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onLanguage:nyra",
+    "onDebugResolve:nyra",
+    "workspaceContains:main.ny",
+    "workspaceContains:nyra.mod"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "nyra",
+        "aliases": ["Nyra"],
+        "extensions": [".ny", ".nyra"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "nyra",
+        "scopeName": "source.nyra",
+        "path": "./syntaxes/nyra.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "nyra",
+        "path": "./snippets/nyra.json"
+      }
+    ],
+    "configurationDefaults": {
+      "[nyra]": {
+        "editor.formatOnSave": true,
+        "editor.tabSize": 4,
+        "editor.semanticHighlighting.enabled": true
+      },
+      "editor.inlayHints.enabled": "on"
+    },
+    "configuration": {
+      "title": "Nyra",
+      "properties": {
+        "nyra.languageServerPath": {
+          "type": "string",
+          "default": "nyra",
+          "description": "Path to the nyra CLI (must support `nyra lsp`)."
+        },
+        "nyra.languageServerArgs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["lsp"],
+          "description": "Arguments passed to the language server."
+        },
+        "nyra.debugAdapterPath": {
+          "type": "string",
+          "default": "nyra",
+          "description": "Path to the nyra CLI (must support `nyra dap`)."
+        },
+        "nyra.showVersionInStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show Nyra toolchain version in the status bar."
+        },
+        "nyra.useBundledToolchain": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use nyra binary bundled inside the extension (bin/nyra-<platform>)."
+        },
+        "nyra.bundledToolchainPath": {
+          "type": "string",
+          "default": "",
+          "description": "Override path to bundled nyra binary."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "nyra.refreshTests",
+        "title": "Nyra: Refresh Tests",
+        "category": "Nyra"
+      },
+      {
+        "command": "nyra.runAllTests",
+        "title": "Nyra: Run All Tests",
+        "category": "Nyra"
+      },
+      {
+        "command": "nyra.showToolchainInfo",
+        "title": "Nyra: Show Toolchain Info",
+        "category": "Nyra"
+      }
+    ],
+    "problemMatchers": [
+      {
+        "name": "nyra",
+        "owner": "nyra",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": [
+          {
+            "regexp": "^(error|warning)(\\[([A-Z][0-9]{3})\\])?: (.+)$",
+            "severity": 1,
+            "message": 4,
+            "code": 3,
+            "loop": true
+          },
+          {
+            "regexp": "^\\s+-->\\s+(.+?):(\\d+):(\\d+)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "loop": true
+          }
+        ],
+        "severity": "error"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "nyra",
+        "label": "Nyra",
+        "languages": ["nyra"],
+        "configurationAttributes": {
+          "launch": {
+            "required": ["program"],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Path to the compiled Nyra binary."
+              },
+              "args": {
+                "type": "array",
+                "items": { "type": "string" },
+                "default": []
+              },
+              "cwd": { "type": "string" },
+              "stopOnEntry": { "type": "boolean", "default": false },
+              "debugger": {
+                "type": "string",
+                "description": "lldb or gdb executable (auto-detected if omitted)."
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "nyra",
+            "request": "launch",
+            "name": "Nyra: Launch",
+            "program": "${workspaceFolder}/target/debug/main",
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": false,
+            "preLaunchTask": "Nyra: build (debug)"
+          }
+        ]
+      }
+    ],
+    "taskDefinitions": [
+      {
+        "type": "nyra",
+        "required": ["task"],
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "build | build-debug | run | check | test | fmt"
+          },
+          "path": {
+            "type": "string",
+            "default": "."
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package --no-dependencies",
+    "publish": "vsce publish --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.4.0",
+    "@vscode/vsce": "^3.0.0"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.0"
+  }
+}

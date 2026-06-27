@@ -1,0 +1,3 @@
+fn!("Hello Nyra")
+    print("Hellv Nyra")
+}

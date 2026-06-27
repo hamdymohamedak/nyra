@@ -1,0 +1,19 @@
+[package]
+name = "nyra-analysis"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Document analysis for IDE tooling (symbols, hover, rename)"
+
+[dependencies]
+ast = { path = "../ast" }
+errors = { path = "../errors" }
+expand = { path = "../expand" }
+lexer = { path = "../lexer" }
+monomorph = { path = "../monomorph" }
+parser = { path = "../parser" }
+resolve = { path = "../resolve" }
+types = { path = "../types" }
+typecheck = { path = "../typecheck" }
+nyra-fmt = { path = "../fmt" }

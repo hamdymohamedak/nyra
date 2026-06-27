@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "nyra",
+      "request": "launch",
+      "name": "Nyra: Debug",
+      "program": "${workspaceFolder}/target/debug/main",
+      "cwd": "${workspaceFolder}",
+      "stopOnEntry": false,
+      "preLaunchTask": "Nyra: build (debug)"
+    }
+  ]
+}

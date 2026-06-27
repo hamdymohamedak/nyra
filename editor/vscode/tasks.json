@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "nyra: LSP server",
+      "type": "shell",
+      "command": "nyra",
+      "args": ["lsp"],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "nyra: check",
+      "type": "shell",
+      "command": "nyra",
+      "args": ["check", "."],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "nyra: watch check",
+      "type": "shell",
+      "command": "nyra",
+      "args": ["watch", ".", "--on", "check"],
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}

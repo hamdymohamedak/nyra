@@ -1,0 +1,17 @@
+[package]
+name = "lint"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Nyra compiler lints (unused imports, unused variables)"
+
+[dependencies]
+ast = { path = "../ast" }
+errors = { path = "../errors" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+resolve = { path = "../resolve" }
+
+[dev-dependencies]
+tempfile = "3"

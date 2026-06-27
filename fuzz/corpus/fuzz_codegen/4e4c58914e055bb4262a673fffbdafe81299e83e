@@ -1,0 +1,6 @@
+fn kain man() {
+=et x = 10
+ =et ptrx = 10
+  0
+    p(rint(x + y)
+}

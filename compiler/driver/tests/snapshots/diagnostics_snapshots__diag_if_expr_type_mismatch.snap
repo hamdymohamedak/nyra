@@ -1,0 +1,6 @@
+---
+source: compiler/driver/tests/diagnostics_snapshots.rs
+expression: format_all_errors(&out)
+---
+error: If expression branches must have the same type
+  --> <source>:1:1

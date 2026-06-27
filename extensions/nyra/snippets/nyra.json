@@ -1,0 +1,42 @@
+{
+  "fn": {
+    "prefix": "fn",
+    "body": ["fn ${1:name}(${2:args}) {", "\t$0", "}"],
+    "description": "Function"
+  },
+  "test fn": {
+    "prefix": "test",
+    "body": ["test fn ${1:name}() {", "\t$0", "}"],
+    "description": "Test function"
+  },
+  "struct": {
+    "prefix": "struct",
+    "body": ["struct ${1:Name} {", "\t${2:field}: ${3:string}", "}"],
+    "description": "Struct definition"
+  },
+  "let": {
+    "prefix": "let",
+    "body": ["let ${1:name} = ${2:value}"],
+    "description": "Immutable binding"
+  },
+  "let typed": {
+    "prefix": "lett",
+    "body": ["let ${1:name}: ${2:i32} = ${3:value}"],
+    "description": "Typed binding"
+  },
+  "import": {
+    "prefix": "import",
+    "body": ["import \"${1:stdlib/module.ny}\""],
+    "description": "Import module"
+  },
+  "match": {
+    "prefix": "match",
+    "body": [
+      "match ${1:expr} {",
+      "\t${2:Case} => ${3:body}",
+      "\t_ => ${4:default}",
+      "}"
+    ],
+    "description": "Match expression"
+  }
+}

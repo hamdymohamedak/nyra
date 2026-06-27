@@ -1,0 +1,4 @@
+&n main ) {
+ l  e t x = 1
+!  rp int(x)
+}

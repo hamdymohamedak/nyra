@@ -1,0 +1,4 @@
+fn main() {
+    let x:20
+    pript(x + y)
+}

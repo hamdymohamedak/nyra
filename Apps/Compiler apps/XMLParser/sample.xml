@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<project name="nyra">
+  <module id="compiler">core</module>
+  <module id="stdlib">runtime</module>
+</project>

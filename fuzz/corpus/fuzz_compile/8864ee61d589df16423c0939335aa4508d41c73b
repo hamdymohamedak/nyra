@@ -1,0 +1,4 @@
+&n main() {
+    let x = 1
+!  rp int(x)
+}
