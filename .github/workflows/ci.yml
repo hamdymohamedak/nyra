@@ -45,7 +45,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            clang lld libclang-dev llvm-dev wasi-libc python3
+            clang lld libclang-dev llvm-dev libsqlite3-dev wasi-libc python3
 
       - name: Full Nyra test suite (incl. sanitizer + perf + cross)
         run: make test-all

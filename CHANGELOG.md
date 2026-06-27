@@ -5,6 +5,8 @@
 **Runtime fix — `clock_gettime` in `rt_common.h` on Linux**
 
 - **Fixed** — `rt_common.h` includes `<time.h>` and enables `_DEFAULT_SOURCE` on Linux so `clock_gettime` / `CLOCK_MONOTONIC` are declared when runtime `.c` files are compiled by `clang` in CI
+- **Fixed** — link step prefers in-repo `stdlib/rt/` when building from a source tree (avoids stale `~/.nyra` copies on CI/dev machines)
+- **CI** — install `libsqlite3-dev` for NyraPkg sqlite shim compile tests
 
 ## v1.36.7 (2026-06-27)
 
