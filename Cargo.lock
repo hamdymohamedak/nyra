@@ -358,6 +358,7 @@ dependencies = [
  "resolve",
  "serde",
  "serde_json",
+ "tempfile",
  "toml",
  "typecheck",
 ]
