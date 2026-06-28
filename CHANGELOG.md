@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.36.15 (2026-06-28)
+
+**Windows CI — runtime C headers (`unistd.h`)**
+
+- **Fixed** — `stdlib/rt/rt_common.h` guards `<unistd.h>` on `_WIN32`; monotonic time via `QueryPerformanceCounter`
+- **Fixed** — `stdlib/rt/rt_time.c` uses `_isatty(_fileno(stdout))` on Windows instead of POSIX `isatty`
+- **Fixed** — `stdlib/rt/rt_tls.c` drops unused `<unistd.h>` include
+
 ## v1.36.14 (2026-06-28)
 
 **Stdlib compile smoke — type annotations and import paths**
