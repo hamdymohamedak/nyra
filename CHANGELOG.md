@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.36.18 (2026-06-28)
+
+**skills — sync from webDocs nyra-skill.md**
+
+- **Updated** — `skills/skill.md` stability tier (v1.36 production-ready, Stable Extended traits) via `node webDocs/scripts/build-nyra-skill.mjs`
+- **Docs** — see [`webDocs/CHANGELOG.md`](webDocs/CHANGELOG.md) in the standalone docs repo
+
 ## v1.36.17 (2026-06-28)
 
 **CI — Linux + macOS + Windows on every push/PR**
