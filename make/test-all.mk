@@ -140,4 +140,4 @@ test-all-banner:
 		printf "       |     OK   A L L   T E S T S   P A S S E D   |\n"; \
 		printf "       +-------------------------------------------+\n$${r}\n"; \
 	fi; \
-	printf "$${dim}  nyra test suite — %s$${r}\n\n" "$$(date +%Y-%m-%d %H:%M:%S)"
+	printf "$${dim}  nyra test suite — %s$${r}\n\n" "$$($(MAKE_LIB)/test-all-progress.sh now)"

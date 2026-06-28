@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.36.14 (2026-06-28)
+
+**Stdlib compile smoke — type annotations and import paths**
+
+- **Fixed** — `stdlib/games/raylib_gfx.ny` explicit `Gfx3D_Vec3` / `Camera3D` parameter types
+- **Fixed** — `stdlib/games/voxel.ny` `get`/`set` return types and wrapper signatures (avoids string `get` inference)
+- **Fixed** — `stdlib/net/cache.ny` import paths (`../` not `../../`)
+- **Fixed** — `stdlib/parser/ast_row.ny` `AstRow_kind` / `AstRow_text` index types
+- **Fixed** — macOS `cross linux smoke` skips when no GNU linux cross toolchain (host clang lacks linux sysroot)
+- **Fixed** — `make test-all` banner timestamp on macOS/BSD (`date` via progress helper)
+
 ## v1.36.13 (2026-06-27)
 
 **Test fixes — `nyra test tests/nyra` and stdlib helpers**

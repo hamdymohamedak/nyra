@@ -2,7 +2,18 @@
 # Progress reporting for make test-all (ASCII-only, no emojis).
 set -euo pipefail
 
-: "${NYRA_TEST_ALL_PROGRESS_FILE:?NYRA_TEST_ALL_PROGRESS_FILE required}"
+case "${1:-}" in
+  now)
+    date '+%Y-%m-%d %H:%M:%S'
+    exit 0
+    ;;
+  total)
+    # gate count only — no progress file yet
+    ;;
+  *)
+    : "${NYRA_TEST_ALL_PROGRESS_FILE:?NYRA_TEST_ALL_PROGRESS_FILE required}"
+    ;;
+esac
 
 PROGRESS_WIDTH="${NYRA_TEST_ALL_PROGRESS_WIDTH:-28}"
 TEST_ALL_LOG="${TEST_ALL_LOG:-}"
@@ -218,7 +229,7 @@ case "${1:-}" in
   summary) nyra_progress_summary_line ;;
   total) printf '%s\n' "$(nyra_progress_total)" ;;
   *)
-    printf 'usage: %s init|phase|begin|end|sub|summary|total\n' "$0" >&2
+    printf 'usage: %s init|phase|begin|end|sub|summary|now|total\n' "$0" >&2
     exit 2
     ;;
 esac
