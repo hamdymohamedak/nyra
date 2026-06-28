@@ -1,3 +1,7 @@
+mod comptime;
+
+pub use comptime::{finalize_comptime_module, strip_comptime_artifacts};
+
 use std::collections::HashMap;
 
 use ast::{BinaryOp, Expression, Literal, UnaryOp};
@@ -31,6 +35,43 @@ pub fn eval_const_expr(
                 }
                 (BinaryOp::Mul, ConstValue::Int(a), ConstValue::Int(b)) => {
                     Some(ConstValue::Int(a.saturating_mul(b)))
+                }
+                (BinaryOp::Div, ConstValue::Int(a), ConstValue::Int(b)) => {
+                    if b == 0 {
+                        None
+                    } else {
+                        Some(ConstValue::Int(a / b))
+                    }
+                }
+                (BinaryOp::Mod, ConstValue::Int(a), ConstValue::Int(b)) => {
+                    if b == 0 {
+                        None
+                    } else {
+                        Some(ConstValue::Int(a % b))
+                    }
+                }
+                (BinaryOp::BitOr, ConstValue::Int(a), ConstValue::Int(b)) => {
+                    Some(ConstValue::Int(a | b))
+                }
+                (BinaryOp::BitAnd, ConstValue::Int(a), ConstValue::Int(b)) => {
+                    Some(ConstValue::Int(a & b))
+                }
+                (BinaryOp::BitXor, ConstValue::Int(a), ConstValue::Int(b)) => {
+                    Some(ConstValue::Int(a ^ b))
+                }
+                (BinaryOp::Shl, ConstValue::Int(a), ConstValue::Int(b)) => {
+                    if b < 0 || b >= 64 {
+                        None
+                    } else {
+                        Some(ConstValue::Int(a.wrapping_shl(b as u32)))
+                    }
+                }
+                (BinaryOp::Shr, ConstValue::Int(a), ConstValue::Int(b)) => {
+                    if b < 0 || b >= 64 {
+                        None
+                    } else {
+                        Some(ConstValue::Int(a.wrapping_shr(b as u32)))
+                    }
                 }
                 (BinaryOp::Eq, ConstValue::Int(a), ConstValue::Int(b)) => {
                     Some(ConstValue::Bool(a == b))

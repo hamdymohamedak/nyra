@@ -222,13 +222,39 @@ Use `let mut` (or `mut`) for counters, loop indices, accumulators, and any value
 const MAX_HP = 100
 ```
 
-Fixed at compile time; shared fixed values across the program. Not the same as `let` — you cannot compute `const` from runtime input.
+Fixed at compile time; shared fixed values across the program. Not the same as `let` — you cannot compute `const` from runtime input unless the expression is folded at compile time (see **comptime** below).
 
-| | `let` | `let mut` | `const` |
-|---|-------|-----------|---------|
-| Reassign? | No | Yes | No |
-| When set? | Runtime in code | Runtime; can change | Compile time |
-| Example | `let name = "Ali"` | `let mut gold = 0` | `const MAX = 100` |
+### `comptime` — compile-time module (optional)
+
+Put `comptime` on the **first line** of a file to make the **entire unit** compile-time only. All functions in that file are evaluated at compile time; only `pub const` (and optional `pub struct`/`enum`) are exported to importers. Comptime modules cannot define `main`, `spawn`, `async`, `print`, or `extern`.
+
+```ny
+comptime
+
+fn mix(n) {
+    return n * 3
+}
+
+pub const SEED = mix(14)
+```
+
+Import from a normal file:
+
+```ny
+import "tables.ny" as tables
+
+fn main() {
+    let seed = tables::SEED   // 42 — folded at compile time
+}
+```
+
+Check a comptime module: `nyra check examples/toolchain/comptime_tables.ny` (no codegen / no `main` required). Examples: `examples/toolchain/comptime_tables.ny`, `comptime_import_main.ny` (zero-types + `.typed.ny` pairs).
+
+| | `let` | `let mut` | `const` | `comptime` file |
+|---|-------|-----------|---------|-----------------|
+| Reassign? | No | Yes | No | N/A (no runtime) |
+| When set? | Runtime in code | Runtime; can change | Compile time | Compile time (whole file) |
+| Example | `let name = "Ali"` | `let mut gold = 0` | `const MAX = 100` | `comptime` + `pub const TABLE = ...` |
 
 - Immutable `let` of **Move** types (heap `string`) transfers ownership on use.
 - `let mut` of Copy types (`i32`, `bool`, enums) is not moved on function call.

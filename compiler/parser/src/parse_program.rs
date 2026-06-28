@@ -26,6 +26,14 @@ impl Parser {
 
     pub fn parse(mut self) -> (Program, Vec<NyraError>) {
         skip_newlines(&self.tokens, &mut self.position);
+        let mut comptime = false;
+        if let TokenKind::Identifier(ref name) = self.current_kind() {
+            if name == "comptime" {
+                comptime = true;
+                self.advance();
+                skip_newlines(&self.tokens, &mut self.position);
+            }
+        }
         let mut module = None;
         if check(&self.tokens, self.position, &TokenKind::Module) {
             module = self.parse_module_decl();
@@ -59,6 +67,13 @@ impl Parser {
                     }
                     "allow_extended" if !allow_extended => {
                         allow_extended = true;
+                        self.advance();
+                        continue;
+                    }
+                    "comptime" => {
+                        self.parse_error_here(
+                            "`comptime` must appear once at the top of the file (before imports and declarations)",
+                        );
                         self.advance();
                         continue;
                     }
@@ -243,6 +258,7 @@ impl Parser {
             Program {
                 module,
                 no_std,
+                comptime,
                 allow_extended,
                 imports,
                 consts,

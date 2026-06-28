@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.37.0 (2026-06-28)
+
+**Comptime modules — optional compile-time evaluation**
+
+- **Added** — `comptime` file directive (first line only): entire unit is evaluated at compile time; export `pub const` to runtime code via `import`
+- **Added** — comptime interpreter: pure functions, `for i in start..end`, integer/bool folding, `if`/`return`/`let mut`
+- **Added** — examples `examples/toolchain/comptime_tables.ny` (+ `.typed.ny`) and `comptime_import_main.ny`; tests under `tests/nyra/comptime/`
+- **Docs** — `skills/skill.md` comptime section
+- **Fixed** — Windows CI link: stop passing `-lpthread` on MSVC (Win32 rt uses native threads; fixes LNK1181)
+- **Fixed** — `nyra test` / link tests use `.exe` output names on Windows hosts
+- **Fixed** — `cross_windows_uses_triple_subdir_and_exe` uses a non-host Windows triple so it passes on Windows MSVC runners
+- **Fixed** — MSVC deprecation noise in `rt_args.c`, `rt_time.c`, `rt_tls.c` (`_strdup`, `memcpy` instead of `strncpy`)
+- **Fixed** — flaky `async_state_machine_spawn_test` / macOS CI: nested `spawn`/`unsafe` poll loops no longer complete the outer async promise early (`async_state_machine.rs`)
+- **Fixed** — thread-safe async sleep timers (`rt_async.c`: lock `g_timers` in `register_timer` / `process_timers`)
+
 ## v1.36.18 (2026-06-28)
 
 **skills — sync from webDocs nyra-skill.md**

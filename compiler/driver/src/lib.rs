@@ -229,6 +229,10 @@ impl Compiler {
         }
 
         let mut program = program.clone();
+        let mut load_errors = load_errors;
+        if program.comptime {
+            load_errors.extend(const_eval::finalize_comptime_module(&mut program));
+        }
         expand_program(&mut program);
         let mut mono_errors = monomorphize_program(&mut program);
         synthesize_vec_pod_helpers(&mut program);
@@ -237,6 +241,7 @@ impl Compiler {
         synthesize_struct_json_helpers(&mut program);
         if !options.no_std
             && !program.no_std
+            && !program.comptime
             && !options.no_prelude
             && !options.freestanding
         {
@@ -392,6 +397,20 @@ impl Compiler {
                 load_errors: vec![],
                 type_errors: vec![],
                 borrow_errors,
+                warnings,
+            });
+        }
+
+        if program.comptime {
+            return Ok(CompileOutput {
+                llvm_ir: None,
+                runtime_profile: RuntimeProfile::default(),
+                escape_plan,
+                lexer_errors: vec![],
+                parser_errors: vec![],
+                load_errors: vec![],
+                type_errors: vec![],
+                borrow_errors: vec![],
                 warnings,
             });
         }

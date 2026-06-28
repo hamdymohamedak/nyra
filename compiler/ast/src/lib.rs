@@ -32,6 +32,8 @@ pub struct Program {
     pub module: Option<String>,
     /// `# no_std` / `no_std` directive — no automatic `nyra_rt` linking; freestanding subset.
     pub no_std: bool,
+    /// `comptime` directive — entire file is compile-time only (first line of the unit).
+    pub comptime: bool,
     /// `allow_extended` directive — suppress Extended-tier stability warnings (W001) for this unit.
     pub allow_extended: bool,
     pub imports: Vec<ImportDecl>,
