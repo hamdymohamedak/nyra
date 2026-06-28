@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.36.16 (2026-06-28)
+
+**Codegen snapshots — cross-platform CI**
+
+- **Fixed** — `normalize_ir` canonicalizes `target triple` to `nyra-snapshot-host` so Linux/macOS/Windows CI share one insta baseline
+- **Updated** — all `codegen_snapshots__*.snap` files to the canonical triple
+
 ## v1.36.15 (2026-06-28)
 
 **Windows CI — runtime C headers (`unistd.h`)**
