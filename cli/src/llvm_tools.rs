@@ -165,6 +165,10 @@ pub fn find_lld() -> Option<String> {
     find_llvm_tool("lld")
 }
 
+pub fn find_llvm_nm() -> Option<String> {
+    find_llvm_tool("llvm-nm")
+}
+
 pub fn find_wasm_ld() -> Option<String> {
     find_llvm_tool("wasm-ld").or_else(|| find_lld())
 }
@@ -271,6 +275,15 @@ pub fn sanitize_ir_for_clang(content: &str) -> String {
     let mut out = content.replace(" captures(none)", "");
     out = out.replace(" captures(all)", "");
     out = out.replace(" captures(ret)", "");
+    for (from, to) in [
+        ("ptr 0,", "ptr %0,"),
+        ("ptr 0)", "ptr %0)"),
+        ("phi ptr [0,", "phi ptr [%0,"),
+    ] {
+        if out.contains(from) {
+            out = out.replace(from, to);
+        }
+    }
     out
 }
 
@@ -307,6 +320,14 @@ mod tests {
         let cleaned = sanitize_ir_for_clang(raw);
         assert!(!cleaned.contains("captures("));
         assert!(cleaned.contains("readonly"));
+    }
+
+    #[test]
+    fn sanitize_fixes_opaque_ptr_zero_operands() {
+        let raw = "  %call = call i32 @find_host_end(ptr 0, i32 %x, i32 %y)";
+        let cleaned = sanitize_ir_for_clang(raw);
+        assert!(cleaned.contains("ptr %0,"));
+        assert!(!cleaned.contains("ptr 0,"));
     }
 
     #[test]

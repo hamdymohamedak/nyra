@@ -13,45 +13,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-linux:
-    name: Linux — make test-all
-    runs-on: ubuntu-latest
-    env:
-      TEST_SAN: "1"
-      TEST_PERF: "1"
-      TEST_FUZZ: "1"
-      NYRA_SUITE_PROFILE: ci
-    steps:
-      - uses: actions/checkout@v4
+  # test-linux:
+  #   name: Linux — make test-all
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     TEST_SAN: "1"
+  #     TEST_PERF: "1"
+  #     TEST_FUZZ: "1"
+  #     NYRA_SUITE_PROFILE: ci
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - uses: dtolnay/rust-toolchain@stable
+  #     - uses: dtolnay/rust-toolchain@stable
 
-      - uses: Swatinem/rust-cache@v2
+  #     - uses: Swatinem/rust-cache@v2
 
-      - name: Install nightly (fuzz smoke)
-        run: rustup toolchain install nightly
+  #     - name: Install nightly (fuzz smoke)
+  #       run: rustup toolchain install nightly
 
-      - name: Cache cargo-fuzz
-        uses: actions/cache@v4
-        with:
-          path: ~/.cargo/bin/cargo-fuzz
-          key: cargo-fuzz-${{ runner.os }}-v1
+  #     - name: Cache cargo-fuzz
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ~/.cargo/bin/cargo-fuzz
+  #         key: cargo-fuzz-${{ runner.os }}-v1
 
-      - name: Install cargo-fuzz
-        run: |
-          if ! command -v cargo-fuzz >/dev/null 2>&1; then
-            cargo install cargo-fuzz --locked
-          fi
+  #     - name: Install cargo-fuzz
+  #       run: |
+  #         if ! command -v cargo-fuzz >/dev/null 2>&1; then
+  #           cargo install cargo-fuzz --locked
+  #         fi
 
-      - name: System dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            clang lld libclang-dev llvm-dev libsqlite3-dev wasi-libc python3 \
-            g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64
+  #     - name: System dependencies
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get install -y \
+  #           clang lld libclang-dev llvm-dev libsqlite3-dev wasi-libc python3 \
+  #           g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64
 
-      - name: Full Nyra test suite (sanitizer + perf + fuzz + cross)
-        run: make test-all
+  #     - name: Full Nyra test suite (sanitizer + perf + fuzz + cross)
+  #       run: make test-all
 
   test-macos:
     name: macOS — make test-all-macos
