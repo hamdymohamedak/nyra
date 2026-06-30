@@ -270,7 +270,7 @@ pub fn optimize_llvm_ir(
     };
 
     let ll_out = work_dir.join("out.opt.ll");
-    let passes = if let Some(ref prof) = profile.pgo_use {
+    let passes = if let Some(ref _prof) = profile.pgo_use {
         format!("{},pgo-instr-use", profile.opt_level.llvm_passes())
     } else {
         profile.opt_level.llvm_passes().to_string()
