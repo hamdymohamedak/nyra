@@ -27,7 +27,11 @@ test-compiletest: suite-clean ensure-nyra
 		python3 $(MAKE_PY)/gen-suite-tests.py --profile $(NYRA_SUITE_PROFILE); \
 		$(MAKE_LIB)/test-count.sh; \
 	fi
-	@cargo test -p compiler suite_ -- --nocapture
+	@if [ "$${NYRA_TEST_ALL:-}" = "1" ]; then \
+		cargo test -p compiler suite_; \
+	else \
+		cargo test -p compiler suite_ -- --nocapture; \
+	fi
 	$(call log_ok,compiletest suite)
 
 test-count:
