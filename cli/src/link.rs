@@ -682,7 +682,7 @@ fn object_exported_symbols(path: &Path) -> Result<HashSet<String>, String> {
     }
     .map_err(|e| format!("nm {}: {e}", path.display()))?;
 
-    if !output.status.success() {
+     if !output.status.success() {
         return Err(format!(
             "nm failed for {}: {}",
             path.display(),
