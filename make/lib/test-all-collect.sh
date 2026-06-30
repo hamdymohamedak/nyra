@@ -50,3 +50,8 @@ ta_fail() {
 ta_quiet() {
   [[ "${NYRA_TEST_ALL:-}" == "1" ]]
 }
+
+# Nyra program stdout only (warnings / incremental notes stay on stderr).
+ta_nyra_stdout() {
+  "$@" 2>/dev/null
+}

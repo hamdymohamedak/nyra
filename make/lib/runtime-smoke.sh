@@ -26,11 +26,15 @@ fail() {
 run_expect() {
   local label="$1"
   shift
-  local out=""
-  if ! out="$("$@" 2>&1)"; then
-    fail "$label" "$out"
+  local out="" err_file="" ec=0
+  err_file="$(mktemp)"
+  out="$("$@" 2>"$err_file")" || ec=$?
+  if ((ec != 0)); then
+    fail "$label" "$(cat "$err_file"; [[ -n "$out" ]] && printf '\n%s' "$out")"
+    rm -f "$err_file"
     return 0
   fi
+  rm -f "$err_file"
   if [[ -n "$out" && "${NYRA_TEST_ALL:-}" != "1" ]]; then
     printf '%s\n' "$out"
   fi
@@ -41,15 +45,20 @@ run_expect_eq() {
   local label="$1"
   local expected="$2"
   shift 2
-  local out=""
-  if ! out="$("$@" 2>&1)"; then
-    fail "$label" "$out"
+  local out="" err_file="" ec=0
+  err_file="$(mktemp)"
+  out="$("$@" 2>"$err_file")" || ec=$?
+  if ((ec != 0)); then
+    fail "$label" "$(cat "$err_file"; [[ -n "$out" ]] && printf '\n%s' "$out")"
+    rm -f "$err_file"
     return 0
   fi
   if [[ "$out" != "$expected" ]]; then
     fail "$label (expected $(printf %q "$expected"), got $(printf %q "$out"))" "$out"
+    rm -f "$err_file"
     return 0
   fi
+  rm -f "$err_file"
   if [[ "${NYRA_TEST_ALL:-}" != "1" ]]; then
     printf '%s\n' "$out"
   fi
