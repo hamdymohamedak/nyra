@@ -123,6 +123,26 @@ char *json_get_object(const char *json, const char *key) {
     return NULL;
 }
 
+static int json_value_is_integer(const char *v) {
+    if (!v || !*v) {
+        return 0;
+    }
+    const char *p = v;
+    if (*p == '-') {
+        p++;
+        if (!*p) {
+            return 0;
+        }
+    }
+    if (*p < '0' || *p > '9') {
+        return 0;
+    }
+    while (*p >= '0' && *p <= '9') {
+        p++;
+    }
+    return *p == '\0';
+}
+
 char *json_encode_object(void *keys_vec, void *values_vec) {
     if (!keys_vec || !values_vec) {
         return NULL;
@@ -150,7 +170,7 @@ char *json_encode_object(void *keys_vec, void *values_vec) {
             out = tmp;
         }
         int is_nested = (v[0] == '{' || v[0] == '[');
-        int is_num = (v[0] >= '0' && v[0] <= '9') || v[0] == '-';
+        int is_num = json_value_is_integer(v);
         int is_bool = (strcmp(v, "true") == 0 || strcmp(v, "false") == 0);
         char *part = NULL;
         if (is_nested || is_num || is_bool) {
@@ -278,6 +298,40 @@ char *json_encode_str_array(void *handle) {
         part[2 + slen] = '\0';
         char *tmp2 = str_cat(out, part);
         free(part);
+        free(out);
+        out = tmp2;
+    }
+    char *done = str_cat(out, "]");
+    free(out);
+    return done;
+}
+
+/* Join JSON object literals into a raw array: [{...},{...}] without extra quoting. */
+char *json_join_raw_array(void *handle) {
+    if (!handle) {
+        return dup_slice("[]", 2);
+    }
+    int n = vec_str_len(handle);
+    if (n <= 0) {
+        return dup_slice("[]", 2);
+    }
+    char *out = (char *)malloc(2);
+    if (!out) {
+        return NULL;
+    }
+    out[0] = '[';
+    out[1] = '\0';
+    for (int i = 0; i < n; i++) {
+        const char *part = vec_str_get(handle, i);
+        if (!part) {
+            part = "";
+        }
+        if (i > 0) {
+            char *tmp = str_cat(out, ",");
+            free(out);
+            out = tmp;
+        }
+        char *tmp2 = str_cat(out, part);
         free(out);
         out = tmp2;
     }

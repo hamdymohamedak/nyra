@@ -175,6 +175,13 @@ impl Codegen {
                                     }
                                 }
                                 let ptr_reg = match binding {
+                                    Binding::Stack { slot, ty } if ty == "ptr" && u.op == UnaryOp::Ref => {
+                                        let loaded = self.fresh("ref");
+                                        self.emit(&format!(
+                                            "  %{loaded} = load ptr, ptr %{slot}"
+                                        ));
+                                        format!("%{loaded}")
+                                    }
                                     Binding::Stack { slot, .. } => format!("%{slot}"),
                                     Binding::Reg { reg, .. } => {
                                         if reg.starts_with('%') {

@@ -10,7 +10,7 @@ fn StringBuilder_new() -> StringBuilder {
 }
 
 fn StringBuilder_push(mut sb: StringBuilder, piece: string) -> StringBuilder {
-    sb.buf = strcat(sb.buf, piece)
+    sb.buf = strcat(clone sb.buf, piece)
     return sb
 }
 

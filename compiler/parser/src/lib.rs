@@ -311,6 +311,49 @@ fn main() { print(0) }"#;
     }
 
     #[test]
+    fn parses_multiline_match_arm_arrow() {
+        let src = r#"fn main() {
+    let n = match 1 {
+        1
+        => 2
+        _ => 0
+    }
+    print(n)
+}"#;
+        let (tokens, _) = Lexer::new(src, "m.ny").tokenize();
+        let (program, errs) = Parser::new(tokens).parse();
+        assert!(errs.is_empty(), "{errs:?}");
+        assert_eq!(program.functions.len(), 1);
+    }
+
+    #[test]
+    fn parses_soft_keyword_bindings() {
+        let src = r#"fn main() {
+    let module = "x"
+    let clone = 1
+    print(module)
+}"#;
+        let (tokens, _) = Lexer::new(src, "k.ny").tokenize();
+        let (program, errs) = Parser::new(tokens).parse();
+        assert!(errs.is_empty(), "{errs:?}");
+        let main = &program.functions[0];
+        let names: Vec<_> = main
+            .body
+            .statements
+            .iter()
+            .filter_map(|s| {
+                if let Statement::Let(l) = s {
+                    Some(l.name.as_str())
+                } else {
+                    None
+                }
+            })
+            .collect();
+        assert!(names.contains(&"module"));
+        assert!(names.contains(&"clone"));
+    }
+
+    #[test]
     fn parses_try_in_match_arm_body() {
         let src = r#"fn main() {
     let r = 1

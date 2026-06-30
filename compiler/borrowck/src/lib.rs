@@ -273,6 +273,8 @@ fn check_statement(
         Statement::If(i) => {
             let _ = uses_moved(&i.condition, state, ctx, diag, errors);
             register_borrows_from_expr(&i.condition, stmt_idx, state, errors);
+            // Condition borrows (e.g. strcmp(&a, &b)) end before branch bodies.
+            state.clear_borrows();
             let mut then_s = state.fork();
             check_block(&i.then_block, &mut then_s, ctx, diag, errors);
             if let Some(e) = &i.else_block {
@@ -287,6 +289,7 @@ fn check_statement(
         Statement::While(w) => {
             let _ = uses_moved(&w.condition, state, ctx, diag, errors);
             register_borrows_from_expr(&w.condition, stmt_idx, state, errors);
+            state.clear_borrows();
             let mut loop_s = state.fork();
             check_block(&w.body, &mut loop_s, ctx, diag, errors);
             state.clear_borrows();
@@ -572,6 +575,9 @@ fn register_borrows_from_expr(
         },
         Expression::Binary(b) => {
             register_borrows_from_expr(&b.left, stmt_idx, state, errors);
+            if matches!(b.op, BinaryOp::And | BinaryOp::Or) {
+                state.expire_borrows_before(stmt_idx + 1);
+            }
             register_borrows_from_expr(&b.right, stmt_idx, state, errors);
         }
         Expression::Call(c) => {

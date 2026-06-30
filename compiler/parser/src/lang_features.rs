@@ -522,7 +522,9 @@ impl Parser {
         skip_newlines(&self.tokens, &mut p);
         match self.tokens.get(p).map(|t| &t.kind) {
             Some(TokenKind::DotDot) | Some(TokenKind::DotDotDot) => true,
-            Some(TokenKind::Identifier(_)) => self
+            Some(TokenKind::Identifier(_))
+            | Some(TokenKind::Module)
+            | Some(TokenKind::Clone) => self
                 .tokens
                 .get(p + 1)
                 .map(|t| &t.kind)
@@ -837,6 +839,10 @@ impl Parser {
             TokenKind::Clone => {
                 self.advance();
                 Some("clone".into())
+            }
+            TokenKind::Module => {
+                self.advance();
+                Some("module".into())
             }
             TokenKind::Number(n) => {
                 self.advance();
