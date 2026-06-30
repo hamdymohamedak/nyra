@@ -400,31 +400,12 @@ pub(crate) enum BindCommands {
 
 #[derive(Subcommand)]
 pub(crate) enum PkgCommands {
-    Init { path: Option<PathBuf> },
-    /// Add a dependency (registry name, git URL, or local package).
-    Add { module: String },
-    /// Alias for `add` — fetch package into `.nyra/cache/` and update lock files.
-    Install { module: String },
     Build {
         path: Option<PathBuf>,
         #[command(flatten)]
         opt: OptFlags,
         #[command(flatten)]
         target_args: TargetArgs,
-    },
-    Verify { path: Option<PathBuf> },
-    Publish {
-        name: String,
-        version: String,
-        git_url: String,
-        #[arg(long, default_value = "http://127.0.0.1:9470")]
-        registry: String,
-        #[arg(long, default_value = "nyra-dev-token")]
-        token: String,
-    },
-    Login {
-        #[arg(long, default_value = "nyra-dev-token")]
-        token: String,
     },
     /// Generate bindings into the current package (`vendor/bindings/`).
     Bind {

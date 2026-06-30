@@ -926,7 +926,6 @@ void *bin_decode_blob_at(void *bin, int32_t index);
 
 /* since Nyra 2.5.0 */
 char *json_encode_str_array(void *handle);
-char *json_join_raw_array(void *handle);
 
 /* since Nyra 2.5.0 */
 int rt_tls_upgrade_client_verify(int plain_fd, const char *hostname);
