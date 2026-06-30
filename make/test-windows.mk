@@ -2,6 +2,8 @@
 
 .PHONY: test-all-windows test-all-windows-native
 
+test-all-windows test-all-windows-native: export NYRA_PROGRESS_PROFILE := platform
+
 test-all-windows: test-platform-core
 	$(call run_gate,test-all-windows-native,native Windows build smoke)
 	@$(MAKE) test-platform-summary

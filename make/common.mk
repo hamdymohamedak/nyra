@@ -16,6 +16,7 @@ NYRA_TEST_STATS_FILE ?= $(TARGET_DIR)/.nyra-test-all-stats
 export TEST_ALL_FAILURES_FILE
 export TEST_ALL_LOG
 export TEST_ALL_GATE_LOGS_DIR
+export NYRA_TEST_ALL_PROGRESS_FILE
 
 export NYRA_ROOT := $(ROOT)
 export NYRA_BIN

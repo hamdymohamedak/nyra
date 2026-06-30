@@ -2,6 +2,8 @@
 
 .PHONY: test-all-macos test-all-macos-native
 
+test-all-macos test-all-macos-native: export NYRA_PROGRESS_PROFILE := platform
+
 test-all-macos: test-platform-core
 	$(call run_gate,test-all-macos-native,native macOS build smoke)
 	@$(MAKE) test-platform-summary
