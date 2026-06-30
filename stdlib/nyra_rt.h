@@ -942,6 +942,12 @@ void *bin_decode_blob_at(void *bin, int32_t index);
 /* since Nyra 2.5.0 */
 char *json_encode_str_array(void *handle);
 
+/* since Nyra 1.38.0 */
+char *json_join_raw_array(void *handle);
+
+/* since Nyra 1.38.0 */
+void *json_split_array_elements(const char *array_json);
+
 /* since Nyra 2.5.0 */
 int rt_tls_upgrade_client_verify(int plain_fd, const char *hostname);
 
@@ -1013,12 +1019,6 @@ int32_t bin_field_width_string_at(void *blob, int32_t off);
 
 /* since Nyra 2.5.0 */
 void *json_decode_str_array(const char *array_json);
-
-/* since Nyra 1.38.0 */
-char *json_join_raw_array(void *handle);
-
-/* since Nyra 1.38.0 */
-void *json_split_array_elements(const char *array_json);
 
 /* since Nyra 1.19.0 */
 int nyra_check_file(const char *path);

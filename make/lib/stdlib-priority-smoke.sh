@@ -24,19 +24,23 @@ log "check $EXAMPLE"
 $NYRA check "$EXAMPLE"
 
 log "run"
-err_file="$(mktemp)"
+combined_file="$(mktemp)"
 out="" ec=0
-out="$("$NYRA" run "$EXAMPLE" 2>"$err_file")" || ec=$?
-if ((ec != 0)); then
-  fail "run $EXAMPLE" "$(cat "$err_file"; [[ -n "$out" ]] && printf '\n%s' "$out")"
+"$NYRA" run "$EXAMPLE" >"$combined_file" 2>&1 || ec=$?
+combined="$(cat "$combined_file")"
+if ((ec == 0)); then
+  out="$combined"
 else
+  fail "run $EXAMPLE" "$combined"
+fi
+if ((ec == 0)); then
   if [[ "${NYRA_TEST_ALL:-}" != "1" ]]; then
     printf '%s\n' "$out"
   fi
   echo "$out" | grep -q "42" || fail "missing atoi output" "$out"
   echo "$out" | grep -q "99" || fail "missing itoa output" "$out"
 fi
-rm -f "$err_file"
+rm -f "$combined_file"
 
 ta_finish "stdlib-priority-smoke"
 log "ok"
