@@ -445,6 +445,7 @@ impl Codegen {
         }
 
         self.enum_locals.clear();
+        self.local_int_kinds.clear();
         self.current_fn_ptrs.clear();
         self.no_escape_stack_safe.clear();
         self.mut_ssa_locals.clear();
@@ -455,6 +456,7 @@ impl Codegen {
         self.current_func = func.name.clone();
         let mut env: Env = HashMap::new();
         for (i, param) in func.params.iter().enumerate() {
+            self.track_local_int_kind_ann(&param.name, &param.ty);
             let ty = self.llvm_param_type_of(&param.ty);
             if is_array_ty(&ty) {
                 let slot = self.fresh("param");

@@ -93,6 +93,19 @@ impl TypeChecker {
                 return_type: Type::Integer(ast::IntKind::I32),
             },
         );
+        for name in ["random", "random_f64"] {
+            env.functions.insert(
+                name.into(),
+                FunctionSignature {
+                    params: vec![],
+                    return_type: if name == "random" {
+                        Type::Integer(ast::IntKind::I32)
+                    } else {
+                        Type::F64
+                    },
+                },
+            );
+        }
         for name in [
             "spawn",
             "async_await",

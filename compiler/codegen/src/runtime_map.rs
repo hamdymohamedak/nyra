@@ -141,6 +141,11 @@ pub fn symbol_module_map() -> HashMap<&'static str, &'static str> {
         ("mem_end", "rt_mem.c"),
         ("_sqlite_null_handle", "rt_db.c"),
         ("spawn_capture", "rt_spawn.c"),
+        ("spawn_join", "rt_spawn.c"),
+        ("spawn_handle_drop", "rt_spawn.c"),
+        ("spawn_task_capture", "rt_task_pool.c"),
+        ("spawn_task_join", "rt_task_pool.c"),
+        ("spawn_task_handle_drop", "rt_task_pool.c"),
         ("parallel_for_range", "rt_parallel.c"),
         ("cpu_count", "rt_parallel.c"),
         ("progress_update", "rt_progress.c"),
@@ -357,8 +362,15 @@ pub fn symbol_module_map() -> HashMap<&'static str, &'static str> {
         ("map_str_str_retain", "rt_map_str_str.c"),
         ("rand_i32", "rt_random.c"),
         ("rand_range", "rt_random.c"),
+        ("rand_i64", "rt_random.c"),
+        ("rand_range_i64", "rt_random.c"),
+        ("rand_u32", "rt_random.c"),
+        ("rand_range_u32", "rt_random.c"),
+        ("rand_u64", "rt_random.c"),
+        ("rand_range_u64", "rt_random.c"),
         ("random_hex", "rt_random.c"),
         ("rand_f64", "rt_random.c"),
+        ("rand_f64_range", "rt_random.c"),
         ("sin_f64", "rt_math.c"),
         ("cos_f64", "rt_math.c"),
         ("atan2_f64", "rt_math.c"),
@@ -582,6 +594,9 @@ impl RuntimeProfile {
         // rt_array.c debug formatters call str_cat / i32_to_string / f64_to_string.
         if mods.contains("rt_array.c") {
             mods.insert("rt_strings.c");
+        }
+        if mods.contains("rt_task_pool.c") {
+            mods.insert("rt_parallel.c");
         }
         if mods.contains("rt_progress.c") {
             mods.insert("rt_io.c");

@@ -323,6 +323,9 @@ impl Codegen {
                 if let Some(v) = self.compile_math_intrinsic_call(call, env) {
                     return v;
                 }
+                if let Some(v) = self.compile_random_builtin_call(call, env) {
+                    return v;
+                }
                 if let Some(v) = self.compile_layout_intrinsic_call(call, env) {
                     return v;
                 }
@@ -789,6 +792,19 @@ impl Codegen {
             Expression::MethodCall(mc) if mc.method == "sort_by" => {
                 self.compile_array_sort_by(mc, env)
             }
+            Expression::MethodCall(mc) if mc.method == "join" && mc.args.is_empty() => {
+                let obj = self.compile_expr(&mc.object, env);
+                let kind = if let Expression::Variable { name, .. } = &mc.object {
+                    self.drop_plan.join_handle_kind(&self.current_func, name)
+                } else {
+                    ast::SpawnKind::Task
+                };
+                self.emit_spawn_join(&obj.reg, kind);
+                ExprValue {
+                    reg: "0".into(),
+                    ty: "void".into(),
+                }
+            }
             Expression::MethodCall(mc) => {
                 let callee = self.method_callee_name(&mc.object, &mc.method, env);
                 let mut args = vec![mc.object.clone()];
@@ -802,6 +818,10 @@ impl Codegen {
                     }),
                     env,
                 )
+            }
+            Expression::Spawn { kind, body, .. } => {
+                let mut spawn_drop = DropState::new(&self.current_func);
+                self.compile_spawn(*kind, body, env, &mut spawn_drop)
             }
             Expression::Grouped(inner) => self.compile_expr(inner, env),
             Expression::Await(inner) => {

@@ -208,6 +208,7 @@ impl OwnershipCtx {
                 .clone()
                 .map(Type::Enum)
                 .unwrap_or(Type::Unknown),
+            Expression::Spawn { .. } => Type::JoinHandle,
             _ => Type::Unknown,
         }
     }

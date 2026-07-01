@@ -336,10 +336,38 @@ impl Parser {
         Statement::While(WhileStmt { condition, body })
     }
 
+    pub(super) fn parse_spawn_kind(&mut self) -> SpawnKind {
+        if !check(&self.tokens, self.position, &TokenKind::Colon) {
+            return SpawnKind::Task;
+        }
+        self.advance();
+        match self.current_kind() {
+            TokenKind::Identifier(name) => {
+                let kind = match name.as_str() {
+                    "task" => SpawnKind::Task,
+                    "thread" => SpawnKind::Thread,
+                    other => {
+                        self.parse_error_here(format!(
+                            "expected `task` or `thread` after `spawn:`, found `{other}`"
+                        ));
+                        SpawnKind::Task
+                    }
+                };
+                self.advance();
+                kind
+            }
+            _ => {
+                self.parse_error_here("expected `task` or `thread` after `spawn:`");
+                SpawnKind::Task
+            }
+        }
+    }
+
     pub(super) fn parse_spawn(&mut self) -> Statement {
         self.advance();
+        let kind = self.parse_spawn_kind();
         let body = self.parse_block();
-        Statement::Spawn(body)
+        Statement::Spawn(SpawnStmt { kind, body })
     }
 
     pub(super) fn parse_benchmark(&mut self) -> Statement {

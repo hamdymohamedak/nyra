@@ -234,12 +234,26 @@ pub enum Statement {
     Expression(Expression),
     Print(PrintStmt),
     Defer(Expression),
-    Spawn(Block),
+    Spawn(SpawnStmt),
     Benchmark(Block),
     Unsafe(Block),
     /// `asm "template"` — LLVM inline assembly; requires enclosing `unsafe`.
     Asm { template: String, span: Span },
     Import(String),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SpawnKind {
+    /// Lightweight task on the global runtime pool (`spawn` / `spawn:task`).
+    Task,
+    /// Dedicated OS thread (`spawn:thread`).
+    Thread,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SpawnStmt {
+    pub kind: SpawnKind,
+    pub body: Block,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -463,6 +477,12 @@ pub enum Expression {
     ArrowFn(Box<ArrowFnExpr>),
     /// `comptime { ... }` — compile-time block expression (folded when evaluable).
     ComptimeBlock { body: Block, span: Span },
+    /// `spawn { ... }` / `spawn:task` / `spawn:thread` — returns `JoinHandle` (Extended).
+    Spawn {
+        kind: SpawnKind,
+        body: Block,
+        span: Span,
+    },
     Invalid,
 }
 

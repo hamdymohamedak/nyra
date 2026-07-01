@@ -59,7 +59,7 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `async_promise_complete` | `void async_promise_complete(int handle, int value)` | `rt_async.c` | 0.2.0 | `stdlib/async.ny`, `stdlib/async_v1.ny` |
 | `async_promise_complete_bool` | `void async_promise_complete_bool(int handle, int value)` | `rt_async.c` | 1.22.0 | `stdlib/async/future.ny` |
 | `async_promise_complete_ptr` | `void async_promise_complete_ptr(int handle, void *value)` | `rt_async.c` | 1.22.0 | `stdlib/async/future.ny` |
-| `async_promise_new` | `int async_promise_new(void)` | `rt_async.c` | 0.2.0 | `stdlib/async.ny`, `stdlib/async_v1.ny`, `stdlib/net/poll.ny` |
+| `async_promise_new` | `int async_promise_new(void)` | `rt_async.c` | 0.2.0 | `stdlib/async.ny`, `stdlib/async_v1.ny`, `stdlib/net/poll.ny`, `stdlib/os/event_loop.ny` |
 | `async_run` | `int async_run(int result)` | `rt_async.c` | 0.2.0 | `stdlib/async.ny` |
 | `async_select2_bool` | `int async_select2_bool(int h0, int h1, int *out_index)` | `rt_async.c` | 1.26.0 | — |
 | `async_select2_i32` | `int async_select2_i32(int h0, int h1, int *out_index)` | `rt_async.c` | 1.26.0 | — |
@@ -141,7 +141,7 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `i64_to_string` | `char *i64_to_string(long long n)` | `rt_strings.c` | 1.17.0 | `stdlib/strings.ny` |
 | `instant_elapsed_ms` | `int instant_elapsed_ms(int64_t start)` | `rt_time.c` | 1.1.0 | `stdlib/time/instant.ny` |
 | `instant_now` | `int64_t instant_now(void)` | `rt_time.c` | 1.1.0 | `stdlib/time/date.ny`, `stdlib/time/instant.ny` |
-| `io_register` | `int io_register(int fd, int task_id)` | `rt_async.c` | 0.2.0 | `stdlib/net/poll.ny` |
+| `io_register` | `int io_register(int fd, int task_id)` | `rt_async.c` | 0.2.0 | `stdlib/net/poll.ny`, `stdlib/os/event_loop.ny`, `stdlib/terminal/pty.ny` |
 | `io_wait_once` | `int io_wait_once(int timeout_ms)` | `rt_async.c` | 0.2.0 | `stdlib/net/poll.ny` |
 | `json_decode_i32_array` | `void *json_decode_i32_array(const char *array_json)` | `rt_json.c` | 1.3.4 | `stdlib/json/mod.ny` |
 | `json_decode_ptr_token` | `void *json_decode_ptr_token(const char *json, const char *key)` | `rt_json.c` | 1.9.0 | `stdlib/json/mod.ny` |
@@ -189,7 +189,7 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `os_arg_count` | `int os_arg_count(void)` | `rt_args.c` | 1.3.0 | `stdlib/fs/file.ny`, `stdlib/fs.ny` |
 | `parallel_for_range` | `void parallel_for_range(int32_t start, int32_t end, void (*body)(int32_t, void *), void *ctx, int32_t max_workers, int32_t exact_workers, int32_t mode, int32_t cpu_percent)` | `rt_parallel.c` | 1.3.0 | — |
 | `path_is_dir` | `int path_is_dir(const char *path)` | `rt_fs.c` | 1.3.0 | `stdlib/fs/file.ny`, `stdlib/fs.ny`, `stdlib/gui/picker.ny` |
-| `println` | `int println(const char *msg)` | `rt_io.c` | 0.2.0 | `stdlib/io.ny` |
+| `println` | `int println(const char *msg)` | `rt_io.c` | 0.2.0 | — |
 | `process_exit` | `void process_exit(int code)` | `rt_args.c` | 1.3.0 | `stdlib/flag/mod.ny`, `stdlib/process/exit.ny` |
 | `progress_finish` | `void progress_finish(void)` | `rt_progress.c` | 1.3.0 | — |
 | `progress_update` | `void progress_update(int32_t current, int32_t total, const char *label)` | `rt_progress.c` | 1.3.0 | — |
@@ -205,9 +205,9 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `pty_spawn` | `int pty_spawn(const char *shell, int rows, int cols)` | `rt_pty.c` | 1.3.0 | `stdlib/terminal/pty.ny` |
 | `pty_wait` | `int pty_wait(int master)` | `rt_pty.c` | 1.3.0 | `stdlib/terminal/pty.ny` |
 | `pty_write` | `int pty_write(int master, const char *data)` | `rt_pty.c` | 1.3.0 | `stdlib/terminal/pty.ny` |
-| `rand_f64` | `double rand_f64(void)` | `rt_random.c` | 1.16.0 | `stdlib/random.ny` |
-| `rand_i32` | `int rand_i32(void)` | `rt_random.c` | 1.1.0 | `stdlib/random.ny` |
-| `rand_range` | `int rand_range(int min_val, int max_val)` | `rt_random.c` | 1.1.0 | `stdlib/builtins_math.ny`, `stdlib/random.ny` |
+| `rand_f64` | `double rand_f64(void)` | `rt_random.c` | 1.16.0 | `stdlib/builtins_math.ny` |
+| `rand_i32` | `int rand_i32(void)` | `rt_random.c` | 1.1.0 | — |
+| `rand_range` | `int rand_range(int min_val, int max_val)` | `rt_random.c` | 1.1.0 | `stdlib/random.ny` |
 | `random_hex` | `char *random_hex(int byte_count)` | `rt_random.c` | 1.1.0 | `stdlib/crypto/random.ny`, `stdlib/uuid/mod.ny` |
 | `read_file` | `char *read_file(const char *path)` | `rt_fs.c` | 0.2.0 | `stdlib/compress/mod.ny`, `stdlib/fs/file.ny`, `stdlib/fs.ny` |
 | `read_file_limit` | `char *read_file_limit(const char *path, int max_bytes)` | `rt_fs.c` | 1.13.0 | `stdlib/fs/file.ny`, `stdlib/fs.ny` |
@@ -275,7 +275,9 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `sin_f64` | `double sin_f64(double x)` | `rt_math.c` | 1.16.0 | `stdlib/math.ny` |
 | `sleep_ms` | `void sleep_ms(int ms)` | `rt_time.c` | 1.1.0 | `stdlib/time/instant.ny` |
 | `spawn` | `void spawn(void)` | `rt_async.c` | 0.2.0 | — |
-| `spawn_capture` | `int spawn_capture(void (*body)(void *), void *data, int64_t nbytes)` | `rt_spawn.c` | 0.2.0 | — |
+| `spawn_capture` | `void *spawn_capture(void (*body)(void *), void *data, int64_t nbytes)` | `rt_spawn.c` | 0.2.0 | — |
+| `spawn_join` | `int spawn_join(void *handle)` | `rt_spawn.c` | 1.39.0 | — |
+| `spawn_handle_drop` | `void spawn_handle_drop(void *handle)` | `rt_spawn.c` | 1.39.0 | — |
 | `sqlite_close` | `void sqlite_close(void *handle)` | `rt_sqlite.c` | 1.3.2 | `stdlib/db/sql.ny`, `stdlib/db/sqlite.ny` |
 | `sqlite_column_count` | `int sqlite_column_count(void *stmt)` | `rt_sqlite.c` | 1.21.0 | `stdlib/db/sqlite.ny` |
 | `sqlite_column_text` | `const char *sqlite_column_text(void *stmt, int col)` | `rt_sqlite.c` | 1.21.0 | `stdlib/db/sqlite.ny` |
@@ -294,12 +296,12 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `stdin_read_key` | `int stdin_read_key(void)` | `rt_io.c` | 1.16.0 | `stdlib/terminal/raw.ny` |
 | `stdin_read_line` | `char *stdin_read_line(const char *prompt)` | `rt_io.c` | 1.1.0 | `stdlib/bufio/mod.ny`, `stdlib/terminal/mod.ny` |
 | `stdin_set_raw_mode` | `void stdin_set_raw_mode(int enable)` | `rt_io.c` | 1.16.0 | `stdlib/terminal/raw.ny` |
-| `stdout_flush` | `void stdout_flush(void)` | `rt_io.c` | 0.2.0 | `stdlib/io.ny` |
+| `stdout_flush` | `void stdout_flush(void)` | `rt_io.c` | 0.2.0 | — |
 | `stdout_write_bytes` | `void stdout_write_bytes(void *handle)` | `rt_bytes.c` | 1.3.0 | `stdlib/fs/bytes.ny` |
-| `stdout_write_i32` | `void stdout_write_i32(int n)` | `rt_io.c` | 0.2.0 | `stdlib/io.ny` |
-| `stdout_write_str` | `void stdout_write_str(const char *s)` | `rt_io.c` | 0.2.0 | `stdlib/io.ny` |
-| `stdout_writeln_i32` | `void stdout_writeln_i32(int n)` | `rt_io.c` | 0.2.0 | `stdlib/io.ny` |
-| `stdout_writeln_str` | `void stdout_writeln_str(const char *s)` | `rt_io.c` | 0.2.0 | `stdlib/io.ny`, `stdlib/log.ny` |
+| `stdout_write_i32` | `void stdout_write_i32(int n)` | `rt_io.c` | 0.2.0 | — |
+| `stdout_write_str` | `void stdout_write_str(const char *s)` | `rt_io.c` | 0.2.0 | — |
+| `stdout_writeln_i32` | `void stdout_writeln_i32(int n)` | `rt_io.c` | 0.2.0 | — |
+| `stdout_writeln_str` | `void stdout_writeln_str(const char *s)` | `rt_io.c` | 0.2.0 | `stdlib/log.ny` |
 | `str_cat` | `char *str_cat(const char *a, const char *b)` | `rt_strings.c` | 0.2.0 | — |
 | `str_clone` | `char *str_clone(const char *s)` | `rt_alloc.c` | 3.0.0 | — |
 | `str_cmp` | `int str_cmp(const char *a, const char *b)` | `rt_strings.c` | 0.3.0 | — |

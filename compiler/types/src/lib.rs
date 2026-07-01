@@ -149,6 +149,8 @@ pub enum Type {
     },
     /// Opaque runtime handle (LLVM `ptr`); Copy (e.g. channels).
     Handle,
+    /// Thread join handle returned by `spawn { }` (LLVM `ptr`).
+    JoinHandle,
     /// `ptr`-backed vector of strings (e.g. `str.split(sep)`).
     VecStr,
     /// Portable SIMD vector (`i32x4`, `f32x4`, …).

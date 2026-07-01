@@ -14,6 +14,7 @@ mod checker_stmt;
 mod checker_expr;
 mod checker_io;
 mod math_builtins;
+mod random_builtins;
 mod layout_builtins;
 mod bytes_builtins;
 mod param_inference;

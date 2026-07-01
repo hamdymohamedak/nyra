@@ -232,6 +232,36 @@ static uint32_t nyra_rand_u32(void) {
     return v;
 }
 
+static uint64_t nyra_rand_u64(void) {
+    uint64_t lo = (uint64_t)nyra_rand_u32();
+    uint64_t hi = (uint64_t)nyra_rand_u32();
+    return (hi << 32) | lo;
+}
+
+static uint32_t nyra_uniform_u32_below(uint32_t span) {
+    if (span == 0u) {
+        return 0u;
+    }
+    uint32_t limit = 0xffffffffu - (0xffffffffu % span);
+    uint32_t r;
+    do {
+        r = nyra_rand_u32();
+    } while (r >= limit);
+    return r % span;
+}
+
+static uint64_t nyra_uniform_u64_below(uint64_t span) {
+    if (span == 0u) {
+        return 0u;
+    }
+    uint64_t limit = 0xffffffffffffffffULL - (0xffffffffffffffffULL % span);
+    uint64_t r;
+    do {
+        r = nyra_rand_u64();
+    } while (r >= limit);
+    return r % span;
+}
+
 int rand_i32(void) {
     return (int32_t)nyra_rand_u32();
 }
@@ -241,17 +271,61 @@ int rand_range(int min_val, int max_val) {
         return min_val;
     }
     uint32_t span = (uint32_t)(max_val - min_val + 1);
-    uint32_t limit = 0xffffffffu - (0xffffffffu % span);
-    uint32_t r;
-    do {
-        r = nyra_rand_u32();
-    } while (r >= limit);
-    return min_val + (int)(r % span);
+    return min_val + (int)nyra_uniform_u32_below(span);
+}
+
+int64_t rand_i64(void) {
+    return (int64_t)nyra_rand_u64();
+}
+
+int64_t rand_range_i64(int64_t min_val, int64_t max_val) {
+    if (max_val <= min_val) {
+        return min_val;
+    }
+    uint64_t span = (uint64_t)((uint64_t)max_val - (uint64_t)min_val + 1u);
+    if (span <= (uint64_t)UINT32_MAX) {
+        return min_val + (int64_t)nyra_uniform_u32_below((uint32_t)span);
+    }
+    return min_val + (int64_t)nyra_uniform_u64_below(span);
+}
+
+uint32_t rand_u32(void) {
+    return nyra_rand_u32();
+}
+
+uint32_t rand_range_u32(uint32_t min_val, uint32_t max_val) {
+    if (max_val <= min_val) {
+        return min_val;
+    }
+    uint32_t span = max_val - min_val + 1u;
+    return min_val + nyra_uniform_u32_below(span);
+}
+
+uint64_t rand_u64(void) {
+    return nyra_rand_u64();
+}
+
+uint64_t rand_range_u64(uint64_t min_val, uint64_t max_val) {
+    if (max_val <= min_val) {
+        return min_val;
+    }
+    uint64_t span = max_val - min_val + 1u;
+    if (span <= (uint64_t)UINT32_MAX) {
+        return min_val + (uint64_t)nyra_uniform_u32_below((uint32_t)span);
+    }
+    return min_val + nyra_uniform_u64_below(span);
 }
 
 double rand_f64(void) {
     uint64_t r = ((uint64_t)nyra_rand_u32() << 32) | (uint64_t)nyra_rand_u32();
     return (double)(r >> 11) * (1.0 / 9007199254740992.0);
+}
+
+double rand_f64_range(double min_val, double max_val) {
+    if (max_val <= min_val) {
+        return min_val;
+    }
+    return min_val + rand_f64() * (max_val - min_val);
 }
 
 static const char nyra_hex_digits[] = "0123456789abcdef";

@@ -10,7 +10,7 @@ use ast::{
     ArrowBody, BinaryOp, Block, ConstDef, EnumDef, EnumVariantDef, Expression, ExternFn,
     ForKind, ForStmt, Function, IfStmt, ImplDef, LetStmt, Literal, MatchArm, MatchPayloadPattern,
     MatchPattern,
-    Param, ParallelConfig, ParallelMode, ParallelThreads, ProgressConfig, Program, Statement, StructDef,
+    Param, ParallelConfig, ParallelMode, ParallelThreads, ProgressConfig, Program, SpawnKind, Statement, StructDef,
     StructField, TraitDef, TraitImpl, TypeAnnotation, UnaryOp, WhileStmt,
 };
 use lexer::Lexer;
@@ -380,10 +380,13 @@ fn emit_stmt(stmt: &Statement, indent: usize, out: &mut String) {
             out.push_str("benchmark ");
             emit_block(b, indent, out);
         }
-        Statement::Spawn(b) => {
+        Statement::Spawn(s) => {
             pad(indent, out);
-            out.push_str("spawn ");
-            emit_block(b, indent, out);
+            match s.kind {
+                SpawnKind::Task => out.push_str("spawn "),
+                SpawnKind::Thread => out.push_str("spawn:thread "),
+            }
+            emit_block(&s.body, indent, out);
         }
         Statement::Unsafe(b) => {
             pad(indent, out);
@@ -752,6 +755,13 @@ fn emit_expr(expr: &Expression, out: &mut String) {
         }
         Expression::ComptimeBlock { body, .. } => {
             out.push_str("comptime ");
+            emit_block(body, 0, out);
+        }
+        Expression::Spawn { kind, body, .. } => {
+            match kind {
+                SpawnKind::Task => out.push_str("spawn "),
+                SpawnKind::Thread => out.push_str("spawn:thread "),
+            }
             emit_block(body, 0, out);
         }
         Expression::Invalid => out.push_str("/* invalid */"),

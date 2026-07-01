@@ -364,6 +364,7 @@ impl Codegen {
             &self.drop_plan.custom_struct_bindings,
             &self.drop_plan.composite_struct_bindings,
             &self.drop_plan.enum_payload_bindings,
+            &self.drop_plan.join_handle_bindings,
         ] {
             if let Some(set) = map.get(&drop_state.func) {
                 for name in set {
@@ -388,6 +389,16 @@ impl Codegen {
         env: &Env,
         drop_state: &mut DropState,
     ) {
+        if let Expression::MethodCall(mc) = expr {
+            if mc.method == "join" {
+                if let Expression::Variable { name, .. } = &mc.object {
+                    if self.drop_plan.is_join_handle_in(&drop_state.func, name) {
+                        drop_state.mark_moved(name);
+                    }
+                }
+                return;
+            }
+        }
         let Expression::Call(c) = expr else {
             return;
         };

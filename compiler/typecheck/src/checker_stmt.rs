@@ -311,14 +311,14 @@ impl TypeChecker {
             Statement::Benchmark(body) => {
                 self.check_block(body, env, expected_ret);
             }
-            Statement::Spawn(body) => {
+            Statement::Spawn(spawn) => {
                 if self.no_std {
                     diagnostics::no_std_unavailable(self, "spawn", sp.clone());
                 }
                 if self.target_is_wasm() {
                     diagnostics::platform_unavailable(self, "spawn", "wasm32", sp.clone());
                 }
-                self.check_block(body, env, &Type::Void);
+                self.check_block(&spawn.body, env, &Type::Void);
             }
             Statement::Unsafe(body) => {
                 self.unsafe_depth += 1;

@@ -1340,6 +1340,7 @@ pub fn type_pretty(ty: &Type) -> String {
         Type::Void => "void".into(),
         Type::Ptr => "ptr".into(),
         Type::Handle => "handle".into(),
+        Type::JoinHandle => "JoinHandle".into(),
         Type::VecStr => "vec_str".into(),
         Type::Struct(n) => n.clone(),
         Type::Union(n) => format!("union {n}"),

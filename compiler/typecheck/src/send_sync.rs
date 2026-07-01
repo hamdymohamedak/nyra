@@ -29,6 +29,7 @@ impl TypeChecker {
             | Type::Bytes
             | Type::Simd { .. }
             | Type::Union(_) => (true, true),
+            Type::JoinHandle => (true, false),
             Type::RawPtr { .. } => (false, false),
             Type::Struct(name) => self.struct_thread_safety(name),
             Type::Array { elem, .. } => self.thread_safety_of(elem),

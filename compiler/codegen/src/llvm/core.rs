@@ -79,6 +79,7 @@ impl Codegen {
             declared_c_syms: HashSet::new(),
             intrinsic_decl_lines: Vec::new(),
             intrinsic_decls: HashSet::new(),
+            local_int_kinds: HashMap::new(),
             trait_method_callees: HashMap::new(),
         }
     }
@@ -115,6 +116,23 @@ impl Codegen {
 
     pub(super) fn record_runtime(&mut self, sym: &str) {
         self.used_runtime.insert(sym.to_string());
+    }
+
+    pub(super) fn ensure_runtime_fn_decl(&mut self, sym: &str, decl: &str) {
+        if self.declared_c_syms.insert(sym.to_string()) {
+            self.intrinsic_decl_lines.push(decl.to_string());
+        }
+        self.record_runtime(sym);
+    }
+
+    pub(super) fn track_local_int_kind(&mut self, name: &str, kind: IntKind) {
+        self.local_int_kinds.insert(name.to_string(), kind);
+    }
+
+    pub(super) fn track_local_int_kind_ann(&mut self, name: &str, ann: &TypeAnnotation) {
+        if let TypeAnnotation::Integer(k) = ann {
+            self.track_local_int_kind(name, *k);
+        }
     }
 
     /// Ensure link pulls in any runtime module referenced by emitted `call @sym(...)`.
@@ -340,7 +358,12 @@ impl Codegen {
             ("os_arg_count", "declare i32 @os_arg_count()"),
             ("os_arg_at", "declare ptr @os_arg_at(i32)"),
             ("heap_free", "declare void @heap_free(ptr)"),
-            ("spawn_capture", "declare i32 @spawn_capture(ptr, ptr, i64)"),
+            ("spawn_capture", "declare ptr @spawn_capture(ptr, ptr, i64)"),
+            ("spawn_join", "declare i32 @spawn_join(ptr)"),
+            ("spawn_handle_drop", "declare void @spawn_handle_drop(ptr)"),
+            ("spawn_task_capture", "declare ptr @spawn_task_capture(ptr, ptr, i64)"),
+            ("spawn_task_join", "declare i32 @spawn_task_join(ptr)"),
+            ("spawn_task_handle_drop", "declare void @spawn_task_handle_drop(ptr)"),
             (
                 "parallel_for_range",
                 "declare void @parallel_for_range(i32, i32, ptr, ptr, i32, i32, i32, i32)",
@@ -410,6 +433,19 @@ impl Codegen {
             ("color_ansi", "declare ptr @color_ansi(ptr)"),
             ("ansi_reset", "declare ptr @ansi_reset()"),
             ("blackbox_i32", "declare i32 @blackbox_i32(i32)"),
+            ("rand_i32", "declare i32 @rand_i32()"),
+            ("rand_range", "declare i32 @rand_range(i32, i32)"),
+            ("rand_i64", "declare i64 @rand_i64()"),
+            ("rand_range_i64", "declare i64 @rand_range_i64(i64, i64)"),
+            ("rand_u32", "declare i32 @rand_u32()"),
+            ("rand_range_u32", "declare i32 @rand_range_u32(i32, i32)"),
+            ("rand_u64", "declare i64 @rand_u64()"),
+            ("rand_range_u64", "declare i64 @rand_range_u64(i64, i64)"),
+            ("rand_f64", "declare double @rand_f64()"),
+            (
+                "rand_f64_range",
+                "declare double @rand_f64_range(double, double)",
+            ),
         ];
         for (name, line) in decls {
             if self.skip_runtime_decls.contains(name) || self.declared_c_syms.contains(name) {

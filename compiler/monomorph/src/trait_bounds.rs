@@ -213,7 +213,12 @@ fn collect_from_stmt(
                 collect_from_stmt(s, originals, trait_impls, out);
             }
         }
-        Statement::Spawn(b) | Statement::Unsafe(b) | Statement::Benchmark(b) => {
+        Statement::Spawn(s) => {
+            for stmt in &s.body.statements {
+                collect_from_stmt(stmt, originals, trait_impls, out);
+            }
+        }
+        Statement::Unsafe(b) | Statement::Benchmark(b) => {
             for s in &b.statements {
                 collect_from_stmt(s, originals, trait_impls, out);
             }

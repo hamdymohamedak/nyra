@@ -52,6 +52,15 @@ impl Codegen {
         if matches!(binding, Binding::PromotedStruct { .. } | Binding::LocalChannel { .. }) {
             return;
         }
+        if drop_state.moved.contains(name) {
+            return;
+        }
+        if self.drop_plan.is_join_handle_in(&drop_state.func, name) {
+            let (loaded, _) = self.binding_load(binding);
+            let kind = self.drop_plan.join_handle_kind(&drop_state.func, name);
+            self.emit_spawn_handle_drop(&loaded, kind);
+            return;
+        }
         let ty = Self::binding_ty(binding).to_string();
         if ty == "vec_str" {
             let (loaded, _) = self.binding_load(binding);

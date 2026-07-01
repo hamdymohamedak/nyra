@@ -294,9 +294,8 @@ fn patch_anon_names_in_stmt(stmt: &mut Statement, queue: &mut Vec<String>) {
                 patch_anon_names_in_expr(c, queue);
             }
         }
-        Statement::Spawn(b) | Statement::Benchmark(b) | Statement::Unsafe(b) => {
-            patch_anon_names_in_block(b, queue);
-        }
+        Statement::Spawn(s) => patch_anon_names_in_block(&mut s.body, queue),
+        Statement::Benchmark(b) | Statement::Unsafe(b) => patch_anon_names_in_block(b, queue),
         _ => {}
     }
 }
@@ -382,6 +381,7 @@ fn patch_anon_names_in_expr(expr: &mut Expression, queue: &mut Vec<String>) {
             ArrowBody::Block(b) => patch_anon_names_in_block(b, queue),
         },
         Expression::ComptimeBlock { body, .. } => patch_anon_names_in_block(body, queue),
+        Expression::Spawn { body, .. } => patch_anon_names_in_block(body, queue),
         Expression::Grouped(e) | Expression::Await(e) => patch_anon_names_in_expr(e, queue),
         Expression::TemplateLiteral(t) => {
             for part in &mut t.parts {

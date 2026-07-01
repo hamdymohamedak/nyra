@@ -110,7 +110,9 @@ static int64_t nyra_now_ms(void) {
 
 #endif
 
-int spawn_capture(void (*body)(void *), void *data, long long nbytes);
+void *spawn_capture(void (*body)(void *), void *data, long long nbytes);
+int spawn_join(void *handle);
+void spawn_handle_drop(void *handle);
 int io_wait_once(int timeout_ms);
 
 #define NYRA_MAX_TASKS 4096
@@ -772,5 +774,8 @@ static void nyra_spawn_noop(void *data) {
 }
 
 void spawn(void) {
-    spawn_capture(nyra_spawn_noop, NULL, 0);
+    void *h = spawn_capture(nyra_spawn_noop, NULL, 0);
+    if (h) {
+        spawn_handle_drop(h);
+    }
 }

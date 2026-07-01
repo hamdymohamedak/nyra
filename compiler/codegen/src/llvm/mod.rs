@@ -122,6 +122,8 @@ pub struct Codegen {
     extern_c_symbols: HashMap<String, String>,
     /// C symbols already emitted as `declare` (avoid duplicate LLVM declarations).
     declared_c_syms: HashSet<String>,
+    /// Integer variable → Nyra `IntKind` (for generic `random` dispatch).
+    local_int_kinds: HashMap<String, IntKind>,
     /// LLVM intrinsic `declare` lines (math builtins).
     intrinsic_decl_lines: Vec<String>,
     intrinsic_decls: HashSet<String>,

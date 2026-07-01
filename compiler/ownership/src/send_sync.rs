@@ -53,6 +53,10 @@ impl<'a> Checker<'a> {
                 send: true,
                 sync: true,
             },
+            Type::JoinHandle => ThreadSafety {
+                send: true,
+                sync: false,
+            },
             Type::RawPtr { .. } => ThreadSafety {
                 send: false,
                 sync: false,

@@ -19,7 +19,8 @@ fn stmt_has_break(stmt: &Statement) -> bool {
         }
         Statement::While(w) => block_has_break(&w.body),
         Statement::For(f) => block_has_break(&f.body),
-        Statement::Spawn(b) | Statement::Unsafe(b) | Statement::Benchmark(b) => block_has_break(b),
+        Statement::Spawn(s) => block_has_break(&s.body),
+        Statement::Unsafe(b) | Statement::Benchmark(b) => block_has_break(b),
         _ => false,
     }
 }

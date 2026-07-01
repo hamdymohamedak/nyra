@@ -334,7 +334,7 @@ fn check_statement(
             }
             check_expr_moves(e, stmt_idx, state, ctx, diag, errors);
         }
-        Statement::Spawn(body) => {
+        Statement::Spawn(sp) => {
             if !state.borrowed_mut.is_empty() || !state.borrowed_imm.is_empty() {
                 errors.push(borrow_active_error(
                     "spawn while references are active",
@@ -343,9 +343,9 @@ fn check_statement(
                 ));
             }
             let outer = state.outer_vars();
-            check_spawn_captures(body, &outer, Span::default(), ctx, errors);
+            check_spawn_captures(&sp.body, &outer, Span::default(), ctx, errors);
             let declared: std::collections::HashSet<String> = outer.keys().cloned().collect();
-            for name in ownership::collect_captures(body, &declared) {
+            for name in ownership::collect_captures(&sp.body, &declared) {
                 if ctx.kind_of(outer.get(&name).unwrap_or(&Type::Unknown)).is_move() {
                     state.moved.insert(
                         name.clone(),
@@ -353,7 +353,7 @@ fn check_statement(
                     );
                 }
             }
-            check_block(body, state, ctx, diag, errors);
+            check_block(&sp.body, state, ctx, diag, errors);
             state.clear_borrows();
         }
         Statement::Benchmark(body) => {
@@ -512,6 +512,29 @@ fn check_expr_moves(
             for arg in &mc.args {
                 if move_candidate(arg).is_some() {
                     try_move_on_call(arg, &mc.method, &mc.span, state, ctx, errors);
+                }
+            }
+            if mc.method == "join" {
+                try_move_on_call(&mc.object, "join", &mc.span, state, ctx, errors);
+            }
+        }
+        Expression::Spawn { body, .. } => {
+            if !state.borrowed_mut.is_empty() || !state.borrowed_imm.is_empty() {
+                errors.push(borrow_active_error(
+                    "spawn while references are active",
+                    Span::default(),
+                    "finish using borrows before spawn",
+                ));
+            }
+            let outer = state.outer_vars();
+            check_spawn_captures(body, &outer, Span::default(), ctx, errors);
+            let declared: std::collections::HashSet<String> = outer.keys().cloned().collect();
+            for cap in ownership::collect_captures(body, &declared) {
+                if ctx.kind_of(outer.get(&cap).unwrap_or(&Type::Unknown)).is_move() {
+                    state.moved.insert(
+                        cap.clone(),
+                        record_move_origin(&cap, Span::default(), None, Span::default(), false),
+                    );
                 }
             }
         }

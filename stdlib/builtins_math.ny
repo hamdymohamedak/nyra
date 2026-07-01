@@ -1,6 +1,5 @@
 import "math.ny"
 
-extern fn rand_range(min_val: i32, max_val: i32) -> i32
 extern fn rand_f64() -> f64
 
 // Math-style helpers (JS-like naming adapted to Nyra function names).

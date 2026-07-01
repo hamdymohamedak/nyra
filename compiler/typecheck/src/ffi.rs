@@ -342,6 +342,7 @@ impl TypeChecker {
             Type::Ref { .. }
             | Type::ForAll { .. }
             | Type::Handle
+            | Type::JoinHandle
             | Type::VecStr
             | Type::Unknown => false,
         }

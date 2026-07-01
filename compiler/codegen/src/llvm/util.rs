@@ -235,7 +235,7 @@ pub(super) fn is_array_ty(ty: &str) -> bool {
 pub(super) fn llvm_storage_ty(ty: &str) -> &str {
     match ty {
         "char" => "i32",
-        "string" | "vec_str" | "bytes" => "ptr",
+        "string" | "vec_str" | "bytes" | "join_handle" => "ptr",
         _ => ty,
     }
 }

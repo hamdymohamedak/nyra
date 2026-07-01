@@ -170,7 +170,10 @@ impl TypeChecker {
                 Statement::For(f) => {
                     Self::collect_param_field_return_types(&f.body, param, info, out);
                 }
-                Statement::Unsafe(b) | Statement::Spawn(b) | Statement::Benchmark(b) => {
+                Statement::Spawn(s) => {
+                    Self::collect_param_field_return_types(&s.body, param, info, out);
+                }
+                Statement::Unsafe(b) | Statement::Benchmark(b) => {
                     Self::collect_param_field_return_types(b, param, info, out);
                 }
                 _ => {}
@@ -204,7 +207,10 @@ impl TypeChecker {
                 Statement::For(f) => {
                     Self::collect_struct_literal_return_types(&f.body, out);
                 }
-                Statement::Unsafe(b) | Statement::Spawn(b) | Statement::Benchmark(b) => {
+                Statement::Spawn(s) => {
+                    Self::collect_struct_literal_return_types(&s.body, out);
+                }
+                Statement::Unsafe(b) | Statement::Benchmark(b) => {
                     Self::collect_struct_literal_return_types(b, out);
                 }
                 _ => {}
@@ -230,7 +236,8 @@ impl TypeChecker {
                 }
                 Statement::While(w) => Self::collect_ctor_binding_vars(&w.body, ctor, out),
                 Statement::For(f) => Self::collect_ctor_binding_vars(&f.body, ctor, out),
-                Statement::Unsafe(b) | Statement::Spawn(b) | Statement::Benchmark(b) => {
+                Statement::Spawn(s) => Self::collect_ctor_binding_vars(&s.body, ctor, out),
+                Statement::Unsafe(b) | Statement::Benchmark(b) => {
                     Self::collect_ctor_binding_vars(b, ctor, out);
                 }
                 _ => {}
@@ -268,7 +275,12 @@ impl TypeChecker {
                         return true;
                     }
                 }
-                Statement::Unsafe(b) | Statement::Spawn(b) | Statement::Benchmark(b) => {
+                Statement::Spawn(s) => {
+                    if Self::block_returns_bound_var(&s.body, vars) {
+                        return true;
+                    }
+                }
+                Statement::Unsafe(b) | Statement::Benchmark(b) => {
                     if Self::block_returns_bound_var(b, vars) {
                         return true;
                     }

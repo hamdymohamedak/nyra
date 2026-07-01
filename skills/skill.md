@@ -1421,6 +1421,23 @@ import "stdlib/builtins_string.ny"
 
 Prefer built-in `.split()` / `.trim()` on `string` when you do not need the import.
 
+### `stdlib/random.ny` — ChaCha20 CSPRNG (hardware-seeded)
+
+```ny
+import "stdlib/random.ny"
+```
+
+| Function | Description |
+|----------|-------------|
+| `random()` | Random `i32` by default — ChaCha20 stream seeded from OS/hardware entropy |
+| `random(min, max)` | Inclusive integer range; **return type follows bounds** (`i32`, `i64`, `u64`, …) with rejection sampling (no modulo bias) |
+| `random<T>()` / `random<T>(min, max)` | Explicit integer type when inference is ambiguous |
+| `random_f64()` | Random `f64` in `[0, 1)` — 53-bit precision |
+| `random_f64(min, max)` | Random `f64` in `[min, max)` |
+| `shuffle_pick(vec)` | Random element from an `i32` vector handle (**import required**) |
+
+Seeding uses `getentropy` / `arc4random_buf` / `BCryptGenRandom` / Intel `RDRAND` (when available), mixed into ChaCha20. For raw OS TRNG bytes use `stdlib/os/hw_crypto.ny` → `hw_random_bytes`.
+
 ### `stdlib/builtins_math.ny` — JS-style math
 
 ```ny
@@ -1431,7 +1448,7 @@ import "stdlib/builtins_math.ny"
 |----------|-------------|
 | `Math_max(a, b)` / `Math_min(a, b)` | Min / max (`i32`) — wraps `max_i32` / `min_i32` |
 | `Math_round(x)` / `Math_floor(x)` / `Math_ceil(x)` | Rounding (MVP on `i32`) |
-| `Math_random()` | Random `f64` in `[0, 1)` |
+| `Math_random()` | Random `f64` in `[0, 1)` — ChaCha20 via `rand_f64()` |
 
 ### `stdlib/builtins_json.ny` — MVP JSON helpers
 

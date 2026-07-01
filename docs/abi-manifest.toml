@@ -499,10 +499,45 @@ since = "1.3.3"
 
 [[symbol]]
 name = "spawn_capture"
-c_sig = "int spawn_capture(void (*body)(void *), void *data, int64_t nbytes)"
+c_sig = "void *spawn_capture(void (*body)(void *), void *data, int64_t nbytes)"
 module = "rt_spawn.c"
 tier = "stable"
 since = "0.2.0"
+
+[[symbol]]
+name = "spawn_join"
+c_sig = "int spawn_join(void *handle)"
+module = "rt_spawn.c"
+tier = "stable"
+since = "1.39.0"
+
+[[symbol]]
+name = "spawn_handle_drop"
+c_sig = "void spawn_handle_drop(void *handle)"
+module = "rt_spawn.c"
+tier = "stable"
+since = "1.39.0"
+
+[[symbol]]
+name = "spawn_task_capture"
+c_sig = "void *spawn_task_capture(void (*body)(void *), void *data, int64_t nbytes)"
+module = "rt_task_pool.c"
+tier = "stable"
+since = "1.39.0"
+
+[[symbol]]
+name = "spawn_task_join"
+c_sig = "int spawn_task_join(void *handle)"
+module = "rt_task_pool.c"
+tier = "stable"
+since = "1.39.0"
+
+[[symbol]]
+name = "spawn_task_handle_drop"
+c_sig = "void spawn_task_handle_drop(void *handle)"
+module = "rt_task_pool.c"
+tier = "stable"
+since = "1.39.0"
 
 [[symbol]]
 name = "parallel_for_range"
@@ -1359,6 +1394,13 @@ tier = "stable"
 since = "1.16.0"
 
 [[symbol]]
+name = "rand_f64_range"
+c_sig = "double rand_f64_range(double min_val, double max_val)"
+module = "rt_random.c"
+tier = "stable"
+since = "1.39.0"
+
+[[symbol]]
 name = "sin_f64"
 c_sig = "double sin_f64(double x)"
 module = "rt_math.c"
@@ -2022,6 +2064,48 @@ c_sig = "int rand_range(int min_val, int max_val)"
 module = "rt_random.c"
 tier = "stable"
 since = "1.1.0"
+
+[[symbol]]
+name = "rand_i64"
+c_sig = "int64_t rand_i64(void)"
+module = "rt_random.c"
+tier = "stable"
+since = "1.39.0"
+
+[[symbol]]
+name = "rand_range_i64"
+c_sig = "int64_t rand_range_i64(int64_t min_val, int64_t max_val)"
+module = "rt_random.c"
+tier = "stable"
+since = "1.39.0"
+
+[[symbol]]
+name = "rand_u32"
+c_sig = "uint32_t rand_u32(void)"
+module = "rt_random.c"
+tier = "stable"
+since = "1.39.0"
+
+[[symbol]]
+name = "rand_range_u32"
+c_sig = "uint32_t rand_range_u32(uint32_t min_val, uint32_t max_val)"
+module = "rt_random.c"
+tier = "stable"
+since = "1.39.0"
+
+[[symbol]]
+name = "rand_u64"
+c_sig = "uint64_t rand_u64(void)"
+module = "rt_random.c"
+tier = "stable"
+since = "1.39.0"
+
+[[symbol]]
+name = "rand_range_u64"
+c_sig = "uint64_t rand_range_u64(uint64_t min_val, uint64_t max_val)"
+module = "rt_random.c"
+tier = "stable"
+since = "1.39.0"
 
 [[symbol]]
 name = "random_hex"

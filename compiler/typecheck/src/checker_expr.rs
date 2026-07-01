@@ -189,6 +189,9 @@ impl TypeChecker {
                 if let Some(ret) = self.check_math_intrinsic_call(call, env, sp.clone()) {
                     return ret;
                 }
+                if let Some(ret) = self.check_random_builtin_call(call, env, sp.clone()) {
+                    return ret;
+                }
                 if let Some(ret) = self.check_layout_intrinsic(
                     &call.callee,
                     &call.args,
@@ -667,6 +670,21 @@ impl TypeChecker {
                     Type::Ref { inner, .. } => (*inner).clone(),
                     other => other,
                 };
+                if mc.method == "join" {
+                    if !mc.args.is_empty() {
+                        diagnostics::method_expects_no_args(self, "join", sp.clone());
+                    }
+                    if obj_ty != Type::JoinHandle && obj_ty != Type::Unknown {
+                        diagnostics::unsupported_method_on_type(
+                            self,
+                            "join",
+                            &obj_ty,
+                            sp.clone(),
+                        );
+                        return Type::Unknown;
+                    }
+                    return Type::Void;
+                }
                 if mc.method == "clone" {
                     return match obj_ty {
                         Type::String => Type::String,
@@ -899,7 +917,16 @@ impl TypeChecker {
                 }
                 to
             }
-            Expression::Invalid => Type::Unknown,
+            Expression::Spawn { body, .. } => {
+                if self.no_std {
+                    diagnostics::no_std_unavailable(self, "spawn", sp.clone());
+                }
+                if self.target_is_wasm() {
+                    diagnostics::platform_unavailable(self, "spawn", "wasm32", sp.clone());
+                }
+                self.check_block(body, env, &Type::Void);
+                Type::JoinHandle
+            }
             Expression::ComptimeBlock { body, span } => {
                 let mut inner = TypeEnv {
                     variables: env.variables.clone(),
@@ -1017,6 +1044,7 @@ impl TypeChecker {
                     return_type: Some(Box::new(ret_ty)),
                 }
             }
+            Expression::Invalid => Type::Unknown,
         }
     }
 }

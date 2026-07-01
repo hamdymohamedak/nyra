@@ -579,6 +579,17 @@ impl Parser {
                     self.parse_postfix(Expression::Variable { name, span })
                 }
             }
+            TokenKind::Spawn => {
+                let start = self.current_span();
+                self.advance();
+                let kind = self.parse_spawn_kind();
+                let body = self.parse_block();
+                self.parse_postfix(Expression::Spawn {
+                    kind,
+                    body,
+                    span: merge_spans(&start, &self.prev_span()),
+                })
+            }
             TokenKind::LParen => {
                 let start = self.current_span();
                 self.advance();

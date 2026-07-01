@@ -202,7 +202,22 @@ void mem_start(const char *label);
 void mem_end(const char *label);
 
 /* since Nyra 0.2.0 */
-int spawn_capture(void (*body)(void *), void *data, int64_t nbytes);
+void *spawn_capture(void (*body)(void *), void *data, int64_t nbytes);
+
+/* since Nyra 1.39.0 */
+int spawn_join(void *handle);
+
+/* since Nyra 1.39.0 */
+void spawn_handle_drop(void *handle);
+
+/* since Nyra 1.39.0 */
+void *spawn_task_capture(void (*body)(void *), void *data, int64_t nbytes);
+
+/* since Nyra 1.39.0 */
+int spawn_task_join(void *handle);
+
+/* since Nyra 1.39.0 */
+void spawn_task_handle_drop(void *handle);
 
 /* since Nyra 1.3.0 */
 void parallel_for_range(int32_t start, int32_t end, void (*body)(int32_t, void *), void *ctx, int32_t max_workers, int32_t exact_workers, int32_t mode, int32_t cpu_percent);
@@ -555,6 +570,9 @@ int map_str_str_remove(void *handle, const char *key);
 /* since Nyra 1.16.0 */
 double rand_f64(void);
 
+/* since Nyra 1.39.0 */
+double rand_f64_range(double min_val, double max_val);
+
 /* since Nyra 1.16.0 */
 double sin_f64(double x);
 
@@ -836,6 +854,24 @@ int rand_i32(void);
 
 /* since Nyra 1.1.0 */
 int rand_range(int min_val, int max_val);
+
+/* since Nyra 1.39.0 */
+int64_t rand_i64(void);
+
+/* since Nyra 1.39.0 */
+int64_t rand_range_i64(int64_t min_val, int64_t max_val);
+
+/* since Nyra 1.39.0 */
+uint32_t rand_u32(void);
+
+/* since Nyra 1.39.0 */
+uint32_t rand_range_u32(uint32_t min_val, uint32_t max_val);
+
+/* since Nyra 1.39.0 */
+uint64_t rand_u64(void);
+
+/* since Nyra 1.39.0 */
+uint64_t rand_range_u64(uint64_t min_val, uint64_t max_val);
 
 /* since Nyra 1.1.0 */
 char *random_hex(int byte_count);

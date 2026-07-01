@@ -78,7 +78,8 @@ fn walk_hrtb_calls(block: &Block, sigs: &HashMap<String, Vec<Type>>, errors: &mu
                 walk_expr_hrtb(&w.condition, sigs, errors);
                 walk_hrtb_calls(&w.body, sigs, errors);
             }
-            Statement::Spawn(b) | Statement::Benchmark(b) => walk_hrtb_calls(b, sigs, errors),
+            Statement::Spawn(s) => walk_hrtb_calls(&s.body, sigs, errors),
+            Statement::Benchmark(b) => walk_hrtb_calls(b, sigs, errors),
             _ => {}
         }
     }

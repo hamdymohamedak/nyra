@@ -14,7 +14,11 @@
 - **Tests** — `union_test`, `layout_align_test`, `enum_hetero_payload_test`, `bytes_type_test`, `stack_buffer_test`, `simd_test`, `arena_test`, `systems_features_test`
 - **Conformance** — `CONF-LANG-010` … `CONF-LANG-013`
 - **Added** — metaprogramming guide: comptime + macros + struct JSON synthesis (`examples/toolchain/metaprogramming.ny`, `stdlib/meta/mod.ny`)
-- **Changed** — `stdlib/random.ny`: ChaCha20 CSPRNG seeded from OS/hardware entropy (getentropy, arc4random, BCryptGenRandom, RDRAND); `Random()` alias; unbiased `random_range`; `Math_random()` uses 53-bit `rand_f64`
+- **Changed** — `random()` / `random(min, max)` and `random_f64()` / `random_f64(min, max)` are compiler builtins; removed `Random()` and `random_range`; integer return type follows bounds or type args (`i32`, `i64`, `u64`, …)
+- **Added** — `JoinHandle` and `.join()` for `spawn` expression form; statement `spawn { }` remains fire-and-forget
+- **Added** — `spawn:task` (default `spawn`) lightweight task pool (`rt_task_pool.c`) and `spawn:thread` for dedicated OS threads (`pthread` / `CreateThread`)
+- **Tests** — `spawn_join_test.ny`; examples `spawn_join.ny`, `spawn_thread.ny`
+- **Runtime** — `spawn_capture` returns `void*` handle; `spawn_join` / `spawn_handle_drop`; `spawn_task_capture` / `spawn_task_join` / `spawn_task_handle_drop`
 
 ## v1.38.0 (2026-06-28)
 

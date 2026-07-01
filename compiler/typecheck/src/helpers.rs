@@ -120,7 +120,8 @@ pub(super) fn collect_return_types_from_block(
                 }
                 collect_return_types_from_block(&f.body, checker, env, out);
             }
-            Statement::Unsafe(b) | Statement::Spawn(b) | Statement::Benchmark(b) => {
+            Statement::Spawn(s) => collect_return_types_from_block(&s.body, checker, env, out),
+            Statement::Unsafe(b) | Statement::Benchmark(b) => {
                 collect_return_types_from_block(b, checker, env, out);
             }
             _ => {}

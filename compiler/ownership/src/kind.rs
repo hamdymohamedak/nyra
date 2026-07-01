@@ -32,6 +32,7 @@ pub fn ownership_of(
         | Type::Void
         | Type::Unknown
         | Type::Handle
+        | Type::JoinHandle
         | Type::VecStr
         | Type::Ptr
         | Type::RawPtr { .. }

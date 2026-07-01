@@ -206,7 +206,8 @@ fn collect_stmt_uses(stmt: &Statement, uses: &mut HashSet<String>) {
             }
         }
         Statement::Defer(e) => collect_expr_uses(e, uses),
-        Statement::Spawn(b) | Statement::Unsafe(b) | Statement::Benchmark(b) => collect_block_uses(b, uses),
+        Statement::Spawn(s) => collect_block_uses(&s.body, uses),
+        Statement::Unsafe(b) | Statement::Benchmark(b) => collect_block_uses(b, uses),
         Statement::Asm { .. } | Statement::Import(_) | Statement::Break { .. } | Statement::Continue { .. } => {}
     }
 }
@@ -308,6 +309,7 @@ fn collect_expr_uses(expr: &Expression, uses: &mut HashSet<String>) {
             ast::ArrowBody::Block(b) => collect_block_uses(b, uses),
         },
         Expression::ComptimeBlock { body, .. } => collect_block_uses(body, uses),
+        Expression::Spawn { body, .. } => collect_block_uses(body, uses),
         Expression::Literal(_) | Expression::Invalid => {}
     }
 }
