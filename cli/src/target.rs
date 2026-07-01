@@ -325,6 +325,8 @@ fn zlib_prefixes() -> Vec<std::path::PathBuf> {
     for p in [
         "/opt/homebrew/opt/zlib",
         "/usr/local/opt/zlib",
+        r"C:\msys64\ucrt64",
+        r"C:\msys64\mingw64",
         r"C:\ProgramData\chocolatey\lib\zlib\tools",
         r"C:\vcpkg\installed\x64-windows",
         r"C:\tools\zlib",

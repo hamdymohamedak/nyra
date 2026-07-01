@@ -33,8 +33,12 @@ run_file() {
   local label="$1"
   local path="$2"
   local expect="${3:-}"
-  local out
-  out="$(normalize_text_out "$("${NYRA[@]}" run "$path" 2>/dev/null || true)")"
+  local out="" err_file="" ec=0
+  err_file="$(mktemp)"
+  out="$(normalize_text_out "$("${NYRA[@]}" run "$path" 2>"$err_file")")" || ec=$?
+  if ((ec != 0)); then
+    fail "run $label (exit $ec): $(tr -d '\r' <"$err_file")"
+  fi
   if [[ -n "$expect" ]]; then
     expect="$(normalize_text_out "$expect")"
     if [[ "$out" != "$expect" ]]; then

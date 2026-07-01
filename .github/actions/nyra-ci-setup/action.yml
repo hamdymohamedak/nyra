@@ -41,7 +41,6 @@ runs:
       shell: bash
       run: |
         echo "LIBCLANG_PATH=$(brew --prefix llvm)/lib" >> "$GITHUB_ENV"
-        echo "DYLD_LIBRARY_PATH=$(brew --prefix llvm)/lib" >> "$GITHUB_ENV"
 
     - name: Install LLVM (Windows)
       if: inputs.platform == 'windows'
@@ -53,13 +52,27 @@ runs:
       if: inputs.platform == 'windows'
       shell: pwsh
       run: |
-        choco install zlib -y --no-progress
-        $root = "C:\ProgramData\chocolatey\lib\zlib\tools"
-        if (-not (Test-Path "$root\include\zlib.h")) {
-          $hit = Get-ChildItem "C:\ProgramData\chocolatey\lib\zlib" -Recurse -Filter "zlib.h" -ErrorAction SilentlyContinue | Select-Object -First 1
-          if ($hit) { $root = $hit.Directory.Parent.FullName }
+        $roots = @()
+        $pacman = 'C:\msys64\usr\bin\pacman.exe'
+        if (Test-Path $pacman) {
+          & $pacman -S --noconfirm mingw-w64-ucrt-x86_64-zlib
+          $roots += 'C:\msys64\ucrt64'
         }
-        "ZLIB_ROOT=$root" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+        $vcpkg = Join-Path $env:VCPKG_INSTALLATION_ROOT 'vcpkg.exe'
+        if (-not (Test-Path $vcpkg)) { $vcpkg = 'C:\vcpkg\vcpkg.exe' }
+        if (Test-Path $vcpkg) {
+          & $vcpkg install zlib:x64-windows --x-install-root="$env:VCPKG_INSTALLATION_ROOT\installed"
+          $roots += (Join-Path $env:VCPKG_INSTALLATION_ROOT 'installed\x64-windows')
+        }
+        foreach ($root in $roots) {
+          if (Test-Path (Join-Path $root 'include\zlib.h')) {
+            "ZLIB_ROOT=$root" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+            break
+          }
+        }
+        if (-not $env:ZLIB_ROOT) {
+          Write-Error 'zlib headers not found (need MSYS2 ucrt64 or vcpkg)'
+        }
 
     - name: System dependencies (Linux)
       if: inputs.platform == 'linux'
