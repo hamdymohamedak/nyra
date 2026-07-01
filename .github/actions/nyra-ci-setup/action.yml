@@ -22,9 +22,11 @@ runs:
           /opt/homebrew/Cellar/llvm
           /opt/homebrew/Cellar/sqlite
           /opt/homebrew/Cellar/z3
+          /opt/homebrew/Cellar/zlib
           /opt/homebrew/opt/llvm
           /opt/homebrew/opt/sqlite
           /opt/homebrew/opt/z3
+          /opt/homebrew/opt/zlib
         key: brew-nyra-macos-${{ hashFiles('.github/workflows/ci.yml', '.github/actions/nyra-ci-setup/action.yml') }}
         restore-keys: |
           brew-nyra-macos-
@@ -32,7 +34,7 @@ runs:
     - name: System dependencies (macOS)
       if: inputs.platform == 'macos'
       shell: bash
-      run: brew install llvm sqlite z3
+      run: brew install llvm sqlite z3 zlib
 
     - name: macOS LLVM paths
       if: inputs.platform == 'macos'
@@ -47,10 +49,22 @@ runs:
       with:
         version: "18.1.8"
 
+    - name: System dependencies (Windows)
+      if: inputs.platform == 'windows'
+      shell: pwsh
+      run: |
+        choco install zlib -y --no-progress
+        $root = "C:\ProgramData\chocolatey\lib\zlib\tools"
+        if (-not (Test-Path "$root\include\zlib.h")) {
+          $hit = Get-ChildItem "C:\ProgramData\chocolatey\lib\zlib" -Recurse -Filter "zlib.h" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($hit) { $root = $hit.Directory.Parent.FullName }
+        }
+        "ZLIB_ROOT=$root" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
     - name: System dependencies (Linux)
       if: inputs.platform == 'linux'
       shell: bash
       run: |
         sudo apt-get update
         sudo apt-get install -y \
-          clang lld libclang-dev llvm-dev libsqlite3-dev python3
+          clang lld libclang-dev llvm-dev libsqlite3-dev zlib1g-dev python3

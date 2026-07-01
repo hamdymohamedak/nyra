@@ -315,6 +315,25 @@ pub struct LinkTargetFlags {
     pub needs_libm: bool,
 }
 
+fn zlib_prefixes() -> Vec<std::path::PathBuf> {
+    let mut out = Vec::new();
+    if let Ok(v) = std::env::var("ZLIB_ROOT") {
+        if !v.is_empty() {
+            out.push(std::path::PathBuf::from(v));
+        }
+    }
+    for p in [
+        "/opt/homebrew/opt/zlib",
+        "/usr/local/opt/zlib",
+        r"C:\ProgramData\chocolatey\lib\zlib\tools",
+        r"C:\vcpkg\installed\x64-windows",
+        r"C:\tools\zlib",
+    ] {
+        out.push(std::path::PathBuf::from(p));
+    }
+    out
+}
+
 fn openssl_prefixes() -> Vec<std::path::PathBuf> {
     let mut out = Vec::new();
     for var in ["OPENSSL_DIR", "OPENSSL_ROOT_DIR"] {
@@ -384,6 +403,13 @@ pub fn apply_target_compile_flags(cmd: &mut Command, spec: &TargetSpec) {
             if inc.is_dir() {
                 cmd.arg(format!("-I{}", inc.display()));
             }
+        }
+    }
+
+    for prefix in zlib_prefixes() {
+        let inc = prefix.join("include");
+        if inc.is_dir() {
+            cmd.arg(format!("-I{}", inc.display()));
         }
     }
 }
@@ -459,6 +485,15 @@ pub fn apply_target_link_flags(cmd: &mut Command, spec: &TargetSpec, rt: &LinkTa
             if rt.uses_rt_os_adv {
                 cmd.arg("-lbcrypt");
                 cmd.arg("-lsetupapi");
+            }
+            if rt.needs_zlib {
+                for prefix in zlib_prefixes() {
+                    let lib = prefix.join("lib");
+                    if lib.is_dir() {
+                        cmd.arg(format!("-L{}", lib.display()));
+                    }
+                }
+                cmd.arg("-lz");
             }
         }
         _ => {}
