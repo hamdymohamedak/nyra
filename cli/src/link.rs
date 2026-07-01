@@ -543,12 +543,15 @@ pub fn link_binary(
     }
 
     if runtime_profile_needs_compiler_ffi(runtime_profile) {
-        if let Some(dir) = compiler_ffi_lib_dir() {
-            cmd.arg(format!("-L{}", dir.display()));
-            #[cfg(target_os = "macos")]
-            cmd.arg(format!("-Wl,-rpath,{}", dir.display()));
-            cmd.arg("-lnyra_compiler");
-        }
+        let dir = compiler_ffi_link_dir().ok_or_else(|| {
+            "compiler FFI required but libnyra_compiler was not found \
+             (run `cargo build -p compiler-ffi` or `cargo build --workspace`)"
+                .to_string()
+        })?;
+        cmd.arg(format!("-L{}", dir.display()));
+        #[cfg(target_os = "macos")]
+        cmd.arg(format!("-Wl,-rpath,{}", dir.display()));
+        cmd.arg("-lnyra_compiler");
     }
 
     let link_tmp = link_temp_path(bin_path, &spec);
@@ -606,6 +609,11 @@ pub fn link_binary(
         let _ = fs::remove_file(&linked);
         format!("failed to install {}: {e}", bin_path.display())
     })?;
+    if runtime_profile_needs_compiler_ffi(runtime_profile) {
+        if let Some(dir) = compiler_ffi_link_dir() {
+            let _ = stage_compiler_ffi_runtime(&dir, bin_path);
+        }
+    }
     if profile.cdylib {
         ensure_macos_cdylib_install_name(bin_path, &spec)?;
     }
@@ -746,28 +754,82 @@ fn runtime_profile_needs_compiler_ffi(profile: &RuntimeProfile) -> bool {
     })
 }
 
-fn compiler_ffi_lib_dir() -> Option<PathBuf> {
+fn compiler_ffi_search_dirs() -> Vec<PathBuf> {
+    let mut dirs = Vec::new();
+    let mut push_dir = |d: PathBuf| {
+        if d.is_dir() && !dirs.iter().any(|x| x == &d) {
+            dirs.push(d);
+        }
+    };
     if let Ok(root) = std::env::var("NYRA_ROOT") {
-        let dir = PathBuf::from(root).join("target/debug");
-        if dir.join(compiler_ffi_lib_name()).is_file() {
-            return Some(dir);
+        let debug = PathBuf::from(root).join("target/debug");
+        push_dir(debug.join("deps"));
+        push_dir(debug);
+    }
+    let ws_debug = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../target/debug");
+    push_dir(ws_debug.join("deps"));
+    push_dir(ws_debug);
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(parent) = exe.parent() {
+            push_dir(parent.join("deps"));
+            push_dir(parent.to_path_buf());
         }
     }
-    let exe_dir = std::env::current_exe().ok()?.parent()?.to_path_buf();
-    if exe_dir.join(compiler_ffi_lib_name()).is_file() {
-        return Some(exe_dir);
+    dirs
+}
+
+fn compiler_ffi_dll_names() -> &'static [&'static str] {
+    if cfg!(target_os = "macos") {
+        &["libnyra_compiler.dylib"]
+    } else if cfg!(target_os = "windows") {
+        &["libnyra_compiler.dll", "nyra_compiler.dll"]
+    } else {
+        &["libnyra_compiler.so"]
+    }
+}
+
+fn compiler_ffi_import_lib_in(dir: &Path) -> bool {
+    if cfg!(target_os = "windows") {
+        dir.join("libnyra_compiler.dll.a").is_file()
+            || dir.join("nyra_compiler.dll.lib").is_file()
+    } else {
+        compiler_ffi_dll_names()
+            .iter()
+            .any(|name| dir.join(name).is_file())
+    }
+}
+
+fn compiler_ffi_link_dir() -> Option<PathBuf> {
+    for dir in compiler_ffi_search_dirs() {
+        if compiler_ffi_import_lib_in(&dir) {
+            return Some(dir);
+        }
     }
     None
 }
 
-fn compiler_ffi_lib_name() -> &'static str {
-    if cfg!(target_os = "macos") {
-        "libnyra_compiler.dylib"
-    } else if cfg!(target_os = "windows") {
-        "nyra_compiler.dll"
-    } else {
-        "libnyra_compiler.so"
+fn stage_compiler_ffi_runtime(_lib_dir: &Path, bin_path: &Path) -> Result<(), String> {
+    let dest_dir = bin_path.parent().unwrap_or_else(|| Path::new("."));
+    for dir in compiler_ffi_search_dirs() {
+        for name in compiler_ffi_dll_names() {
+            let src = dir.join(name);
+            if !src.is_file() {
+                continue;
+            }
+            let dst = dest_dir.join(name);
+            if src != dst {
+                fs::copy(&src, &dst).map_err(|e| {
+                    format!(
+                        "copy compiler FFI {} → {}: {e}",
+                        src.display(),
+                        dst.display()
+                    )
+                })?;
+            }
+            return Ok(());
+        }
     }
+    Ok(())
 }
 
 #[cfg(test)]
