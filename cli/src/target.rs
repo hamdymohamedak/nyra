@@ -446,17 +446,25 @@ pub fn apply_target_compile_flags(cmd: &mut Command, spec: &TargetSpec) {
 
     if spec.os == TargetOs::Windows {
         for prefix in mingw_sysroot_prefixes() {
+            let inc = prefix.join("include");
             if prefix.join("include/stdlib.h").is_file() {
                 cmd.arg(format!("--sysroot={}", prefix.display()));
+                cmd.arg(format!("-isystem{}", inc.display()));
                 break;
             }
         }
+        /* Avoid MinGW inline snprintf/vsnprintf duplicated across rt .o files. */
+        cmd.arg("-D__USE_MINGW_ANSI_STDIO=0");
     }
 
     for prefix in zlib_prefixes() {
         let inc = prefix.join("include");
         if inc.is_dir() {
-            cmd.arg(format!("-I{}", inc.display()));
+            if spec.os == TargetOs::Windows {
+                cmd.arg(format!("-isystem{}", inc.display()));
+            } else {
+                cmd.arg(format!("-I{}", inc.display()));
+            }
         }
     }
 }
