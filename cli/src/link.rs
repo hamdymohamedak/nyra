@@ -761,14 +761,24 @@ fn compiler_ffi_search_dirs() -> Vec<PathBuf> {
             dirs.push(d);
         }
     };
+    let mut push_profile = |root: PathBuf, profile: &str| {
+        let base = root.join("target").join(profile);
+        push_dir(base.join("deps"));
+        push_dir(base);
+    };
     if let Ok(root) = std::env::var("NYRA_ROOT") {
-        let debug = PathBuf::from(root).join("target/debug");
-        push_dir(debug.join("deps"));
-        push_dir(debug);
+        let root = PathBuf::from(root);
+        push_profile(root.clone(), "debug");
+        push_profile(root, "release");
     }
-    let ws_debug = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../target/debug");
-    push_dir(ws_debug.join("deps"));
-    push_dir(ws_debug);
+    if let Ok(target) = std::env::var("CARGO_TARGET_DIR") {
+        let target = PathBuf::from(target);
+        push_profile(target.clone(), "debug");
+        push_profile(target, "release");
+    }
+    let ws = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..");
+    push_profile(ws.clone(), "debug");
+    push_profile(ws, "release");
     if let Ok(exe) = std::env::current_exe() {
         if let Some(parent) = exe.parent() {
             push_dir(parent.join("deps"));
@@ -776,6 +786,64 @@ fn compiler_ffi_search_dirs() -> Vec<PathBuf> {
         }
     }
     dirs
+}
+
+fn compiler_ffi_artifact_names() -> Vec<String> {
+    let mut names: Vec<String> = compiler_ffi_dll_names()
+        .iter()
+        .map(|s| (*s).to_string())
+        .collect();
+    if cfg!(target_os = "windows") {
+        names.push("libnyra_compiler.dll.a".into());
+        names.push("nyra_compiler.dll.lib".into());
+    }
+    names
+}
+
+fn compiler_ffi_link_dir() -> Option<PathBuf> {
+    for dir in compiler_ffi_search_dirs() {
+        for name in compiler_ffi_artifact_names() {
+            if dir.join(&name).is_file() {
+                return Some(dir);
+            }
+        }
+        if let Ok(entries) = fs::read_dir(&dir) {
+            for entry in entries.flatten() {
+                let name = entry.file_name().to_string_lossy().to_string();
+                if name.starts_with("libnyra_compiler")
+                    && (name.ends_with(".dylib")
+                        || name.ends_with(".dll")
+                        || name.ends_with(".so")
+                        || name.ends_with(".dll.a")
+                        || name.ends_with(".dll.lib"))
+                {
+                    return Some(dir);
+                }
+            }
+        }
+    }
+    None
+}
+
+fn compiler_ffi_runtime_artifact(dir: &Path) -> Option<PathBuf> {
+    for name in compiler_ffi_dll_names() {
+        let path = dir.join(name);
+        if path.is_file() {
+            return Some(path);
+        }
+    }
+    if let Ok(entries) = fs::read_dir(dir) {
+        for entry in entries.flatten() {
+            let path = entry.path();
+            let name = path.file_name()?.to_string_lossy();
+            if name.starts_with("libnyra_compiler")
+                && (name.ends_with(".dylib") || name.ends_with(".dll") || name.ends_with(".so"))
+            {
+                return Some(path);
+            }
+        }
+    }
+    None
 }
 
 fn compiler_ffi_dll_names() -> &'static [&'static str] {
@@ -788,46 +856,24 @@ fn compiler_ffi_dll_names() -> &'static [&'static str] {
     }
 }
 
-fn compiler_ffi_import_lib_in(dir: &Path) -> bool {
-    if cfg!(target_os = "windows") {
-        dir.join("libnyra_compiler.dll.a").is_file()
-            || dir.join("nyra_compiler.dll.lib").is_file()
-    } else {
-        compiler_ffi_dll_names()
-            .iter()
-            .any(|name| dir.join(name).is_file())
-    }
-}
-
-fn compiler_ffi_link_dir() -> Option<PathBuf> {
-    for dir in compiler_ffi_search_dirs() {
-        if compiler_ffi_import_lib_in(&dir) {
-            return Some(dir);
-        }
-    }
-    None
-}
-
 fn stage_compiler_ffi_runtime(_lib_dir: &Path, bin_path: &Path) -> Result<(), String> {
     let dest_dir = bin_path.parent().unwrap_or_else(|| Path::new("."));
     for dir in compiler_ffi_search_dirs() {
-        for name in compiler_ffi_dll_names() {
-            let src = dir.join(name);
-            if !src.is_file() {
-                continue;
-            }
-            let dst = dest_dir.join(name);
-            if src != dst {
-                fs::copy(&src, &dst).map_err(|e| {
-                    format!(
-                        "copy compiler FFI {} → {}: {e}",
-                        src.display(),
-                        dst.display()
-                    )
-                })?;
-            }
-            return Ok(());
+        let Some(src) = compiler_ffi_runtime_artifact(&dir) else {
+            continue;
+        };
+        let file_name = src.file_name().ok_or("compiler FFI path has no file name")?;
+        let dst = dest_dir.join(file_name);
+        if src != dst {
+            fs::copy(&src, &dst).map_err(|e| {
+                format!(
+                    "copy compiler FFI {} → {}: {e}",
+                    src.display(),
+                    dst.display()
+                )
+            })?;
         }
+        return Ok(());
     }
     Ok(())
 }
