@@ -1,3 +1,5 @@
+import "stdlib/os/io_uring.ny"
+import "stdlib/os/fd.ny"
 import "stdlib/os/event_loop.ny"
 import "stdlib/os/fd.ny"
 import "stdlib/os/memory.ny"
@@ -33,6 +35,15 @@ test fn test_pty_session_fd() {
     }
 }
 
-fn main() {
+test fn test_io_uring_probe() {
+    let avail = IoUring_available()
+    let _ = avail
+}
+
+test fn test_tcp_borrow_fd() {
+    let fd = Fd_borrow(-1)
+    let _ = fd
+}
+
     print(0)
 }

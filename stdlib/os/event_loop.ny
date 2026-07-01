@@ -1,6 +1,7 @@
 // Unified event loop — async executor + kqueue/epoll/select IO multiplexing.
 
 import "../async_v1.ny"
+import "io_uring.ny"
 
 extern fn io_register(fd: i32, task_id: i32) -> i32
 extern fn io_unregister(fd: i32) -> i32
@@ -36,6 +37,9 @@ fn EventLoop_sleep_ms(loop: EventLoop, ms: i32) -> i32 {
 
 fn EventLoop_register_read(loop: EventLoop, fd: i32, promise: i32) -> i32 {
     let _ = loop
+    if IoUring_available() {
+        return IoUring_register_read(fd, promise)
+    }
     return io_register(fd, promise)
 }
 

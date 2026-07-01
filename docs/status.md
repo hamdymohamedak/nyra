@@ -49,6 +49,10 @@
 | Shared memory | **Shipped** — `stdlib/os/shm.ny` + `rt_shm.c` (POSIX) |
 | I/O thread pool | **Shipped** — `stdlib/io/pool.ny` + `rt_io_pool.c` |
 | PTY + event loop | **Shipped** — `PtySession_register_read_async` via `io_register` |
+| Windows ConPTY | **Shipped** — `rt_pty_win.inc.c` (Windows 10 1809+) |
+| Windows shm | **Shipped** — `CreateFileMapping` in `rt_shm.c` |
+| Linux io_uring probe | **Shipped** — `stdlib/os/io_uring.ny` (falls back to epoll) |
+| `TcpStream` / `PtySession` → `Fd` | **Shipped** — `*_borrow_fd`, `*_into_fd` helpers |
 
 ## Conformance
 

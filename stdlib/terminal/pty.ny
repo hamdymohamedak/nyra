@@ -1,3 +1,5 @@
+import "stdlib/os/fd.ny"
+
 extern fn pty_spawn(shell: string, rows: i32, cols: i32) -> i32
 extern fn pty_write(master: i32, data: string) -> i32
 extern fn pty_read(master: i32, max_bytes: i32) -> string
@@ -121,4 +123,12 @@ fn PtySession_register_read_async(sess: PtySession, promise: i32) -> i32 {
 
 fn PtySession_fd(sess: PtySession) -> i32 {
     return sess.master_fd
+}
+
+fn PtySession_borrow_fd(sess: PtySession) -> Fd {
+    return Fd_borrow(sess.master_fd)
+}
+
+fn PtySession_into_fd(sess: PtySession) -> Fd {
+    return Fd_new(sess.master_fd)
 }

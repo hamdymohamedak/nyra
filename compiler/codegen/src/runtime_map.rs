@@ -408,6 +408,8 @@ pub fn symbol_module_map() -> HashMap<&'static str, &'static str> {
         ("io_pool_submit_wait_readable", "rt_io_pool.c"),
         ("io_pool_submit_read", "rt_io_pool.c"),
         ("io_pool_queue_depth", "rt_io_pool.c"),
+        ("io_uring_available", "rt_io_uring.c"),
+        ("io_uring_register_read", "rt_io_uring.c"),
         ("hw_disk_total_bytes", "rt_hw.c"),
         ("hw_disk_free_bytes", "rt_hw.c"),
         ("hw_disk_fs_type", "rt_hw.c"),
