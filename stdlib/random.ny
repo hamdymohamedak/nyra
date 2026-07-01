@@ -1,5 +1,8 @@
 import "vec.ny"
 
+// ChaCha20 CSPRNG seeded from OS/hardware entropy (getentropy, arc4random,
+// BCryptGenRandom, RDRAND when available). Zero runtime type overhead.
+
 extern fn rand_i32() -> i32
 extern fn rand_range(min_val: i32, max_val: i32) -> i32
 extern fn rand_f64() -> f64
@@ -8,11 +11,16 @@ fn random() -> i32 {
     return rand_i32()
 }
 
+// JS-style alias — same ChaCha20 stream as `random()`.
+fn Random() -> i32 {
+    return rand_i32()
+}
+
 fn random_range(min_val: i32, max_val: i32) -> i32 {
     return rand_range(min_val, max_val)
 }
 
-fn random_f64() {
+fn random_f64() -> f64 {
     return rand_f64()
 }
 

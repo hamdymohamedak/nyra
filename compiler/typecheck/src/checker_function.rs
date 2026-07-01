@@ -3,6 +3,7 @@
 use ast::*;
 use errors::{ErrorKind, NyraError};
 
+use super::diagnostics;
 use super::helpers::{block_has_return, collect_return_types_from_block, unify_return_types};
 use super::{FunctionSignature, TypeChecker, TypeEnv, VarInfo};
 use types::{self, Type};
@@ -100,17 +101,7 @@ impl TypeChecker {
             return ty;
         }
         if !returns.is_empty() {
-            self.errors.push(
-                NyraError::new(
-                    ErrorKind::Type,
-                    func.span.clone(),
-                    format!(
-                        "Function '{}' has incompatible return types; add an explicit return type",
-                        func.name
-                    ),
-                )
-                .note("Example: `fn run() -> i32 { return 1 }`"),
-            );
+            diagnostics::function_incompatible_returns(self, &func.name, func.span.clone());
             return Type::Unknown;
         }
         Type::Void
@@ -773,21 +764,13 @@ impl TypeChecker {
 
     pub(super) fn check_function(&mut self, func: &Function) {
         if func.is_async && self.target_is_wasm() {
-            self.errors.push(NyraError::new(
-                ErrorKind::Type,
-                func.span.clone(),
-                "async functions are not available on wasm32 targets".to_string(),
-            ));
+            diagnostics::platform_unavailable(self, "async functions", "wasm32", func.span.clone());
         }
         self.check_export_fn_abi(func);
         if let Some(ann) = &func.return_type {
             let ret_ty = self.type_from_ann(ann);
             if Self::is_stack_buffer_ref(&ret_ty) {
-                self.errors.push(NyraError::new(
-                    ErrorKind::Type,
-                    func.span.clone(),
-                    "references to StackBuffer cannot be returned from functions (stack-only allocation)",
-                ));
+                diagnostics::stack_buffer_return_forbidden(self, func.span.clone());
             }
         }
         let mut local = TypeEnv {
@@ -908,17 +891,7 @@ impl TypeChecker {
             && !func.is_test
             && ret != Type::Void
         {
-            self.errors.push(
-                NyraError::new(
-                    ErrorKind::Type,
-                    func.span.clone(),
-                    format!(
-                        "Function '{}' is missing a return value; add `return` or declare `-> void`",
-                        func.name
-                    ),
-                )
-                .note("Example: `fn run() -> void { print(1) }`"),
-            );
+            diagnostics::function_missing_return(self, &func.name, func.span.clone());
         }
     }
 }

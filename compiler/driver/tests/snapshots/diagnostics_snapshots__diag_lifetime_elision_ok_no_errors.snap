@@ -4,5 +4,9 @@ expression: format_all_errors(&out)
 ---
 warning[W003]: unused variable `s`
   --> test.ny:1:1
+   |
+  1 | fn main() {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = label: declared here but never read
    = help: prefix with `_` if intentional: `let _s = ...`
    = help: or remove the binding if `s` is not needed

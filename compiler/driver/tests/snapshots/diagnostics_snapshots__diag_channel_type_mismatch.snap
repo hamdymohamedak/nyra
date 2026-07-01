@@ -2,7 +2,15 @@
 source: compiler/driver/tests/diagnostics_snapshots.rs
 expression: format_all_errors(&out)
 ---
-error: Undefined function 'channel__i32'
+error[E013]: undefined function `channel__i32`
   --> test.ny:2:27
-error: Undefined function 'send'
+   |
+  2 |     defer print(1)
+   |                           ^
+   = label: `channel__i32` is not declared in scope
+error[E013]: undefined function `send`
   --> test.ny:3:23
+   |
+  3 |     print(0)
+   |                       ^
+   = label: `send` is not declared in scope

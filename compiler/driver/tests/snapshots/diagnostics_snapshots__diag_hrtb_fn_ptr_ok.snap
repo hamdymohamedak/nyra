@@ -2,5 +2,6 @@
 source: compiler/driver/tests/diagnostics_snapshots.rs
 expression: format_all_errors(&out)
 ---
-error: 'f' is not callable
+error[E017]: `f` is not callable
   --> test.ny:2:16
+   = help: check that the callee name is correct and refers to a function

@@ -17,6 +17,17 @@ pub fn coded_parser_error(span: Span, message: impl AsRef<str>) -> NyraError {
     err
 }
 
+/// `parallel(..., cores = ...)` is accepted but `max_threads` / `threads` are preferred.
+pub fn parallel_prefer_max_threads(span: Span) -> NyraError {
+    NyraError::coded(
+        P015_PARALLEL_PREFER_THREADS,
+        ErrorKind::Parser,
+        span,
+        "prefer `max_threads` or `threads` over `cores` in `parallel(...)`",
+    )
+    .note("Nyra schedules worker threads; the OS maps them to CPU cores")
+}
+
 fn classify_parser_message(msg: &str) -> (&'static str, Option<&'static str>, Option<&'static str>) {
     match msg {
         "Expected parameter name" => (

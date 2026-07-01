@@ -2,7 +2,9 @@
 use std::collections::HashSet;
 
 use ast::*;
-use errors::{ErrorKind, NyraError, Span};
+use errors::{NyraError, Span};
+
+use crate::diag;
 
 pub fn block_has_break(block: &Block) -> bool {
     block.statements.iter().any(stmt_has_break)
@@ -60,24 +62,14 @@ pub fn check_parallel_for_body(
     errors: &mut Vec<NyraError>,
 ) {
     if block_has_break(body) {
-        errors.push(NyraError::new(
-            ErrorKind::Type,
-            span.clone(),
-            "`break` / `continue` are not allowed in `parallel for`",
-        )
-        .note("Iterations run concurrently; use a regular `for` loop for early exit"));
+        errors.push(diag::parallel_for_no_break_continue(span.clone()));
     }
     for name in collect_assigned_in_block(body) {
         if name == loop_var {
             continue;
         }
         if outer_names.contains(&name) {
-            errors.push(NyraError::new(
-                ErrorKind::Type,
-                span.clone(),
-                format!("`parallel for` cannot mutate outer variable '{name}'"),
-            )
-            .note("Each iteration must be independent; use a local or a regular `for` loop"));
+            errors.push(diag::parallel_for_mutates_outer(&name, span.clone()));
         }
     }
 }

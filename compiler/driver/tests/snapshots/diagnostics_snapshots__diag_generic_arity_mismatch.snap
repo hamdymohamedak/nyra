@@ -4,5 +4,11 @@ expression: format_all_errors(&out)
 ---
 error[P006]: Invalid expression
   --> test.ny:2:22
+   |
+  2 |     let x = if true { 1 } else { "no" }
+   |                      ^^^
 error[P006]: Invalid expression
   --> test.ny:2:27
+   |
+  2 |     let x = if true { 1 } else { "no" }
+   |                           ^^^

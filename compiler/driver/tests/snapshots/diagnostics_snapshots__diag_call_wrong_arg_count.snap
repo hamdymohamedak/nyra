@@ -4,3 +4,7 @@ expression: format_all_errors(&out)
 ---
 error[E007]: function `add` expects 2 arguments, found 1
   --> test.ny:2:24
+   |
+  2 | fn main() { print(add(1)) }
+   |                        ^
+   = label: wrong number of arguments

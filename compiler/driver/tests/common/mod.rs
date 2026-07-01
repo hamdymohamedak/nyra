@@ -35,6 +35,7 @@ pub fn corpus_dir() -> PathBuf {
 /// Compile inline source with default options.
 pub fn compile(src: &str) -> CompileOutput {
     ensure_plain_diagnostics();
+    errors::register_source("test.ny", src);
     Compiler::compile_source(src, "test.ny", &CompileOptions::default()).unwrap()
 }
 

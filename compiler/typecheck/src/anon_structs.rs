@@ -3,9 +3,10 @@
 use std::collections::HashMap;
 
 use ast::*;
-use errors::{ErrorKind, NyraError, Span};
+use errors::Span;
 
 use super::{TypeChecker, TypeEnv};
+use super::diagnostics;
 use types::{integer_assignable, float_assignable, StructInfo, Type};
 
 impl TypeChecker {
@@ -34,14 +35,7 @@ impl TypeChecker {
                 }
                 Type::Unknown => {}
                 other => {
-                    self.errors.push(NyraError::new(
-                        ErrorKind::Type,
-                        sp.clone(),
-                        format!(
-                            "Object spread `...expr` requires a struct value, got {:?}",
-                            other
-                        ),
-                    ));
+                    diagnostics::object_spread_requires_struct(self, other, sp.clone());
                 }
             }
         }
@@ -49,11 +43,7 @@ impl TypeChecker {
         let mut seen = std::collections::HashSet::new();
         for (fname, fexpr) in &sl.fields {
             if !seen.insert(fname.clone()) {
-                self.errors.push(NyraError::new(
-                    ErrorKind::Type,
-                    sp.clone(),
-                    format!("Duplicate field '{fname}' in object literal"),
-                ));
+                diagnostics::duplicate_object_field(self, fname, sp.clone());
                 continue;
             }
             let mut got = self.check_expr(fexpr, env);
@@ -63,27 +53,14 @@ impl TypeChecker {
                     .unwrap_or(Type::Unknown);
             }
             if got == Type::Unknown {
-                self.errors.push(NyraError::new(
-                    ErrorKind::Type,
-                    sp.clone(),
-                    format!(
-                        "cannot infer type of field '{fname}' in object literal; add a struct declaration or type annotation"
-                    ),
-                ));
+                diagnostics::object_field_cannot_infer(self, fname, sp.clone());
             }
             if let Some(prev) = merged_fields.get(fname) {
                 if got != *prev && got != Type::Unknown && *prev != Type::Unknown
                     && !integer_assignable(prev, &got)
                     && !float_assignable(prev, &got)
                 {
-                    self.errors.push(NyraError::new(
-                        ErrorKind::Type,
-                        sp.clone(),
-                        format!(
-                            "Field '{fname}' override has type {:?}, expected {:?} from spread",
-                            got, prev
-                        ),
-                    ));
+                    diagnostics::object_field_override_mismatch(self, fname, &got, prev, sp.clone());
                 }
             } else {
                 field_order.push(fname.clone());
@@ -101,11 +78,7 @@ impl TypeChecker {
             .collect();
 
         if inferred_fields.is_empty() {
-            self.errors.push(NyraError::new(
-                ErrorKind::Type,
-                sp.clone(),
-                "object literal must have at least one field or spread",
-            ));
+            diagnostics::object_literal_empty(self, sp.clone());
             return Type::Unknown;
         }
 

@@ -3,7 +3,6 @@ use std::collections::HashMap;
 
 use ast::*;
 use ast::expr_span;
-use errors::{ErrorKind, NyraError};
 
 use super::{FunctionSignature, TypeChecker, TypeEnv, VarInfo};
 use super::diagnostics;
@@ -152,14 +151,13 @@ impl TypeChecker {
             let declared = c.ty.clone().map(Type::from);
             if let Some(ref d) = declared {
                 if value_ty != *d && value_ty != Type::Unknown && *d != Type::Unknown {
-                    self.errors.push(NyraError::new(
-                        ErrorKind::Type,
+                    diagnostics::const_type_mismatch(
+                        self,
+                        &c.name,
+                        d,
+                        &value_ty,
                         expr_span(&c.value),
-                        format!(
-                            "Const '{}' type mismatch: expected {:?}, got {:?}",
-                            c.name, d, value_ty
-                        ),
-                    ));
+                    );
                 }
             }
             let var_ty = declared.unwrap_or(value_ty);

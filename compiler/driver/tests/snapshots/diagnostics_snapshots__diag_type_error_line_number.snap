@@ -4,3 +4,9 @@ expression: err
 ---
 error[E002]: undefined variable `y`
   --> test.ny:2:14
+   |
+  2 |     let x = y
+   |              ^
+   = label: `y` is not in scope
+   |
+  3 | }

@@ -11,7 +11,11 @@ use ownership::{
 use types::Type;
 
 mod diag;
-use diag::{record_move_origin, use_after_move_error, DiagCtx, MoveOrigin, move_candidate};
+use diag::{
+    borrow_active_error, cannot_borrow_moved, cannot_borrow_mut_alias,
+    cannot_borrow_while_mut_borrowed, manual_free_warning, move_while_borrowed, record_move_origin,
+    use_after_move_error, use_moved_value_error, DiagCtx, MoveOrigin, move_candidate,
+};
 
 fn builtin_method_borrows_receiver(method: &str) -> bool {
     matches!(
@@ -194,14 +198,11 @@ fn check_statement(
             }
             if let Expression::ArrowFn(arrow) = &l.value {
                 if !state.borrowed_mut.is_empty() || !state.borrowed_imm.is_empty() {
-                    errors.push(
-                        NyraError::new(
-                            ErrorKind::BorrowCheck,
-                            expr_span(&l.value),
-                            "closure while references are active",
-                        )
-                        .note("Finish using borrows before creating a capturing closure"),
-                    );
+                    errors.push(borrow_active_error(
+                        "closure while references are active",
+                        expr_span(&l.value),
+                        "finish using borrows before creating a capturing closure",
+                    ));
                 }
                 let outer = state.outer_vars();
                 check_sync_closure_captures(arrow, &outer, arrow.span.clone(), ctx, errors);
@@ -248,10 +249,12 @@ fn check_statement(
             }
             if let Some(v) = variable_name(&a.value) {
                 if state.moved.contains_key(v) {
-                    errors.push(NyraError::new(
-                        ErrorKind::BorrowCheck,
+                    errors.push(use_moved_value_error(
+                        v,
                         a.span.clone(),
-                        format!("Use of moved value '{v}'"),
+                        state.moved.get(v),
+                        diag,
+                        &state.type_of(v, ctx),
                     ));
                 }
             }
@@ -301,12 +304,11 @@ fn check_statement(
             });
             if f.parallel.is_some() {
                 if !state.borrowed_mut.is_empty() || !state.borrowed_imm.is_empty() {
-                    errors.push(NyraError::new(
-                        ErrorKind::BorrowCheck,
-                        Span::default(),
+                    errors.push(borrow_active_error(
                         "`parallel for` while references are active",
-                    )
-                    .note("Finish using borrows before `parallel for`"));
+                        Span::default(),
+                        "finish using borrows before `parallel for`",
+                    ));
                 }
                 let outer = state.outer_vars();
                 check_parallel_for_captures(&f.body, &outer, Span::default(), ctx, errors);
@@ -334,12 +336,11 @@ fn check_statement(
         }
         Statement::Spawn(body) => {
             if !state.borrowed_mut.is_empty() || !state.borrowed_imm.is_empty() {
-                errors.push(NyraError::new(
-                    ErrorKind::BorrowCheck,
-                    Span::default(),
+                errors.push(borrow_active_error(
                     "spawn while references are active",
-                )
-                .note("Finish using borrows before spawn"));
+                    Span::default(),
+                    "finish using borrows before spawn",
+                ));
             }
             let outer = state.outer_vars();
             check_spawn_captures(body, &outer, Span::default(), ctx, errors);
@@ -431,16 +432,7 @@ fn check_nyra_free_call(
     };
     state.manually_freed.insert(name.clone());
     if state.ownership_of_var(name, ctx).is_move() && !state.moved.contains_key(name) {
-        errors.push(
-            NyraError::new(
-                ErrorKind::BorrowCheck,
-                call.span.clone(),
-                format!(
-                    "manual free('{name}') on owned value; Nyra auto-drops at scope end (double-free risk)"
-                ),
-            )
-            .note("Remove free unless this is FFI escape hatch code"),
-        );
+        errors.push(manual_free_warning(name, call.span.clone()));
     }
 }
 
@@ -495,14 +487,11 @@ fn check_expr_moves(
                 if let Expression::ArrowFn(arrow) = arg {
                     if arrow_has_captures(arrow) {
                         if !state.borrowed_mut.is_empty() || !state.borrowed_imm.is_empty() {
-                            errors.push(
-                                NyraError::new(
-                                    ErrorKind::BorrowCheck,
-                                    arrow.span.clone(),
-                                    "closure while references are active",
-                                )
-                                .note("Finish using borrows before passing a capturing closure"),
-                            );
+                            errors.push(borrow_active_error(
+                                "closure while references are active",
+                                arrow.span.clone(),
+                                "finish using borrows before passing a capturing closure",
+                            ));
                         }
                         let outer = state.outer_vars();
                         check_sync_closure_captures(arrow, &outer, arrow.span.clone(), ctx, errors);
@@ -548,11 +537,7 @@ fn try_move_on_call(
         return;
     }
     if state.borrowed_imm.contains(name) || state.borrowed_mut.contains(name) {
-        errors.push(NyraError::new(
-            ErrorKind::BorrowCheck,
-            expr_span(arg),
-            format!("Cannot move '{name}' while borrowed"),
-        ));
+        errors.push(move_while_borrowed(name, expr_span(arg)));
         return;
     }
     state.moved.insert(
@@ -652,28 +637,16 @@ fn register_borrow(
     };
     let sp = expr_span(operand);
     if state.moved.contains_key(name) {
-        errors.push(NyraError::new(
-            ErrorKind::BorrowCheck,
-            sp.clone(),
-            format!("Cannot borrow moved value '{name}'"),
-        ));
+        errors.push(cannot_borrow_moved(name, sp.clone()));
         return;
     }
     if mutable {
         if state.borrowed_imm.contains(name) || state.borrowed_mut.contains(name) {
-            errors.push(NyraError::new(
-                ErrorKind::BorrowCheck,
-                sp,
-                format!("Cannot borrow '{name}' as mutable (&mut aliasing rule)"),
-            ));
+            errors.push(cannot_borrow_mut_alias(name, sp));
             return;
         }
     } else if state.borrowed_mut.contains(name) {
-        errors.push(NyraError::new(
-            ErrorKind::BorrowCheck,
-            sp,
-            format!("Cannot borrow '{name}' while mutably borrowed"),
-        ));
+        errors.push(cannot_borrow_while_mut_borrowed(name, sp));
         return;
     }
     // Temporary expression borrows end at the current statement (NLL).

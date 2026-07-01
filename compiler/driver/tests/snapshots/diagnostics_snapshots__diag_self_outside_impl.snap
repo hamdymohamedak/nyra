@@ -4,3 +4,7 @@ expression: format_all_errors(&out)
 ---
 error[E002]: undefined variable `self`
   --> test.ny:1:19
+   |
+  1 | struct S { x: i32 }
+   |                   ^^^^
+   = label: `self` is not in scope

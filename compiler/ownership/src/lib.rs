@@ -1,5 +1,6 @@
 mod context;
 mod copy_attrs;
+mod diag;
 mod drop;
 mod escape;
 mod kind;

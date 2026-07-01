@@ -1,10 +1,9 @@
 //! `bytes` type method and operator builtins.
 
-use ast::*;
-use errors::{ErrorKind, NyraError};
+use types::Type;
 
 use crate::TypeChecker;
-use types::Type;
+use crate::diagnostics;
 
 impl TypeChecker {
     pub fn bytes_method_return_type(method: &str) -> Option<Type> {
@@ -21,11 +20,7 @@ impl TypeChecker {
         sp: &errors::Span,
     ) -> Type {
         if obj_ty != &Type::Bytes && *obj_ty != Type::Unknown {
-            checker.errors.push(NyraError::new(
-                ErrorKind::Type,
-                sp.clone(),
-                "indexing requires `bytes` value",
-            ));
+            diagnostics::bytes_index_requires_bytes(checker, sp.clone());
         }
         Type::Integer(ast::IntKind::I32)
     }

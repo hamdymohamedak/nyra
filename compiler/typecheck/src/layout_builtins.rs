@@ -1,10 +1,10 @@
 //! Compile-time `size_of` / `align_of` builtins.
 
 use ast::*;
-use errors::{ErrorKind, NyraError};
 use types::{align_of_ann, is_layout_intrinsic_fn, size_of_ann};
 
 use crate::{TypeChecker, TypeEnv};
+use crate::diagnostics;
 use types::Type;
 
 impl TypeChecker {
@@ -20,18 +20,10 @@ impl TypeChecker {
             return None;
         }
         if !args.is_empty() {
-            self.errors.push(NyraError::new(
-                ErrorKind::Type,
-                sp.clone(),
-                format!("`{callee}` takes no runtime arguments (use type parameter)"),
-            ));
+            diagnostics::layout_intrinsic_no_args(self, callee, sp.clone());
         }
         let ann = type_args?.first().cloned().or_else(|| {
-            self.errors.push(NyraError::new(
-                ErrorKind::Type,
-                sp.clone(),
-                format!("`{callee}` requires a type argument (e.g. `{callee}<i32>()`)"),
-            ));
+            diagnostics::layout_intrinsic_requires_type_arg(self, callee, sp.clone());
             None
         })?;
         let _ = env;

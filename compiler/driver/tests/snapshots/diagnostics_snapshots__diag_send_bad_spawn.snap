@@ -2,7 +2,7 @@
 source: compiler/driver/tests/diagnostics_snapshots.rs
 expression: format_all_errors(&out)
 ---
-error[E012]: `b` was moved at line 1
+error[E012]: `b` was moved
   --> test.ny:4:19
    = note: keep using `b`:
   let copy = clone b

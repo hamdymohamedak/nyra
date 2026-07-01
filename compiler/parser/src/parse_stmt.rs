@@ -537,12 +537,9 @@ impl Parser {
                     let expr = self.parse_expression();
                     config.threads = ParallelThreads::Max(expr);
                     if key == "cores" {
-                        self.errors.push(errors::NyraError::new(
-                            errors::ErrorKind::Parser,
+                        self.errors.push(errors::parallel_prefer_max_threads(
                             self.current_span(),
-                            "prefer `max_threads` or `threads` over `cores` in `parallel(...)`",
-                        )
-                        .note("Nyra schedules worker threads; the OS maps them to CPU cores"));
+                        ));
                     }
                 }
                 "threads" | "workers" => {

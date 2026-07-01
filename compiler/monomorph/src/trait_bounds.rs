@@ -3,7 +3,7 @@
 use std::collections::HashSet;
 
 use ast::*;
-use errors::{ErrorKind, NyraError, Span};
+use errors::{ErrorKind, NyraError, Span, E033_CAST};
 
 fn mangle_type_ann(base: &str, args: &[TypeAnnotation]) -> String {
     if args.is_empty() {
@@ -69,7 +69,8 @@ pub fn validate_function_bounds(
         for bound in required {
             if !trait_impl_exists(trait_impls, &concrete, bound) {
                 return Some(
-                    NyraError::new(
+                    NyraError::coded(
+                        E033_CAST,
                         ErrorKind::Type,
                         span.clone(),
                         format!(
@@ -77,7 +78,7 @@ pub fn validate_function_bounds(
                             func.name
                         ),
                     )
-                    .note(format!("add `impl {bound} for {concrete}`")),
+                    .help(format!("add `impl {bound} for {concrete}`")),
                 );
             }
         }

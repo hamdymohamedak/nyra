@@ -4,7 +4,7 @@ use std::collections::{BTreeMap, HashMap, HashSet};
 use std::ops::ControlFlow;
 
 use ast::{for_each_expr_in_block, for_each_expr_in_block_mut, Block, Expression, ForKind, Function, MatchPayloadPattern, MatchPattern, Program, Statement, UnaryOp};
-use errors::{ErrorKind, NyraError, Span};
+use errors::{coded_comptime_error, NyraError, Span};
 
 use crate::{const_value_to_expr, const_value_to_expr_typed, eval_const_expr, ConstValue};
 
@@ -382,7 +382,7 @@ fn validate_comptime_function(f: &Function) -> Vec<NyraError> {
 }
 
 fn comptime_error(span: Span, message: impl Into<String>) -> NyraError {
-    NyraError::new(ErrorKind::ConstEval, span, message)
+    coded_comptime_error(span, message)
 }
 
 fn walk_block_forbidden(block: &Block, fn_name: &str, errors: &mut Vec<NyraError>) {

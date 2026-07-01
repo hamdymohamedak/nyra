@@ -13,6 +13,8 @@
 - **Added** — arena bump allocator (`stdlib/alloc/arena.ny`, `rt_arena.c`)
 - **Tests** — `union_test`, `layout_align_test`, `enum_hetero_payload_test`, `bytes_type_test`, `stack_buffer_test`, `simd_test`, `arena_test`, `systems_features_test`
 - **Conformance** — `CONF-LANG-010` … `CONF-LANG-013`
+- **Added** — metaprogramming guide: comptime + macros + struct JSON synthesis (`examples/toolchain/metaprogramming.ny`, `stdlib/meta/mod.ny`)
+- **Changed** — `stdlib/random.ny`: ChaCha20 CSPRNG seeded from OS/hardware entropy (getentropy, arc4random, BCryptGenRandom, RDRAND); `Random()` alias; unbiased `random_range`; `Math_random()` uses 53-bit `rand_f64`
 
 ## v1.38.0 (2026-06-28)
 

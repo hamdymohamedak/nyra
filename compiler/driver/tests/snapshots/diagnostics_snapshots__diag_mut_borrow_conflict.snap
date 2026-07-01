@@ -4,4 +4,8 @@ expression: format_all_errors(& out)
 ---
 error[E010]: cannot assign to `v` because it is borrowed
   --> test.ny:4:5
+   |
+  4 | }
+   |     ^
+   = label: `v` is immutably borrowed here
    = help: drop the borrow before assigning, or clone the value: `let copy = clone v`

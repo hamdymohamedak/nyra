@@ -2,8 +2,9 @@
 source: compiler/driver/tests/diagnostics_snapshots.rs
 expression: format_all_errors(& out)
 ---
-error[E012]: `a` was moved at line 3
+error[E012]: `a` was moved
   --> test.ny:4:11
+  --> test.ny:3:14
    = note: keep using `a`:
   let copy = clone a
 warning[W003]: unused variable `b`
