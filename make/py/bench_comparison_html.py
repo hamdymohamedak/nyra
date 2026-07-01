@@ -17,11 +17,8 @@ LANG_COLORS = {
     "C++": "#00599c",
     "Go": "#00a8cc",
     "Rust": "#dea584",
-    "Node": "#6bbd5b",
-    "Python": "#5b9bd5",
-    "Java": "#e76f00",
 }
-LANG_ORDER = ["Nyra", "Nyra-typed", "Nyra-comptime", "Nyra-comptime-typed", "C", "C++", "Go", "Rust", "Node", "Python", "Java"]
+LANG_ORDER = ["Nyra", "Nyra-typed", "Nyra-comptime", "Nyra-comptime-typed", "C", "C++", "Go", "Rust"]
 LANG_DISPLAY = {
     "Nyra": "Nyra (Zero Types)",
     "Nyra-typed": "Nyra (Explicit Types)",
@@ -857,9 +854,7 @@ def build_binary_size_table(binary: dict[str, dict[str, int | str]]) -> str:
             '<p class="muted-note">Binary size data not found. Re-run '
             "<code>./scripts/bench.sh</code> (or set <code>BENCH_BINARY_SIZE=1</code>).</p>"
         )
-    langs = [l for l in LANG_ORDER if l in binary] + sorted(
-        set(binary.keys()) - set(LANG_ORDER)
-    )
+    langs = [l for l in LANG_ORDER if l in binary]
     body = []
     release_vals = [
         int(binary[l]["release"])
@@ -888,8 +883,7 @@ def build_binary_size_table(binary: dict[str, dict[str, int | str]]) -> str:
         f"<tbody>{''.join(body)}</tbody></table></div>"
         '<p class="muted-note">Hello-world artifact sizes. <strong>Release</strong> = optimized build; '
         "<strong>Stripped</strong> = after <code>strip</code>; <strong>UPX</strong> = "
-        "<code>upx --best</code> (— when UPX is missing or unsupported). "
-        "Java = <code>.class</code> total; Node/Python = source script bytes (runtime required).</p>"
+        "<code>upx --best</code> (— when UPX is missing or unsupported).</p>"
     )
 
 
@@ -1187,7 +1181,7 @@ def build_report(rows: list[dict], meta: dict, binary: dict[str, dict[str, int |
     <header class="hero" id="overview">
       <span class="hero-badge">Nyra comparison benchmark</span>
       <h1>Runtime, memory &amp; binary size</h1>
-      <p class="lead">Mean wall-clock <strong>time</strong>, peak <strong>memory</strong> (RSS), and hello-world <strong>binary size</strong> across Nyra, C, C++, Go, Rust, Node, Python, and Java. Lower is better.</p>
+      <p class="lead">Mean wall-clock <strong>time</strong>, peak <strong>memory</strong> (RSS), and hello-world <strong>binary size</strong> across Nyra, C, C++, Go, and Rust. Lower is better.</p>
     </header>
 
     <dl class="meta-grid">

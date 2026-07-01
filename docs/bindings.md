@@ -11,6 +11,18 @@ Regenerate:
 make gen-bindings-doc
 ```
 
+## HashMap runtime naming
+
+Hash-map symbols follow `map_<key_type>_<value_type>_<operation>`. The first type is the **key**, the second is the **value**, then the operation (`new`, `insert`, `get`, `contains`, `remove`, `keys`, `free`, `retain`).
+
+| Family | Example symbols | Use case |
+|--------|-----------------|----------|
+| `map_str_i32_*` | `map_str_i32_insert`, `map_str_i32_get` | String keys, integer values |
+| `map_str_str_*` | `map_str_str_insert`, `map_str_str_get` | String keys, string values |
+| `map_i32_i32_*` | `map_i32_i32_insert`, `map_i32_i32_get` | Integer keys and values (`map[int]int` parity) |
+
+When key and value types match, both appear in the name (e.g. `map_i32_i32_get`) so each C entry point has an unambiguous signature. Tutorial: [Learn → HashMap](../webDocs/learn-hashmap.html). Stdlib: `stdlib/map.ny` (`HashMap_str_i32`, `HashMap_str_str`).
+
 ## Stable bindings
 
 | Symbol | C signature | RT module | Since | Nyra stdlib |
@@ -295,7 +307,7 @@ make gen-bindings-doc
 | `str_ends_with` | `int str_ends_with(const char *s, const char *suffix)` | `rt_strings.c` | 1.3.0 | `stdlib/strings/ops.ny` |
 | `str_len` | `int str_len(const char *s)` | `rt_strings.c` | 0.2.0 | `stdlib/strings/ops.ny` |
 | `str_pop` | `char *str_pop(const char *s)` | `rt_strings.c` | 1.3.0 | `stdlib/gui/buffer.ny`, `stdlib/strings.ny` |
-| `str_push_char` | `char *str_push_char(const char *s, int ch)` | `rt_strings.c` | 1.3.0 | `stdlib/gui/buffer.ny`, `stdlib/strings/builder.ny`, `stdlib/strings.ny` |
+| `str_push_char` | `char *str_push_char(const char *s, int ch)` | `rt_strings.c` | 1.3.0 | `stdlib/gui/buffer.ny`, `stdlib/strings.ny` |
 | `str_replace` | `char *str_replace(const char *s, const char *from, const char *to)` | `rt_strings.c` | 1.3.0 | `stdlib/strings/ops.ny` |
 | `str_replacen` | `char *str_replacen(const char *s, const char *from, const char *to, int count)` | `rt_strings.c` | 1.5.0 | `stdlib/strings/ops.ny` |
 | `str_split` | `void *str_split(const char *s, const char *sep)` | `rt_strings.c` | 1.3.0 | `stdlib/builtins_string.ny` |

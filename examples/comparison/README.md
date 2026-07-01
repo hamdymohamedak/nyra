@@ -1,6 +1,6 @@
 # Fair comparison benchmarks
 
-Same algorithm per subfolder across **Nyra (zero types)**, **Nyra (typed)**, **C**, **C++**, **Go**, **Rust**, **Node**, **Python**, and **Java**.
+Same algorithm per subfolder across **Nyra (zero types)**, **Nyra (typed)**, **C**, **C++**, **Go**, and **Rust**.
 
 Heavy CPU suites use **modular arithmetic** so every language (including Nyra `i32`) produces the same checksum without overflow.
 
@@ -22,7 +22,9 @@ Heavy CPU suites use **modular arithmetic** so every language (including Nyra `i
 
 ### Extended suites (memory, strings, collections, algorithms, concurrency)
 
-23 additional suites under [`memory/`](memory/), [`strings/`](strings/), [`collections/`](collections/), [`algorithms/`](algorithms/), [`concurrency/`](concurrency/). Regenerate with `python3 scripts/gen-comparison-extended.py`. Full list and expected checksums: [`extended/README.md`](extended/README.md).
+23 additional suites under [`memory/`](memory/), [`strings/`](strings/), [`collections/`](collections/), [`algorithms/`](algorithms/), [`concurrency/`](concurrency/). Regenerate with `python3 make/py/gen-comparison-extended.py`. Full list and expected checksums: [`extended/README.md`](extended/README.md).
+
+**Fair parity:** each suite uses the **same algorithm** in every language (same loop counts, same checksum). Example: `collections_hashmap` uses `map[int]int` / `map_i32_i32` — not string keys in Nyra vs int keys in Go. Re-sync typed mirrors: `python3 make/py/sync-comparison-typed.py`.
 
 | Category | Suites |
 |----------|--------|
@@ -75,7 +77,7 @@ cargo run --bin nyra -- run examples/comparison/dungeon_typed
 # Parity gate (all languages, quick subset)
 bash scripts/check-comparison-parity.sh
 
-# Go / Rust / Node / Python / Java — same folders, matching constants
+# Go / Rust — same folders, matching constants
 go run examples/comparison/nested/nested.go
 rustc -O examples/comparison/nested/nested.rs -o /tmp/nested_rust && /tmp/nested_rust
 ```
@@ -86,9 +88,9 @@ rustc -O examples/comparison/nested/nested.rs -o /tmp/nested_rust && /tmp/nested
 ./scripts/bench.sh
 ```
 
-Opens **`results/latest.txt`** and **`results/latest.html`** (Nyra, Nyra-typed, C, C++, Go, Rust, Node, Python, Java).
+Opens **`results/latest.txt`** and **`results/latest.html`** (Nyra, Nyra-typed, C, C++, Go, Rust).
 
-Requires on `PATH`: `clang`/`clang++` (or `CC`/`CXX`), `rustc`, `go`, `node`, `python3`, `javac`, `java` (missing tools are skipped with a warning).
+Requires on `PATH`: `clang`/`clang++` (or `CC`/`CXX`), `rustc`, `go` (missing tools are skipped with a warning).
 
 Release Nyra builds are the default. Set `BENCH_RELEASE=0` for debug builds (less RAM/CPU while compiling).
 

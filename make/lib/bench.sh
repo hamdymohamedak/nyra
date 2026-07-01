@@ -156,9 +156,6 @@ SP_NY_CT_NAME=""
 SP_NY_CT_TYPED_NAME=""
 SP_GO_SRC=""
 SP_RUST_SRC=""
-SP_JS_SRC=""
-SP_PY_SRC=""
-SP_JAVA_SRC=""
 SP_C_SRC=""
 SP_CPP_SRC=""
 
@@ -199,9 +196,6 @@ extended_suite_paths() {
   fi
   [[ -f "$dir/bench.go" ]] && SP_GO_SRC="$dir/bench.go"
   [[ -f "$dir/bench.rs" ]] && SP_RUST_SRC="$dir/bench.rs"
-  [[ -f "$dir/bench.js" ]] && SP_JS_SRC="$dir/bench.js"
-  [[ -f "$dir/bench.py" ]] && SP_PY_SRC="$dir/bench.py"
-  [[ -f "$dir/bench.java" ]] && SP_JAVA_SRC="$dir/bench.java"
   [[ -f "$dir/bench.c" ]] && SP_C_SRC="$dir/bench.c"
   [[ -f "$dir/bench.cpp" ]] && SP_CPP_SRC="$dir/bench.cpp"
   return 0
@@ -219,9 +213,6 @@ suite_paths() {
   SP_NY_CT_TYPED_NAME=""
   SP_GO_SRC=""
   SP_RUST_SRC=""
-  SP_JS_SRC=""
-  SP_PY_SRC=""
-  SP_JAVA_SRC=""
   SP_C_SRC=""
   SP_CPP_SRC=""
 
@@ -231,9 +222,6 @@ suite_paths() {
       SP_NY_NAME="bench_hello"
       SP_GO_SRC="$COMPARISON/hello/hello.go"
       SP_RUST_SRC="$COMPARISON/hello/hello.rs"
-      SP_JS_SRC="$COMPARISON/hello/hello.js"
-      SP_PY_SRC="$COMPARISON/hello/hello.py"
-      SP_JAVA_SRC="$COMPARISON/hello/Hello.java"
       SP_C_SRC="$COMPARISON/hello/hello.c"
       SP_CPP_SRC="$COMPARISON/hello/hello.cpp"
       ;;
@@ -242,9 +230,6 @@ suite_paths() {
       SP_NY_NAME="bench_sum"
       SP_GO_SRC="$COMPARISON/arithmetic/sum.go"
       SP_RUST_SRC="$COMPARISON/arithmetic/sum.rs"
-      SP_JS_SRC="$COMPARISON/arithmetic/sum.js"
-      SP_PY_SRC="$COMPARISON/arithmetic/sum.py"
-      SP_JAVA_SRC="$COMPARISON/arithmetic/Sum.java"
       SP_C_SRC="$COMPARISON/arithmetic/sum.c"
       SP_CPP_SRC="$COMPARISON/arithmetic/sum.cpp"
       ;;
@@ -253,9 +238,6 @@ suite_paths() {
       SP_NY_NAME="bench_dungeon"
       SP_GO_SRC="$COMPARISON/dungeon/dungeon.go"
       SP_RUST_SRC="$COMPARISON/dungeon/dungeon.rs"
-      SP_JS_SRC="$COMPARISON/dungeon/dungeon.js"
-      SP_PY_SRC="$COMPARISON/dungeon/dungeon.py"
-      SP_JAVA_SRC="$COMPARISON/dungeon/Dungeon.java"
       SP_C_SRC="$COMPARISON/dungeon/dungeon.c"
       SP_CPP_SRC="$COMPARISON/dungeon/dungeon.cpp"
       ;;
@@ -264,9 +246,6 @@ suite_paths() {
       SP_NY_NAME="bench_loop"
       SP_GO_SRC="$COMPARISON/loop/sum_loop.go"
       SP_RUST_SRC="$COMPARISON/loop/sum_loop.rs"
-      SP_JS_SRC="$COMPARISON/loop/sum_loop.js"
-      SP_PY_SRC="$COMPARISON/loop/sum_loop.py"
-      SP_JAVA_SRC="$COMPARISON/loop/SumLoop.java"
       SP_C_SRC="$COMPARISON/loop/sum_loop.c"
       SP_CPP_SRC="$COMPARISON/loop/sum_loop.cpp"
       ;;
@@ -275,9 +254,6 @@ suite_paths() {
       SP_NY_NAME="bench_fib"
       SP_GO_SRC="$COMPARISON/fib/fib.go"
       SP_RUST_SRC="$COMPARISON/fib/fib.rs"
-      SP_JS_SRC="$COMPARISON/fib/fib.js"
-      SP_PY_SRC="$COMPARISON/fib/fib.py"
-      SP_JAVA_SRC="$COMPARISON/fib/Fib.java"
       SP_C_SRC="$COMPARISON/fib/fib.c"
       SP_CPP_SRC="$COMPARISON/fib/fib.cpp"
       ;;
@@ -286,9 +262,6 @@ suite_paths() {
       SP_NY_NAME="bench_nested"
       SP_GO_SRC="$COMPARISON/nested/nested.go"
       SP_RUST_SRC="$COMPARISON/nested/nested.rs"
-      SP_JS_SRC="$COMPARISON/nested/nested.js"
-      SP_PY_SRC="$COMPARISON/nested/nested.py"
-      SP_JAVA_SRC="$COMPARISON/nested/Nested.java"
       SP_C_SRC="$COMPARISON/nested/nested.c"
       SP_CPP_SRC="$COMPARISON/nested/nested.cpp"
       ;;
@@ -297,9 +270,6 @@ suite_paths() {
       SP_NY_NAME="bench_struct_sum"
       SP_GO_SRC="$COMPARISON/struct_sum/struct_sum.go"
       SP_RUST_SRC="$COMPARISON/struct_sum/struct_sum.rs"
-      SP_JS_SRC="$COMPARISON/struct_sum/struct_sum.js"
-      SP_PY_SRC="$COMPARISON/struct_sum/struct_sum.py"
-      SP_JAVA_SRC="$COMPARISON/struct_sum/StructSum.java"
       SP_C_SRC="$COMPARISON/struct_sum/struct_sum.c"
       SP_CPP_SRC="$COMPARISON/struct_sum/struct_sum.cpp"
       ;;
@@ -330,9 +300,6 @@ suite_paths() {
       SP_NY_NAME="bench_cpu_bound"
       SP_GO_SRC="$COMPARISON/cpu_bound/bench.go"
       SP_RUST_SRC="$COMPARISON/cpu_bound/bench.rs"
-      SP_JS_SRC="$COMPARISON/cpu_bound/bench.js"
-      SP_PY_SRC="$COMPARISON/cpu_bound/bench.py"
-      SP_JAVA_SRC="$COMPARISON/cpu_bound/CpuBound.java"
       SP_C_SRC="$COMPARISON/cpu_bound/bench.c"
       SP_CPP_SRC="$COMPARISON/cpu_bound/bench.cpp"
       ;;
@@ -341,9 +308,6 @@ suite_paths() {
       SP_NY_NAME="bench_mix"
       SP_GO_SRC="$COMPARISON/mix/mix.go"
       SP_RUST_SRC="$COMPARISON/mix/mix.rs"
-      SP_JS_SRC="$COMPARISON/mix/mix.js"
-      SP_PY_SRC="$COMPARISON/mix/mix.py"
-      SP_JAVA_SRC="$COMPARISON/mix/Mix.java"
       SP_C_SRC="$COMPARISON/mix/mix.c"
       SP_CPP_SRC="$COMPARISON/mix/mix.cpp"
       ;;
@@ -527,7 +491,7 @@ write_header() {
 # Nyra build: $nyra_build
 # Isolation: $isolation_note
 # Compiled langs: -O3 -flto=thin (Nyra --release, clang/clang++/rustc aligned)
-# Note: Nyra/C/C++/Go/Rust/Java = compiled; Node/Python = runtime interpreters
+# Note: Nyra/C/C++/Go/Rust = compiled native binaries
 
 EOF
 }
@@ -658,17 +622,6 @@ upx_binary_copy() {
   return 1
 }
 
-java_class_bytes() {
-  local dir="$1"
-  local total=0
-  local f sz
-  while IFS= read -r -d '' f; do
-    sz="$(file_bytes "$f")"
-    total=$((total + sz))
-  done < <(find "$dir" -name '*.class' -print0 2>/dev/null)
-  echo "$total"
-}
-
 fmt_bytes_human() {
   local b="$1"
   if [[ -z "$b" || "$b" == "-" ]]; then
@@ -712,7 +665,7 @@ measure_binary_variants() {
 
 run_binary_size_benchmark() {
   local dir="$BENCH_DIR/binary-size"
-  local bin c_bin cpp_bin go_bin rust_bin java_classes
+  local bin c_bin cpp_bin go_bin rust_bin
   mkdir -p "$dir"
 
   log "Binary size — hello world (release / stripped / UPX)"
@@ -735,28 +688,6 @@ run_binary_size_benchmark() {
   cpp_bin="$(build_cpp "$COMPARISON/hello/hello.cpp" "$dir/hello_cpp")" && measure_binary_variants "C++" "$cpp_bin" || true
   go_bin="$(build_go "$COMPARISON/hello/hello.go" "$dir/hello_go")" && measure_binary_variants "Go" "$go_bin" || true
   rust_bin="$(build_rust "$COMPARISON/hello/hello.rs" "$dir/hello_rust")" && measure_binary_variants "Rust" "$rust_bin" || true
-
-  if command -v javac &>/dev/null; then
-    java_classes="$dir/java_classes"
-    mkdir -p "$java_classes"
-    if javac -d "$java_classes" "$COMPARISON/hello/Hello.java" 2>/dev/null; then
-      local jbytes
-      jbytes="$(java_class_bytes "$java_classes")"
-      binary_size_row "Java" "$jbytes" "$jbytes" "-"
-    fi
-  fi
-
-  # Script sources (not standalone binaries — source bytes for reference)
-  if [[ -f "$COMPARISON/hello/hello.js" ]]; then
-    local jsb
-    jsb="$(file_bytes "$COMPARISON/hello/hello.js")"
-    binary_size_row "Node" "$jsb" "-" "-"
-  fi
-  if [[ -f "$COMPARISON/hello/hello.py" ]]; then
-    local pyb
-    pyb="$(file_bytes "$COMPARISON/hello/hello.py")"
-    binary_size_row "Python" "$pyb" "-" "-"
-  fi
 
   echo "" >>"$LATEST"
 }
@@ -869,7 +800,7 @@ bench_nyra_variants_suite() {
 bench_one_lang() {
   local suite="$1"
   local lang="$2"
-  local go_bin rust_bin c_bin cpp_bin java_classes java_class
+  local go_bin rust_bin c_bin cpp_bin
   local ms kb
 
   case "$lang" in
@@ -908,33 +839,6 @@ bench_one_lang() {
         bench_row "$suite" "Rust" "$ms" "$kb"
       fi
       ;;
-    Node)
-      read -r ms kb <<<"$(measure_cmd node "$SP_JS_SRC")"
-      bench_row "$suite" "Node" "$ms" "$kb"
-      ;;
-    Python)
-      if command -v python3 &>/dev/null; then
-        read -r ms kb <<<"$(measure_cmd python3 "$SP_PY_SRC")"
-        bench_row "$suite" "Python" "$ms" "$kb"
-      else
-        log "warn: python3 not found — skip Python ($suite)"
-      fi
-      ;;
-    Java)
-      java_classes="$BENCH_DIR/${suite}_java"
-      mkdir -p "$java_classes"
-      java_class="$(basename "$SP_JAVA_SRC" .java)"
-      if command -v javac &>/dev/null && command -v java &>/dev/null; then
-        if javac -d "$java_classes" "$SP_JAVA_SRC" 2>/dev/null; then
-          read -r ms kb <<<"$(measure_cmd java -cp "$java_classes" "$java_class")"
-          bench_row "$suite" "Java" "$ms" "$kb"
-        else
-          log "warn: javac failed for $SP_JAVA_SRC"
-        fi
-      else
-        log "warn: javac/java not found — skip Java ($suite)"
-      fi
-      ;;
   esac
 }
 
@@ -943,7 +847,7 @@ run_comparison_suite() {
   log "== $suite =="
   bench_nyra_variants_suite "$suite"
   local lang
-  for lang in C C++ Go Rust Node Python Java; do
+  for lang in C C++ Go Rust; do
     log "  -> $lang"
     bench_one_lang "$suite" "$lang"
   done
@@ -951,7 +855,7 @@ run_comparison_suite() {
 
 run_isolated_langs() {
   local lang suite
-  local langs=(C C++ Go Rust Node Python Java)
+  local langs=(C C++ Go Rust)
   local suites=(
     hello arithmetic dungeon loop fib nested struct_sum loop_nofold comptime_table cpu_bound mix
     escape_local_channel escape_spawn_channel escape_point_sroa

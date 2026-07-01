@@ -140,34 +140,34 @@ Full details, test placement rules, and `expand/` module index: [`docs/contribut
 
 ## Performance benchmarks
 
-Nyra is compared against **C, C++, Go, Rust, Node, Python, and Java** on the same
+Nyra is compared against **C, C++, Go, and Rust** on the same
 programs under [`examples/comparison/`](examples/comparison/). **Lower runtime and RAM are better.**
 Compile time is excluded; numbers are mean wall-clock over timed runs.
 
-**Last run:** 2026-07-01T14:14:09Z · **Platform:** Darwin arm64 · **Runs:** 5 (warmup 1 discarded); micro=9 concurrency=11 · **Nyra:** release; cpu_bound_pgo=release+pgo; Nyra flags: --no-prelude (single-file suites), prelude (multi-file/struct_sum), -march=native
+**Last run:** 2026-07-01T14:51:55Z · **Platform:** Darwin arm64 · **Runs:** 5 (warmup 1 discarded); micro=9 concurrency=11 · **Nyra:** release; cpu_bound_pgo=release+pgo; Nyra flags: --no-prelude (single-file suites), prelude (multi-file/struct_sum), -march=native
 
 **[Interactive report →](examples/comparison/results/latest.html)** ·
 raw data: [`data.tsv`](examples/comparison/results/data.tsv)
 
 | Language | CPU hot loop | Nested loops | Linear sum | Hello I/O |
 |----------|----------:|----------:|----------:|----------:|
-| Nyra (Zero Types) | 809 ms | 52.2 ms | 1,414 ms | 1.8 ms |
-| Nyra (Explicit Types) | 809 ms | 52.0 ms | 1,413 ms | 1.8 ms |
-| C | 474 ms | 57.9 ms | 1,296 ms | 3.8 ms |
-| C++ | 475 ms | 57.4 ms | 1,296 ms | 2.9 ms |
-| Go | 582 ms | 58.9 ms | 1,298 ms | 4.6 ms |
-| Rust | 878 ms | 71.3 ms | 1,552 ms | 3.7 ms |
+| Nyra (Zero Types) | 825 ms | 53.9 ms | 1,507 ms | 2.8 ms |
+| Nyra (Explicit Types) | 846 ms | 53.7 ms | 1,435 ms | 2.7 ms |
+| C | 461 ms | 58.4 ms | 1,303 ms | 3.5 ms |
+| C++ | 459 ms | 57.9 ms | 1,296 ms | 3.6 ms |
+| Go | 570 ms | 59.6 ms | 1,321 ms | 4.7 ms |
+| Rust | 861 ms | 69.2 ms | 1,544 ms | 4.0 ms |
 
-**cpu_bound snapshot:** Nyra (Zero Types) `809 ms` vs fastest compiled (C `474 ms`) — **1.70×** wall time.
+**cpu_bound snapshot:** Nyra (Zero Types) `825 ms` vs fastest compiled (C++ `459 ms`) — **1.80×** wall time.
 
 **Peak RAM (cpu_bound):**
 
 | Language | Peak RSS |
 |----------|----------:|
 | Nyra (Zero Types) | 1.0 MB |
-| Nyra (Explicit Types) | 1.0 MB |
-| C | 1.0 MB |
+| Nyra (Explicit Types) | 1.1 MB |
 | C++ | 1.1 MB |
+| C | 1.1 MB |
 | Rust | 1.2 MB |
 | Go | 3.6 MB |
 
