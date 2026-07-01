@@ -43,6 +43,12 @@
 | Portable SIMD | **Shipped** — `i32x4` / `f32x4` / `f64x2` + `simd_*` intrinsics |
 | Platform SIMD | **Shipped** — `stdlib/simd/x86.ny`, `arm.ny` behind `unsafe` + CPU checks |
 | Arena allocator | **Shipped** — `stdlib/alloc/arena.ny` + `rt_arena.c` bump allocator |
+| OS event loop | **Shipped** — `stdlib/os/event_loop.ny` (executor + kqueue/epoll/select) |
+| First-class `Fd` | **Shipped** — `stdlib/os/fd.ny` with `Drop` |
+| mmap (file + anon) | **Shipped** — `stdlib/os/memory.ny` + `rt_hw.c` |
+| Shared memory | **Shipped** — `stdlib/os/shm.ny` + `rt_shm.c` (POSIX) |
+| I/O thread pool | **Shipped** — `stdlib/io/pool.ny` + `rt_io_pool.c` |
+| PTY + event loop | **Shipped** — `PtySession_register_read_async` via `io_register` |
 
 ## Conformance
 

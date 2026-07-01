@@ -649,6 +649,38 @@ int io_register(int fd, int task_id) {
 #endif
 }
 
+int io_unregister(int fd) {
+#ifdef __APPLE__
+    if (g_kq < 0 || fd < 0) {
+        return -1;
+    }
+    struct kevent ev;
+    EV_SET(&ev, (uintptr_t)fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
+    return kevent(g_kq, &ev, 1, NULL, 0, NULL) == 0 ? 0 : -1;
+#elif defined(__linux__)
+    if (g_epoll < 0 || fd < 0) {
+        return -1;
+    }
+    struct epoll_event ev;
+    return epoll_ctl(g_epoll, EPOLL_CTL_DEL, fd, &ev) == 0 ? 0 : -1;
+#elif defined(_WIN32)
+    io_lock_init();
+    IO_LOCK();
+    for (int i = 0; i < g_io_n; i++) {
+        if (g_io_tab[i].fd == fd) {
+            g_io_tab[i].active = 0;
+            IO_UNLOCK();
+            return 0;
+        }
+    }
+    IO_UNLOCK();
+    return -1;
+#else
+    (void)fd;
+    return -1;
+#endif
+}
+
 int io_wait_once(int timeout_ms) {
 #ifdef __APPLE__
     if (g_kq < 0) {

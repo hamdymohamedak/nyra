@@ -170,6 +170,7 @@ pub fn symbol_module_map() -> HashMap<&'static str, &'static str> {
         ("runtime_executor_run_until", "rt_async.c"),
         ("async_sleep_ms", "rt_async.c"),
         ("io_register", "rt_async.c"),
+        ("io_unregister", "rt_async.c"),
         ("io_wait_once", "rt_async.c"),
         ("rt_tcp_listen", "rt_net.c"),
         ("rt_tcp_accept", "rt_net.c"),
@@ -392,8 +393,21 @@ pub fn symbol_module_map() -> HashMap<&'static str, &'static str> {
         ("hw_cpu_brand", "rt_hw.c"),
         ("hw_mem_page_size", "rt_hw.c"),
         ("hw_mem_map_anonymous", "rt_hw.c"),
+        ("hw_mem_map_file", "rt_hw.c"),
+        ("hw_mem_sync", "rt_hw.c"),
         ("hw_mem_unmap", "rt_hw.c"),
         ("hw_dma_available", "rt_hw.c"),
+        ("shm_create", "rt_shm.c"),
+        ("shm_open_existing", "rt_shm.c"),
+        ("shm_map", "rt_shm.c"),
+        ("shm_unmap", "rt_shm.c"),
+        ("shm_close_fd", "rt_shm.c"),
+        ("shm_unlink_region", "rt_shm.c"),
+        ("io_pool_create", "rt_io_pool.c"),
+        ("io_pool_shutdown", "rt_io_pool.c"),
+        ("io_pool_submit_wait_readable", "rt_io_pool.c"),
+        ("io_pool_submit_read", "rt_io_pool.c"),
+        ("io_pool_queue_depth", "rt_io_pool.c"),
         ("hw_disk_total_bytes", "rt_hw.c"),
         ("hw_disk_free_bytes", "rt_hw.c"),
         ("hw_disk_fs_type", "rt_hw.c"),
@@ -497,7 +511,7 @@ impl RuntimeProfile {
             matches!(
                 *m,
                 "rt_spawn.c" | "rt_channel.c" | "rt_sync.c" | "rt_async.c" | "rt_net.c" | "rt_os_adv.c"
-                    | "rt_parallel.c" | "rt_race.c"
+                    | "rt_parallel.c" | "rt_race.c" | "rt_io_pool.c" | "rt_shm.c"
             )
         })
     }

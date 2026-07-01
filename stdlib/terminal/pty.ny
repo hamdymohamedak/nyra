@@ -10,6 +10,7 @@ extern fn pty_poll(master: i32) -> i32
 extern fn pty_resize(master: i32, rows: i32, cols: i32) -> void
 extern fn pty_close(master: i32) -> void
 extern fn pty_wait(master: i32) -> i32
+extern fn io_register(fd: i32, task_id: i32) -> i32
 extern fn strlen(s: &string) -> i32
 
 const PTY_ROWS = 36
@@ -109,4 +110,15 @@ fn PtySession_resize(sess: PtySession, rows: i32, cols: i32) -> void {
 fn PtySession_close(sess: PtySession) -> PtySession {
     pty_close(sess.master_fd)
     return PtySession_mark_dead(sess)
+}
+
+fn PtySession_register_read_async(sess: PtySession, promise: i32) -> i32 {
+    if sess.alive == 0 || sess.master_fd < 0 {
+        return -1
+    }
+    return io_register(sess.master_fd, promise)
+}
+
+fn PtySession_fd(sess: PtySession) -> i32 {
+    return sess.master_fd
 }
