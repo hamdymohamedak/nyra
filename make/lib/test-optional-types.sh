@@ -24,13 +24,19 @@ check_file() {
   fi
 }
 
+normalize_text_out() {
+  # Windows runners emit CRLF from print(); normalize before comparing expected output.
+  printf '%s' "$1" | tr -d '\r'
+}
+
 run_file() {
   local label="$1"
   local path="$2"
   local expect="${3:-}"
   local out
-  out="$("${NYRA[@]}" run "$path" 2>/dev/null || true)"
+  out="$(normalize_text_out "$("${NYRA[@]}" run "$path" 2>/dev/null || true)")"
   if [[ -n "$expect" ]]; then
+    expect="$(normalize_text_out "$expect")"
     if [[ "$out" != "$expect" ]]; then
       fail "run $label: expected $(printf %q "$expect") got $(printf %q "$out")"
     fi
