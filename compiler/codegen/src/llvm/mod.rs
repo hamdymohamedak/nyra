@@ -104,6 +104,8 @@ pub struct Codegen {
     loop_stack: Vec<LoopPhiContext>,
     /// LLVM block label for the most recently emitted basic block.
     current_block: String,
+    /// Monotonic parallel helper index per function (expression-site `parallel any/find/all`).
+    func_par_idx: usize,
     /// LLVM attribute groups for `#[inline]` / `#[hot]` / `#[cold]` functions.
     fn_attr_sets: Vec<String>,
     /// Struct types declared with `repr(C)` (C ABI at FFI boundaries).

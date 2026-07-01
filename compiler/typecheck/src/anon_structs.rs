@@ -382,6 +382,10 @@ fn patch_anon_names_in_expr(expr: &mut Expression, queue: &mut Vec<String>) {
         },
         Expression::ComptimeBlock { body, .. } => patch_anon_names_in_block(body, queue),
         Expression::Spawn { body, .. } => patch_anon_names_in_block(body, queue),
+        Expression::ParallelSearch(ref mut ps) => {
+            ps.map_exprs_mut(|e| patch_anon_names_in_expr(e, queue));
+            patch_anon_names_in_block(&mut ps.body, queue);
+        }
         Expression::Grouped(e) | Expression::Await(e) => patch_anon_names_in_expr(e, queue),
         Expression::TemplateLiteral(t) => {
             for part in &mut t.parts {

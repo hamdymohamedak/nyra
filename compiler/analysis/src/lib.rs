@@ -485,6 +485,10 @@ fn collect_expr_refs(expr: &Expression, out: &mut Vec<Symbol>) {
         },
         Expression::ComptimeBlock { body, .. } => collect_block_symbols(body, out),
         Expression::Spawn { body, .. } => collect_block_symbols(body, out),
+        Expression::ParallelSearch(ps) => {
+            ps.for_each_expr(|e| collect_expr_refs(e, out));
+            collect_block_symbols(&ps.body, out);
+        }
         Expression::Literal(_) | Expression::Invalid => {}
     }
     let _ = expr_span(expr);

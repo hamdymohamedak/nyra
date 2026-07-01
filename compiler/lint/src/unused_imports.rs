@@ -371,6 +371,10 @@ fn collect_expr_uses(expr: &ast::Expression, uses: &mut HashSet<String>) {
         },
         Expression::ComptimeBlock { body, .. } => collect_block_uses(body, uses),
         Expression::Spawn { body, .. } => collect_block_uses(body, uses),
+        Expression::ParallelSearch(ps) => {
+            ps.for_each_expr(|e| collect_expr_uses(e, uses));
+            collect_block_uses(&ps.body, uses);
+        }
         Expression::Literal(_) | Expression::Invalid => {}
     }
 }

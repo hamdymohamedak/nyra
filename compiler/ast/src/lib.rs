@@ -296,12 +296,27 @@ impl Default for ParallelThreads {
     }
 }
 
+/// `parallel for` vs early-exit search (`parallel any/find/all for`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum ParallelOp {
+    /// `parallel for` — run every iteration (fork-join).
+    #[default]
+    Iterate,
+    /// `parallel any for` — true if any iteration matches the predicate.
+    Any,
+    /// `parallel find for` — first matching index, or `-1`.
+    Find,
+    /// `parallel all for` — true if every iteration matches the predicate.
+    All,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct ParallelConfig {
     /// Task pool (default) or dedicated OS threads per chunk (`parallel:thread`).
     pub kind: SpawnKind,
     pub mode: ParallelMode,
     pub threads: ParallelThreads,
+    pub op: ParallelOp,
 }
 
 impl Default for ParallelConfig {
@@ -310,7 +325,42 @@ impl Default for ParallelConfig {
             kind: SpawnKind::Task,
             mode: ParallelMode::Auto,
             threads: ParallelThreads::Auto,
+            op: ParallelOp::Iterate,
         }
+    }
+}
+
+/// `parallel any/find/all for` — expression with bool predicate body.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ParallelSearchExpr {
+    pub config: ParallelConfig,
+    pub var: String,
+    pub kind: ForKind,
+    pub body: Block,
+    pub span: Span,
+}
+
+impl ParallelSearchExpr {
+    pub fn map_exprs_mut<F: FnMut(&mut Expression)>(&mut self, mut f: F) {
+        match &mut self.kind {
+            ForKind::Range { start, end } => {
+                f(start);
+                f(end);
+            }
+            ForKind::Iterable { iterable } => f(iterable),
+        }
+        self.config.map_exprs_mut(&mut f);
+    }
+
+    pub fn for_each_expr<F: FnMut(&Expression)>(&self, mut f: F) {
+        match &self.kind {
+            ForKind::Range { start, end } => {
+                f(start);
+                f(end);
+            }
+            ForKind::Iterable { iterable } => f(iterable),
+        }
+        self.config.for_each_expr(&mut f);
     }
 }
 
@@ -486,6 +536,8 @@ pub enum Expression {
         body: Block,
         span: Span,
     },
+    /// `parallel any/find/all for` — parallel short-circuit search (Extended).
+    ParallelSearch(Box<ParallelSearchExpr>),
     Invalid,
 }
 

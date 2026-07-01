@@ -456,4 +456,83 @@ impl TypeChecker {
             diagnostics::parallel_threads_must_be_integer(self, expr.1, &ty, sp);
         }
     }
+
+    pub(super) fn check_parallel_search(
+        &mut self,
+        ps: &ParallelSearchExpr,
+        env: &mut TypeEnv,
+    ) -> Type {
+        let sp = ps.span.clone();
+        if self.no_std {
+            diagnostics::no_std_unavailable(self, "parallel search", sp.clone());
+        }
+        let outer_before: std::collections::HashSet<String> =
+            env.variables.keys().cloned().collect();
+        match &ps.kind {
+            ForKind::Range { start, end } => {
+                let start_ty = self.check_expr(start, env);
+                let end_ty = self.check_expr(end, env);
+                if !types::is_integer(&start_ty) && start_ty != Type::Unknown {
+                    diagnostics::for_range_requires_integer(self, "start", sp.clone());
+                }
+                if !types::is_integer(&end_ty) && end_ty != Type::Unknown {
+                    diagnostics::for_range_requires_integer(self, "end", sp.clone());
+                }
+                env.variables.insert(
+                    ps.var.clone(),
+                    VarInfo {
+                        ty: Type::Integer(ast::IntKind::I32),
+                        mutable: true,
+                    },
+                );
+            }
+            ForKind::Iterable { iterable } => {
+                let iter_ty = self.check_expr(iterable, env);
+                let elem_ty = match &iter_ty {
+                    Type::Array { elem, len: Some(_) } => elem.as_ref().clone(),
+                    Type::Array { .. } => {
+                        diagnostics::for_in_requires_fixed_array(self, sp.clone());
+                        Type::Unknown
+                    }
+                    Type::String => Type::Char,
+                    Type::VecStr => Type::String,
+                    _ => {
+                        diagnostics::for_in_requires_iterable(self, &iter_ty, sp.clone());
+                        Type::Unknown
+                    }
+                };
+                env.variables.insert(
+                    ps.var.clone(),
+                    VarInfo {
+                        ty: elem_ty,
+                        mutable: true,
+                    },
+                );
+            }
+        }
+        ownership::check_parallel_for_body(
+            &ps.body,
+            &ps.var,
+            &outer_before,
+            sp.clone(),
+            &mut self.errors,
+        );
+        self.check_parallel_config(&ps.config, sp.clone(), env);
+        self.loop_depth += 1;
+        self.check_block(&ps.body, env, &Type::Bool);
+        self.loop_depth -= 1;
+        if let Some(expr) = ast::block_trailing_expression(&ps.body) {
+            let pred_ty = self.check_expr(&expr, env);
+            if pred_ty != Type::Bool && pred_ty != Type::Unknown {
+                diagnostics::parallel_search_predicate_must_be_bool(self, sp);
+            }
+        } else {
+            diagnostics::parallel_search_predicate_must_be_bool(self, sp);
+        }
+        match ps.config.op {
+            ParallelOp::Find => Type::Integer(ast::IntKind::I32),
+            ParallelOp::Any | ParallelOp::All => Type::Bool,
+            ParallelOp::Iterate => Type::Bool,
+        }
+    }
 }

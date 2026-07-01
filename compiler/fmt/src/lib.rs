@@ -10,7 +10,7 @@ use ast::{
     ArrowBody, BinaryOp, Block, ConstDef, EnumDef, EnumVariantDef, Expression, ExternFn,
     ForKind, ForStmt, Function, IfStmt, ImplDef, LetStmt, Literal, MatchArm, MatchPayloadPattern,
     MatchPattern,
-    Param, ParallelConfig, ParallelMode, ParallelThreads, ProgressConfig, Program, SpawnKind, Statement, StructDef,
+    Param, ParallelConfig, ParallelMode, ParallelOp, ParallelThreads, ProgressConfig, Program, SpawnKind, Statement, StructDef,
     StructField, TraitDef, TraitImpl, TypeAnnotation, UnaryOp, WhileStmt,
 };
 use lexer::Lexer;
@@ -465,6 +465,7 @@ fn emit_for(f: &ForStmt, indent: usize, out: &mut String) {
             out.push_str(":thread");
         }
         emit_parallel_config(cfg, out);
+        emit_parallel_op(cfg.op, out);
         out.push(' ');
     }
     if f.progress.is_some() {
@@ -527,6 +528,24 @@ fn emit_parallel_config(cfg: &ParallelConfig, out: &mut String) {
         out.push_str(opt);
     }
     out.push(')');
+}
+
+fn emit_parallel_op(op: ParallelOp, out: &mut String) {
+    match op {
+        ParallelOp::Iterate => {}
+        ParallelOp::Any => {
+            out.push(' ');
+            out.push_str("any");
+        }
+        ParallelOp::Find => {
+            out.push(' ');
+            out.push_str("find");
+        }
+        ParallelOp::All => {
+            out.push(' ');
+            out.push_str("all");
+        }
+    }
 }
 
 fn emit_progress_config(cfg: &ProgressConfig, out: &mut String) {
@@ -766,6 +785,27 @@ fn emit_expr(expr: &Expression, out: &mut String) {
                 SpawnKind::Thread => out.push_str("spawn:thread "),
             }
             emit_block(body, 0, out);
+        }
+        Expression::ParallelSearch(ps) => {
+            out.push_str("parallel");
+            if ps.config.kind == SpawnKind::Thread {
+                out.push_str(":thread");
+            }
+            emit_parallel_config(&ps.config, out);
+            emit_parallel_op(ps.config.op, out);
+            out.push_str("for ");
+            out.push_str(&ps.var);
+            out.push_str(" in ");
+            match &ps.kind {
+                ForKind::Range { start, end } => {
+                    emit_expr(start, out);
+                    out.push_str("..");
+                    emit_expr(end, out);
+                }
+                ForKind::Iterable { iterable } => emit_expr(iterable, out),
+            }
+            out.push(' ');
+            emit_block(&ps.body, 0, out);
         }
         Expression::Invalid => out.push_str("/* invalid */"),
     }

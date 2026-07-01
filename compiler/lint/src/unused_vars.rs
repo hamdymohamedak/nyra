@@ -238,6 +238,10 @@ fn mark_expr_uses(expr: &Expression, scopes: &mut Vec<HashMap<String, Binding>>)
         },
         Expression::ComptimeBlock { body, .. } => check_block(body, scopes, &mut vec![]),
         Expression::Spawn { body, .. } => check_block(body, scopes, &mut vec![]),
+        Expression::ParallelSearch(ps) => {
+            ps.for_each_expr(|e| mark_expr_uses(e, scopes));
+            check_block(&ps.body, scopes, &mut vec![]);
+        }
         Expression::Literal(_) | Expression::Invalid => {}
     }
 }

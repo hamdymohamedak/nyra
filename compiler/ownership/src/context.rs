@@ -209,6 +209,10 @@ impl OwnershipCtx {
                 .map(Type::Enum)
                 .unwrap_or(Type::Unknown),
             Expression::Spawn { .. } => Type::JoinHandle,
+            Expression::ParallelSearch(ps) => match ps.config.op {
+                ParallelOp::Find => Type::Integer(ast::IntKind::I32),
+                ParallelOp::Any | ParallelOp::All | ParallelOp::Iterate => Type::Bool,
+            },
             _ => Type::Unknown,
         }
     }

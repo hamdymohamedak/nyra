@@ -927,6 +927,7 @@ impl TypeChecker {
                 self.check_block(body, env, &Type::Void);
                 Type::JoinHandle
             }
+            Expression::ParallelSearch(ps) => self.check_parallel_search(ps, env),
             Expression::ComptimeBlock { body, span } => {
                 let mut inner = TypeEnv {
                     variables: env.variables.clone(),

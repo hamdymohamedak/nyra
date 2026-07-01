@@ -67,6 +67,7 @@ impl Codegen {
             zero_init_ssa_vars: HashSet::new(),
             loop_stack: Vec::new(),
             current_block: "entry".into(),
+            func_par_idx: 0,
             fn_attr_sets: Vec::new(),
             repr_c_structs: HashSet::new(),
             union_fields: HashMap::new(),
@@ -367,6 +368,18 @@ impl Codegen {
             (
                 "parallel_for_range",
                 "declare void @parallel_for_range(i32, i32, ptr, ptr, i32, i32, i32, i32, i32)",
+            ),
+            (
+                "parallel_any_range",
+                "declare i32 @parallel_any_range(i32, i32, ptr, ptr, i32, i32, i32, i32, i32)",
+            ),
+            (
+                "parallel_find_range",
+                "declare i32 @parallel_find_range(i32, i32, ptr, ptr, i32, i32, i32, i32, i32)",
+            ),
+            (
+                "parallel_all_range",
+                "declare i32 @parallel_all_range(i32, i32, ptr, ptr, i32, i32, i32, i32, i32)",
             ),
             ("cpu_count", "declare i32 @cpu_count()"),
             ("progress_update", "declare void @progress_update(i32, i32, ptr)"),

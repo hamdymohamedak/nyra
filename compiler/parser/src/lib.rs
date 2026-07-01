@@ -360,6 +360,27 @@ fn main() {
     }
 
     #[test]
+    fn parses_parallel_any_for() {
+        let src = r#"fn main() {
+    let hit = parallel any for i in 0..10 {
+        i > 5
+    }
+}"#;
+        let (tokens, _) = Lexer::new(src, "f.ny").tokenize();
+        let (program, errs) = Parser::new(tokens).parse();
+        assert!(errs.is_empty(), "{errs:?}");
+        assert!(program.functions[0].body.statements.iter().any(|s| {
+            matches!(
+                s,
+                Statement::Let(l) if matches!(
+                    &l.value,
+                    Expression::ParallelSearch(ps) if ps.config.op == ParallelOp::Any
+                )
+            )
+        }));
+    }
+
+    #[test]
     fn parses_parallel_for() {
         let src = r#"fn main() {
     parallel for i in 0..10 {

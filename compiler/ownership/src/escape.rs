@@ -457,6 +457,10 @@ impl EscapeGraph {
             }
             Expression::ComptimeBlock { body, .. } => self.analyze_block(body, scope),
             Expression::Spawn { body, .. } => self.analyze_block(body, scope),
+            Expression::ParallelSearch(ps) => {
+                ps.for_each_expr(|e| self.analyze_expr_escapes(e, scope));
+                self.analyze_block(&ps.body, scope);
+            }
             Expression::EnumVariant(v) => {
                 for a in &v.args {
                     self.analyze_expr_escapes(a, scope);
@@ -685,6 +689,12 @@ fn collect_vars(expr: &Expression, out: &mut Vec<String>) {
         }
         Expression::Spawn { body, .. } => {
             for stmt in &body.statements {
+                collect_vars_from_stmt(stmt, out);
+            }
+        }
+        Expression::ParallelSearch(ps) => {
+            ps.for_each_expr(|e| collect_vars(e, out));
+            for stmt in &ps.body.statements {
                 collect_vars_from_stmt(stmt, out);
             }
         }

@@ -8,7 +8,7 @@ use errors::{
     E016_UNSAFE_REQUIRED, E017_NOT_CALLABLE, E018_UNKNOWN_METHOD, E019_BOOL_CONDITION,
     E020_CONTROL_FLOW, E021_PLATFORM_UNSUPPORTED, E022_RETURN_MISMATCH, E023_MATCH, E024_FOR_IN,
     E025_DESTRUCTURE, E026_BLOCK_VALUE, E027_INTEGER_RANGE, E031_ARRAY, E032_ENUM, E033_CAST,
-    E034_FFI, E036_SEND_SYNC,
+    E034_FFI, E036_SEND_SYNC, E037_PARALLEL,
 };
 
 use crate::{Type, TypeChecker, TypeEnv};
@@ -641,6 +641,18 @@ pub fn parallel_threads_must_be_integer(
             sp,
             format!("parallel {field} must be an integer, got {}", type_pretty(got)),
         ),
+    );
+}
+
+pub fn parallel_search_predicate_must_be_bool(checker: &mut TypeChecker, sp: Span) {
+    checker.errors.push(
+        NyraError::coded(
+            E037_PARALLEL,
+            ErrorKind::Type,
+            sp,
+            "`parallel any/find/all for` body must be a `bool` predicate",
+        )
+        .note("use a trailing expression such as `i > 10` or `arr[i] == target`"),
     );
 }
 

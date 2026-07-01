@@ -457,6 +457,15 @@ fn walk_expr_forbidden(expr: &Expression, fn_name: &str, errors: &mut Vec<NyraEr
     match expr {
         Expression::ComptimeBlock { body, .. } => walk_block_forbidden(body, fn_name, errors),
         Expression::Spawn { body, .. } => walk_block_forbidden(body, fn_name, errors),
+        Expression::ParallelSearch(ps) => {
+            walk_block_forbidden(&ps.body, fn_name, errors);
+            errors.push(NyraError::coded(
+                errors::E037_PARALLEL,
+                errors::ErrorKind::Type,
+                ps.span.clone(),
+                format!("comptime function `{fn_name}` cannot use parallel search"),
+            ));
+        }
         Expression::Binary(b) => {
             walk_expr_forbidden(&b.left, fn_name, errors);
             walk_expr_forbidden(&b.right, fn_name, errors);
@@ -1620,6 +1629,10 @@ fn fold_comptime_in_expr(
         }
         Expression::Spawn { body, .. } => {
             fold_comptime_in_block(body, functions, &mut env.clone());
+        }
+        Expression::ParallelSearch(ps) => {
+            let mut body = ps.body.clone();
+            fold_comptime_in_block(&mut body, functions, &mut env.clone());
         }
         Expression::StructLiteral(s) => {
             for (_, e) in &mut s.fields {

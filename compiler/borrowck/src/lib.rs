@@ -538,6 +538,17 @@ fn check_expr_moves(
                 }
             }
         }
+        Expression::ParallelSearch(ps) => {
+            if !state.borrowed_mut.is_empty() || !state.borrowed_imm.is_empty() {
+                errors.push(borrow_active_error(
+                    "parallel search while references are active",
+                    Span::default(),
+                    "finish using borrows before parallel search",
+                ));
+            }
+            let outer = state.outer_vars();
+            check_parallel_for_captures(&ps.body, &outer, Span::default(), ctx, errors);
+        }
         _ => {}
     }
 }

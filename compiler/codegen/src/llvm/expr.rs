@@ -823,6 +823,7 @@ impl Codegen {
                 let mut spawn_drop = DropState::new(&self.current_func);
                 self.compile_spawn(*kind, body, env, &mut spawn_drop)
             }
+            Expression::ParallelSearch(ps) => self.compile_parallel_search(ps, env),
             Expression::Grouped(inner) => self.compile_expr(inner, env),
             Expression::Await(inner) => {
                 let inner_v = self.compile_expr(inner, env);

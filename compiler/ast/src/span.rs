@@ -40,6 +40,7 @@ pub fn expr_span(expr: &Expression) -> Span {
         Expression::ArrowFn(a) => a.span.clone(),
         Expression::ComptimeBlock { span, .. } => span.clone(),
         Expression::Spawn { span, .. } => span.clone(),
+        Expression::ParallelSearch(ps) => ps.span.clone(),
         Expression::ArrayLiteral(al) => al
             .all_exprs()
             .next()
