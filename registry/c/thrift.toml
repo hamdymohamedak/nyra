@@ -1,0 +1,10 @@
+name = "thrift"
+description = "Apache Thrift RPC/serialization"
+headers = ["thrift/Thrift.h"]
+libs = ["thrift"]
+pkg_config = "thrift"
+brew = "thrift"
+apt = "libthrift-dev"
+pacman = "thrift"
+dnf = "thrift-devel"
+cxx = true

@@ -1,0 +1,10 @@
+name = "grpc"
+description = "gRPC C core"
+headers = ["grpc/grpc.h"]
+libs = ["grpc"]
+pkg_config = "grpc"
+brew = "grpc"
+apt = "libgrpc-dev"
+pacman = "grpc"
+dnf = "grpc-devel"
+aliases = ["grpc-c"]

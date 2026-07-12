@@ -1,0 +1,6 @@
+name = "elasticsearch-c"
+description = "Elasticsearch official C client (elastic/elasticsearch-c is limited; use curl+JSON often)"
+headers = ["elastic/client.h"]
+libs = ["elasticsearch"]
+aliases = ["elasticsearch", "elastic-c"]
+git = "https://github.com/elastic/elasticsearch-c.git"

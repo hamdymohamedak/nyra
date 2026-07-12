@@ -73,7 +73,7 @@ dnf = "raylib-devel"
 pacman = "raylib"
 ```
 
-Known names: **270+** built-ins including **AI/ML** (`onnxruntime`, `llama-cpp`, `ggml`, `libtorch`, `tensorflow`, `faiss`, `xgboost`, `cuda`/ROCm on Linux, …), plus networks, games, GUI, backend, media, crypto, and science. See [`registry/c/`](../registry/c/) or `nyra pkg list`. Validate with `python3 make/py/test_c_registry.py --bind`.
+Known names: **310+** built-ins including **AI/ML**, **RPC/data** (`grpc`, `arrow`, `duckdb`), **observability** (`opentelemetry-cpp`, `prometheus-cpp`), **Wasm** (`wasmtime`, `wasmer`, `wamr`), auth/cloud, messaging, robotics, and classic networks/games/GUI/media/science. See [`registry/c/`](../registry/c/) or `nyra pkg list`. Validate with `python3 make/py/test_c_registry.py --bind`.
 
 ### C++ libraries (`cxx = true`)
 

@@ -1,0 +1,9 @@
+name = "tpm2-tss"
+description = "TPM 2.0 Software Stack (TSS)"
+headers = ["tss2/tss2_esys.h"]
+libs = ["tss2-esys", "tss2-mu", "tss2-sys"]
+apt = "libtss2-dev"
+pacman = "tpm2-tss"
+dnf = "tpm2-tss-devel"
+aliases = ["tpm", "tss2"]
+platforms = ["linux"]

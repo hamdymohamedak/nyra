@@ -8,18 +8,26 @@ Nyra is **not** a C package manager. These files only map names so Nyra can:
 2. Find headers via `pkg-config` (or system include paths)
 3. Generate bindings + `nyra.mod` link lines
 
-There are **260+** built-in entries covering:
+There are **310+** built-in entries covering:
 
 | Area | Examples |
 |------|----------|
-| **AI / inference** | `onnxruntime`, `llama-cpp`, `ggml`, `tensorflow`, `libtorch`, `onednn` |
+| **AI / inference** | `onnxruntime`, `llama-cpp`, `ggml`, `tensorflow`, `libtorch`, `onednn`, `whisper-cpp`, `ctranslate2` |
 | **AI / ML & vectors** | `xgboost`, `lightgbm`, `faiss`, `hnswlib`, `annoy`, `sqlite-vec`, `sentencepiece` |
-| **AI / GPU** | `cuda`, `cudnn`, `tensorrt`, `rocm`, `miopen`, `opencl`, `vulkan-loader` |
-| Networks / async | `curl`, `libuv`, `zeromq`, `librdkafka`, `hiredis` |
-| Games / graphics | `raylib`, `sdl2`, `sdl3`, `glfw`, `box2d` |
+| **AI / GPU** | `cuda`, `cudnn`, `tensorrt`, `rocm`, `miopen`, `opencl`, `vulkan-loader`, `moltenvk`, `mkl` |
+| **RPC / data** | `grpc`, `thrift`, `capnp`, `arrow`, `parquet`, `duckdb`, `protobuf`, `flatbuffers` |
+| **Observability** | `opentelemetry-cpp`, `prometheus-cpp`, `opentelemetry-c` |
+| **WebAssembly** | `wasmtime`, `wasmer`, `wamr` |
+| **Auth / security** | `openldap`, `krb5`, `cyrus-sasl`, `pam`, `pkcs11-helper`, `tpm2-tss`, `openssl`, `libsodium` |
+| **Cloud** | `aws-c-common`, `aws-c-s3`, `aws-sdk-cpp`, `azure-iot-sdk-c` |
+| **Messaging** | `zeromq`, `librdkafka`, `rabbitmq-c`, `qpid-proton`, `nats-c`, `pulsar` |
+| **DB clients** | `sqlite3`, `libpq`, `mongoc`, `hiredis`, `cassandra`, `neo4j-client` |
+| Networks / async | `curl`, `libuv`, `nghttp2`, `libwebsockets` |
+| Games / graphics | `raylib`, `sdl2`, `sdl3`, `glfw`, `box2d`, `bullet`, `assimp` |
 | GUI / desktop | `gtk3`, `gtk4`, `cairo`, `ncurses`, `raygui` |
-| Backend / data | `sqlite3`, `libpq`, `openssl`, `libsodium`, `libxml2`, `protobuf` |
-| Media / audio | `ffmpeg`, `opencv`, `portaudio`, `opus`, `fftw`, `openexr` |
+| Media / live | `ffmpeg`, `gstreamer`, `opencv`, `portaudio`, `opus`, `openexr` |
+| Robotics / vision | `pcl`, `realsense`, `opencv`, `zbar`, `zxing-cpp` |
+| Documents | `mupdf`, `poppler`, `pdfium`, `tesseract` |
 | Science | `gsl`, `openblas`, `lapack`, `eigen`, `hdf5`, `gdal` |
 
 Validate locally:

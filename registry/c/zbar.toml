@@ -1,0 +1,9 @@
+name = "zbar"
+description = "ZBar barcode reader"
+headers = ["zbar.h"]
+libs = ["zbar"]
+pkg_config = "zbar"
+brew = "zbar"
+apt = "libzbar-dev"
+pacman = "zbar"
+dnf = "zbar-devel"

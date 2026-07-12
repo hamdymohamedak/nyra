@@ -1,0 +1,10 @@
+name = "opentelemetry-cpp"
+description = "OpenTelemetry C++ API/SDK"
+headers = ["opentelemetry/exporters/ostream/span_exporter.h"]
+libs = ["opentelemetry_trace", "opentelemetry_common"]
+brew = "opentelemetry-cpp"
+apt = "libopentelemetry-dev"
+pacman = "opentelemetry-cpp"
+dnf = "opentelemetry-cpp-devel"
+aliases = ["otel-cpp", "opentelemetry"]
+cxx = true

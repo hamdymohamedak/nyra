@@ -1,0 +1,10 @@
+name = "gstreamer"
+description = "GStreamer multimedia framework"
+headers = ["gst/gst.h"]
+libs = ["gstreamer-1.0"]
+pkg_config = "gstreamer-1.0"
+brew = "gstreamer"
+apt = "libgstreamer1.0-dev"
+pacman = "gstreamer"
+dnf = "gstreamer1-devel"
+aliases = ["gst"]

@@ -1,0 +1,10 @@
+name = "krb5"
+description = "Kerberos 5 (MIT)"
+headers = ["krb5.h"]
+libs = ["krb5"]
+pkg_config = "krb5"
+brew = "krb5"
+apt = "libkrb5-dev"
+pacman = "krb5"
+dnf = "krb5-devel"
+aliases = ["kerberos", "gssapi"]

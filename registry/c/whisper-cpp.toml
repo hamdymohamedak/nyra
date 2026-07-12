@@ -1,0 +1,7 @@
+name = "whisper-cpp"
+description = "OpenAI Whisper (C/C++ local)"
+headers = ["whisper.h"]
+libs = ["whisper"]
+brew = "whisper-cpp"
+pacman = "whisper-cpp"
+aliases = ["whisper", "whisper.cpp"]

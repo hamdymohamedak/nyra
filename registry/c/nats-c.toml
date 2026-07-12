@@ -1,0 +1,7 @@
+name = "nats-c"
+description = "NATS.io C client"
+headers = ["nats.h"]
+libs = ["nats"]
+brew = "cnats"
+aliases = ["nats", "cnats", "nats.c"]
+git = "https://github.com/nats-io/nats.c.git"

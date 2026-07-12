@@ -1,0 +1,7 @@
+name = "wasmtime"
+description = "Wasmtime Wasm runtime (C API)"
+headers = ["wasm.h"]
+libs = ["wasmtime"]
+brew = "wasmtime"
+pacman = "wasmtime"
+aliases = ["wasmtime-c"]

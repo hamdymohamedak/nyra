@@ -1,0 +1,6 @@
+name = "azure-iot-sdk-c"
+description = "Azure IoT Hub C SDK"
+headers = ["iothub_client.h"]
+libs = ["iothub_client"]
+aliases = ["azure-iot", "azure-iot-sdk"]
+git = "https://github.com/Azure/azure-iot-sdk-c.git"

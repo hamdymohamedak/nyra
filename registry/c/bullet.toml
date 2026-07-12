@@ -1,0 +1,10 @@
+name = "bullet"
+description = "Bullet Physics SDK"
+headers = ["btBulletDynamicsCommon.h"]
+libs = ["BulletDynamics", "BulletCollision", "LinearMath"]
+brew = "bullet"
+apt = "libbullet-dev"
+pacman = "bullet"
+dnf = "bullet-devel"
+aliases = ["bullet3"]
+cxx = true

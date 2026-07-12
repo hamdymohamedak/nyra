@@ -1,0 +1,6 @@
+name = "nanoarrow"
+description = "Arrow C data interface (nanoarrow)"
+headers = ["nanoarrow/nanoarrow.h"]
+libs = ["nanoarrow"]
+brew = "nanoarrow"
+git = "https://github.com/apache/arrow-nanoarrow.git"

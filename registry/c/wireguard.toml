@@ -1,0 +1,9 @@
+name = "wireguard"
+description = "WireGuard Linux kernel UAPI headers"
+headers = ["linux/wireguard.h"]
+libs = ["m"]
+apt = "linux-libc-dev"
+pacman = "linux-api-headers"
+dnf = "kernel-headers"
+aliases = ["wireguard-linux"]
+platforms = ["linux"]

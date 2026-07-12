@@ -1,0 +1,8 @@
+name = "duckdb"
+description = "DuckDB embedded analytics DB"
+headers = ["duckdb.h"]
+libs = ["duckdb"]
+brew = "duckdb"
+apt = "libduckdb-dev"
+pacman = "duckdb"
+dnf = "duckdb-devel"

@@ -1,0 +1,11 @@
+name = "pcl"
+description = "Point Cloud Library"
+headers = ["pcl/point_cloud.h"]
+libs = ["pcl_common"]
+pkg_config = "pcl_common"
+brew = "pcl"
+apt = "libpcl-dev"
+pacman = "pcl"
+dnf = "pcl-devel"
+aliases = ["pointcloud"]
+cxx = true

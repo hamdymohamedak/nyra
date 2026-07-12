@@ -1,0 +1,8 @@
+name = "aws-sdk-cpp"
+description = "AWS SDK for C++ (core)"
+headers = ["aws/core/Aws.h"]
+libs = ["aws-cpp-sdk-core"]
+brew = "aws-sdk-cpp"
+pacman = "aws-sdk-cpp"
+aliases = ["aws-sdk"]
+cxx = true

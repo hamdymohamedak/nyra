@@ -1,0 +1,12 @@
+name = "parquet"
+description = "Apache Parquet (via Arrow)"
+headers = ["parquet/arrow/reader.h"]
+libs = ["parquet"]
+pkg_config = "parquet"
+brew = "apache-arrow"
+apt = "libparquet-dev"
+pacman = "arrow"
+dnf = "libparquet-devel"
+aliases = ["libparquet"]
+depends = ["arrow"]
+cxx = true

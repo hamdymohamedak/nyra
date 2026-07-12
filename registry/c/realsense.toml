@@ -1,0 +1,9 @@
+name = "realsense"
+description = "Intel RealSense SDK 2"
+headers = ["librealsense2/rs.h"]
+libs = ["realsense2"]
+pkg_config = "realsense2"
+brew = "librealsense"
+apt = "librealsense2-dev"
+pacman = "librealsense"
+aliases = ["librealsense", "librealsense2"]

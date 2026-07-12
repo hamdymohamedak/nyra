@@ -1,0 +1,11 @@
+name = "capnp"
+description = "Cap'n Proto serialization/RPC"
+headers = ["capnp/message.h"]
+libs = ["capnp", "kj"]
+pkg_config = "capnp"
+brew = "capnp"
+apt = "libcapnp-dev"
+pacman = "capnproto"
+dnf = "capnproto-devel"
+aliases = ["capnproto"]
+cxx = true

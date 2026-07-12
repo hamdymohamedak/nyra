@@ -1,0 +1,6 @@
+name = "wasmer"
+description = "Wasmer Wasm runtime (C API)"
+headers = ["wasmer.h"]
+libs = ["wasmer"]
+brew = "wasmer"
+pacman = "wasmer"

@@ -1,0 +1,6 @@
+name = "opentelemetry-c"
+description = "OpenTelemetry C API (experimental)"
+headers = ["opentelemetry/c/trace.h"]
+libs = ["opentelemetry_common"]
+aliases = ["otel-c"]
+git = "https://github.com/open-telemetry/opentelemetry-c.git"

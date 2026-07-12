@@ -1,0 +1,7 @@
+name = "aws-c-common"
+description = "AWS C common utilities"
+headers = ["aws/common/common.h"]
+libs = ["aws-c-common"]
+pkg_config = "aws-c-common"
+brew = "aws-c-common"
+pacman = "aws-c-common"

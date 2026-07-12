@@ -1,0 +1,10 @@
+name = "rabbitmq-c"
+description = "RabbitMQ AMQP 0-9-1 C client"
+headers = ["amqp.h"]
+libs = ["rabbitmq"]
+pkg_config = "librabbitmq"
+brew = "rabbitmq-c"
+apt = "librabbitmq-dev"
+pacman = "rabbitmq-c"
+dnf = "librabbitmq-devel"
+aliases = ["amqp", "librabbitmq"]

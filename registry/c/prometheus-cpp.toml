@@ -1,0 +1,8 @@
+name = "prometheus-cpp"
+description = "Prometheus metrics C++ client"
+headers = ["prometheus/counter.h"]
+libs = ["prometheus-cpp-core", "prometheus-cpp-pull"]
+brew = "prometheus-cpp"
+pacman = "prometheus-cpp"
+aliases = ["prometheus"]
+cxx = true

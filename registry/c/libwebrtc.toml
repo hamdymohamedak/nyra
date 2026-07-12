@@ -1,0 +1,7 @@
+name = "libwebrtc"
+description = "Google WebRTC native (C++ — large; git)"
+headers = ["api/peer_connection_interface.h"]
+libs = ["webrtc"]
+aliases = ["webrtc"]
+git = "https://github.com/webrtc-uwp/webrtc-deps.git"
+cxx = true

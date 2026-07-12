@@ -1,0 +1,12 @@
+name = "grpcpp"
+description = "gRPC C++ API"
+headers = ["grpcpp/grpcpp.h"]
+libs = ["grpc++"]
+pkg_config = "grpc++"
+brew = "grpc"
+apt = "libgrpc++-dev"
+pacman = "grpc"
+dnf = "grpc-devel"
+aliases = ["grpc-cpp"]
+depends = ["grpc", "protobuf", "abseil"]
+cxx = true

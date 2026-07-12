@@ -1,0 +1,8 @@
+name = "ctranslate2"
+description = "CTranslate2 fast Transformer inference"
+headers = ["ctranslate2/translator.h"]
+libs = ["ctranslate2"]
+pacman = "ctranslate2"
+aliases = ["ct2"]
+git = "https://github.com/OpenNMT/CTranslate2.git"
+cxx = true

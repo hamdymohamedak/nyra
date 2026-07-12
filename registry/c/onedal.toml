@@ -1,0 +1,10 @@
+name = "onedal"
+description = "Intel oneDAL data analytics library"
+headers = ["daal.h"]
+libs = ["onedal"]
+brew = "onedal"
+pacman = "intel-oneapi-dal"
+dnf = "intel-oneapi-dal"
+aliases = ["dal", "intel-dal"]
+cxx = true
+platforms = ["linux"]

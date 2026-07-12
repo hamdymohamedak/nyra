@@ -1,0 +1,6 @@
+name = "pdfium"
+description = "PDFium PDF engine (Chromium)"
+headers = ["fpdfview.h"]
+libs = ["pdfium"]
+aliases = ["pdfium-binaries"]
+git = "https://github.com/bblanchon/pdfium-binaries.git"

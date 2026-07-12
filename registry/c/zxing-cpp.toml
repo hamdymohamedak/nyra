@@ -1,0 +1,11 @@
+name = "zxing-cpp"
+description = "ZXing barcode (C++)"
+headers = ["ZXing/ReadBarcode.h"]
+libs = ["ZXing"]
+pkg_config = "zxing"
+brew = "zxing-cpp"
+apt = "libzxing-dev"
+pacman = "zxing-cpp"
+dnf = "zxing-cpp-devel"
+aliases = ["zxing"]
+cxx = true

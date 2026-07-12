@@ -1,0 +1,8 @@
+name = "pulsar"
+description = "Apache Pulsar C++ client"
+headers = ["pulsar/Client.h"]
+libs = ["pulsar"]
+brew = "libpulsar"
+apt = "libpulsar-dev"
+aliases = ["libpulsar", "apache-pulsar"]
+cxx = true

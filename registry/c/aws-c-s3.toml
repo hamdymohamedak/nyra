@@ -1,0 +1,6 @@
+name = "aws-c-s3"
+description = "AWS C S3 client"
+headers = ["aws/s3/s3_client.h"]
+libs = ["aws-c-s3"]
+brew = "aws-c-s3"
+depends = ["aws-c-common"]

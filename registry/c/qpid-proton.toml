@@ -1,0 +1,10 @@
+name = "qpid-proton"
+description = "Apache Qpid Proton AMQP 1.0"
+headers = ["proton/message.h"]
+libs = ["qpid-proton"]
+pkg_config = "libqpid-proton"
+brew = "qpid-proton"
+apt = "libqpid-proton11-dev"
+pacman = "qpid-proton"
+dnf = "qpid-proton-c-devel"
+aliases = ["proton", "amqp1"]

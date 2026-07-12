@@ -1,0 +1,9 @@
+name = "mkl"
+description = "Intel oneMKL (Linux packages / Intel channel)"
+headers = ["mkl.h"]
+libs = ["mkl_rt"]
+apt = "intel-mkl"
+pacman = "intel-oneapi-mkl"
+dnf = "intel-oneapi-mkl"
+aliases = ["onemkl", "intel-mkl"]
+platforms = ["linux"]

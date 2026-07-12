@@ -1,0 +1,10 @@
+name = "pkcs11-helper"
+description = "PKCS#11 helper library"
+headers = ["pkcs11-helper-1.0/pkcs11h.h"]
+libs = ["pkcs11-helper"]
+pkg_config = "libpkcs11-helper-1"
+brew = "pkcs11-helper"
+apt = "libpkcs11-helper1-dev"
+pacman = "pkcs11-helper"
+dnf = "pkcs11-helper-devel"
+aliases = ["pkcs11"]

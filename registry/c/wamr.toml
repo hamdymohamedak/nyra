@@ -1,0 +1,7 @@
+name = "wamr"
+description = "WAMR (WebAssembly Micro Runtime)"
+headers = ["wasm_export.h"]
+libs = ["iwasm", "vmlib"]
+brew = "wasm-micro-runtime"
+pacman = "wasm-micro-runtime"
+aliases = ["wasm-micro-runtime"]

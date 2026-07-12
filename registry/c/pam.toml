@@ -1,0 +1,10 @@
+name = "pam"
+description = "Linux PAM (Pluggable Authentication Modules)"
+headers = ["security/pam_appl.h"]
+libs = ["pam"]
+brew = "linux-pam"
+apt = "libpam0g-dev"
+pacman = "pam"
+dnf = "pam-devel"
+aliases = ["linux-pam"]
+platforms = ["linux"]

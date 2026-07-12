@@ -1,0 +1,10 @@
+name = "cyrus-sasl"
+description = "Cyrus SASL authentication"
+headers = ["sasl/sasl.h"]
+libs = ["sasl2"]
+pkg_config = "libsasl2"
+brew = "cyrus-sasl"
+apt = "libsasl2-dev"
+pacman = "cyrus-sasl"
+dnf = "cyrus-sasl-devel"
+aliases = ["sasl", "libsasl2"]

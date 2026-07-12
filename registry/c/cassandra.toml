@@ -1,0 +1,8 @@
+name = "cassandra"
+description = "DataStax Cassandra C/C++ driver"
+headers = ["cassandra.h"]
+libs = ["cassandra"]
+brew = "cassandra-cpp-driver"
+apt = "libcassandra-dev"
+dnf = "cassandra-cpp-driver-devel"
+aliases = ["cassandra-cpp-driver", "datastax-cpp"]

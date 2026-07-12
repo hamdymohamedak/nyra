@@ -1,0 +1,7 @@
+name = "neo4j-client"
+description = "libneo4j-client (Bolt C client)"
+headers = ["neo4j-client.h"]
+libs = ["neo4j-client"]
+apt = "libneo4j-client-dev"
+aliases = ["neo4j", "libneo4j-client"]
+git = "https://github.com/cleishm/libneo4j-client.git"

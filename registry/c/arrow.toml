@@ -1,0 +1,11 @@
+name = "arrow"
+description = "Apache Arrow columnar in-memory"
+headers = ["arrow/api.h"]
+libs = ["arrow"]
+pkg_config = "arrow"
+brew = "apache-arrow"
+apt = "libarrow-dev"
+pacman = "arrow"
+dnf = "libarrow-devel"
+aliases = ["apache-arrow", "libarrow"]
+cxx = true

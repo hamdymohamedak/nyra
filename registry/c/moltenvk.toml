@@ -1,0 +1,8 @@
+name = "moltenvk"
+description = "MoltenVK — Vulkan on Metal (macOS)"
+headers = ["MoltenVK/mvk_vulkan.h"]
+libs = ["MoltenVK"]
+brew = "molten-vk"
+aliases = ["molten-vk"]
+depends = ["vulkan-headers"]
+platforms = ["macos"]

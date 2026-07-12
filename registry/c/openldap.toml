@@ -1,0 +1,10 @@
+name = "openldap"
+description = "OpenLDAP client libraries"
+headers = ["ldap.h"]
+libs = ["ldap", "lber"]
+pkg_config = "ldap"
+brew = "openldap"
+apt = "libldap2-dev"
+pacman = "libldap"
+dnf = "openldap-devel"
+aliases = ["ldap"]
