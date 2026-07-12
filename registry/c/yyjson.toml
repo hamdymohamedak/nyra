@@ -1,0 +1,9 @@
+name = "yyjson"
+description = "High-performance JSON library"
+headers = ["yyjson.h"]
+libs = ["yyjson"]
+pkg_config = "yyjson"
+brew = "yyjson"
+apt = "libyyjson-dev"
+pacman = "yyjson"
+dnf = "yyjson-devel"

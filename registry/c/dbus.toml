@@ -1,0 +1,9 @@
+name = "dbus"
+description = "D-Bus message bus library"
+headers = ["dbus/dbus.h"]
+libs = ["dbus-1"]
+pkg_config = "dbus-1"
+brew = "dbus"
+apt = "libdbus-1-dev"
+pacman = "dbus"
+dnf = "dbus-devel"

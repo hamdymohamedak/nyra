@@ -1,0 +1,9 @@
+name = "libsoup"
+description = "HTTP client/server library (GNOME)"
+headers = ["libsoup/soup.h"]
+libs = ["soup-3.0"]
+pkg_config = "libsoup-3.0"
+brew = "libsoup"
+apt = "libsoup-3.0-dev"
+pacman = "libsoup3"
+dnf = "libsoup3-devel"

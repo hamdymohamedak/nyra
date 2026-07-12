@@ -1,0 +1,11 @@
+name = "alsa-lib"
+description = "Advanced Linux Sound Architecture"
+headers = ["alsa/asoundlib.h"]
+libs = ["asound"]
+pkg_config = "alsa"
+brew = "alsa-lib"
+apt = "libasound2-dev"
+pacman = "alsa-lib"
+dnf = "alsa-lib-devel"
+aliases = ["alsa"]
+platforms = ["linux"]

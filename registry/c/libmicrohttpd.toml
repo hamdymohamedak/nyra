@@ -1,0 +1,10 @@
+name = "libmicrohttpd"
+description = "Small embeddable HTTP server"
+headers = ["microhttpd.h"]
+libs = ["microhttpd"]
+pkg_config = "libmicrohttpd"
+brew = "libmicrohttpd"
+apt = "libmicrohttpd-dev"
+pacman = "libmicrohttpd"
+dnf = "libmicrohttpd-devel"
+aliases = ["microhttpd"]

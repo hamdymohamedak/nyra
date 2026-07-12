@@ -1,0 +1,9 @@
+name = "libevent"
+description = "Event notification library"
+headers = ["event2/event.h"]
+libs = ["event"]
+pkg_config = "libevent"
+brew = "libevent"
+apt = "libevent-dev"
+pacman = "libevent"
+dnf = "libevent-devel"

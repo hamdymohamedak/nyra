@@ -1,0 +1,9 @@
+name = "cglm"
+description = "Highly optimized C math library for graphics"
+headers = ["cglm/cglm.h"]
+libs = ["cglm"]
+pkg_config = "cglm"
+brew = "cglm"
+apt = "libcglm-dev"
+pacman = "cglm"
+dnf = "cglm-devel"

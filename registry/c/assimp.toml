@@ -1,0 +1,9 @@
+name = "assimp"
+description = "Open Asset Import Library (C API)"
+headers = ["assimp/cimport.h"]
+libs = ["assimp"]
+pkg_config = "assimp"
+brew = "assimp"
+apt = "libassimp-dev"
+pacman = "assimp"
+dnf = "assimp-devel"

@@ -1,0 +1,9 @@
+name = "glew"
+description = "OpenGL Extension Wrangler"
+headers = ["GL/glew.h"]
+libs = ["GLEW"]
+pkg_config = "glew"
+brew = "glew"
+apt = "libglew-dev"
+pacman = "glew"
+dnf = "glew-devel"

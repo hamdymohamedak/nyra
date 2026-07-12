@@ -1,0 +1,9 @@
+name = "libnice"
+description = "ICE / connectivity (WebRTC)"
+headers = ["nice/agent.h"]
+libs = ["nice"]
+pkg_config = "nice"
+brew = "libnice"
+apt = "libnice-dev"
+pacman = "libnice"
+dnf = "libnice-devel"

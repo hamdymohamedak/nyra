@@ -1,0 +1,9 @@
+name = "cunit"
+description = "C Unit testing framework"
+headers = ["CUnit/CUnit.h"]
+libs = ["cunit"]
+pkg_config = "cunit"
+brew = "cunit"
+apt = "libcunit1-dev"
+pacman = "cunit"
+dnf = "CUnit-devel"

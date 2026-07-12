@@ -89,6 +89,8 @@ mod tests {
             header,
             includes: vec![],
             defines: vec![],
+            force_includes: vec![],
+            cxx: false,
             link_libs: vec!["m".into()],
             function_prefix: None,
             export_filter: vec![],

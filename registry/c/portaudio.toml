@@ -1,0 +1,9 @@
+name = "portaudio"
+description = "Cross-platform audio I/O"
+headers = ["portaudio.h"]
+libs = ["portaudio"]
+pkg_config = "portaudio-2.0"
+brew = "portaudio"
+apt = "portaudio19-dev"
+pacman = "portaudio"
+dnf = "portaudio-devel"

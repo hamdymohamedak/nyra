@@ -476,6 +476,7 @@ def main() -> int:
     check_examples_syntax()
     check_recipe_json_examples()
     check_c_lib_registry_roundtrip()
+    check_c_registry_catalog_size()
     check_batch_json_catalogs()
     check_abi_manifest_tree()
     check_runtime_map_pure_denylist()
@@ -484,6 +485,27 @@ def main() -> int:
     check_install_sh_defaults()
     print("CONF-CONTRIB-PY: all checks passed")
     return 0
+
+
+def check_c_registry_catalog_size() -> None:
+    from contrib_dev.c_registry_catalog import count as catalog_count
+    from contrib_dev.paths import C_REGISTRY, C_REGISTRY_RS
+
+    n = catalog_count()
+    if n < 100:
+        _fail(f"c_registry_catalog has {n} entries (need >= 100)")
+    tomls = sorted(p.stem for p in C_REGISTRY.glob("*.toml"))
+    if len(tomls) != n:
+        _fail(f"registry/c has {len(tomls)} tomls but catalog has {n}")
+    rs = C_REGISTRY_RS.read_text(encoding="utf-8")
+    missing = [name for name in tomls if f'("{name}", include_str!' not in rs]
+    if missing:
+        _fail(f"c_registry.rs BUILTIN missing: {missing[:8]}")
+    live = MAKE_PY / "test_c_registry.py"
+    rc = subprocess.call([sys.executable, str(live)], cwd=str(ROOT))
+    if rc != 0:
+        _fail("test_c_registry.py (schema/brew)")
+    _ok(f"c registry catalog ({n} libs wired + validated)")
 
 
 def check_install_sh_defaults() -> None:

@@ -1,0 +1,10 @@
+name = "tesseract"
+description = "OCR engine (C API)"
+headers = ["tesseract/capi.h"]
+libs = ["tesseract"]
+pkg_config = "tesseract"
+brew = "tesseract"
+apt = "libtesseract-dev"
+pacman = "tesseract"
+dnf = "tesseract-devel"
+depends = ["leptonica"]

@@ -1,0 +1,8 @@
+name = "quickjs"
+description = "Small embeddable JavaScript engine"
+headers = ["quickjs.h"]
+libs = ["quickjs"]
+brew = "quickjs"
+apt = "libquickjs-dev"
+pacman = "quickjs"
+dnf = "quickjs-devel"

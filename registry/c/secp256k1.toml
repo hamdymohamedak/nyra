@@ -1,0 +1,9 @@
+name = "secp256k1"
+description = "Optimized ECDSA / secp256k1"
+headers = ["secp256k1.h"]
+libs = ["secp256k1"]
+pkg_config = "libsecp256k1"
+brew = "secp256k1"
+apt = "libsecp256k1-dev"
+pacman = "libsecp256k1"
+dnf = "libsecp256k1-devel"

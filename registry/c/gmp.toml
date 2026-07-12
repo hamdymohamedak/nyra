@@ -1,0 +1,9 @@
+name = "gmp"
+description = "GNU multiple precision arithmetic"
+headers = ["gmp.h"]
+libs = ["gmp"]
+pkg_config = "gmp"
+brew = "gmp"
+apt = "libgmp-dev"
+pacman = "gmp"
+dnf = "gmp-devel"

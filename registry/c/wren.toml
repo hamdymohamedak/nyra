@@ -1,0 +1,8 @@
+name = "wren"
+description = "Small class-based scripting language"
+headers = ["wren.h"]
+libs = ["wren"]
+brew = "wren"
+apt = "libwren-dev"
+pacman = "wren"
+dnf = "wren-devel"

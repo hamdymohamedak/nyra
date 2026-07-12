@@ -1,0 +1,9 @@
+name = "geos"
+description = "Geometry Engine Open Source"
+headers = ["geos_c.h"]
+libs = ["geos_c"]
+pkg_config = "geos"
+brew = "geos"
+apt = "libgeos-dev"
+pacman = "geos"
+dnf = "geos-devel"

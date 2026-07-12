@@ -1,0 +1,8 @@
+name = "tcmalloc"
+description = "Thread-caching malloc (gperftools)"
+headers = ["gperftools/tcmalloc.h"]
+libs = ["tcmalloc"]
+brew = "gperftools"
+apt = "libgoogle-perftools-dev"
+pacman = "gperftools"
+dnf = "gperftools-devel"

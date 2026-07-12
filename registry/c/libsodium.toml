@@ -1,0 +1,10 @@
+name = "libsodium"
+description = "Modern easy-to-use crypto library"
+headers = ["sodium.h"]
+libs = ["sodium"]
+pkg_config = "libsodium"
+brew = "libsodium"
+apt = "libsodium-dev"
+pacman = "libsodium"
+dnf = "libsodium-devel"
+aliases = ["sodium"]

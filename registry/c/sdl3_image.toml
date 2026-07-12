@@ -1,0 +1,10 @@
+name = "sdl3_image"
+description = "SDL3 image loading"
+headers = ["SDL3_image/SDL_image.h"]
+libs = ["SDL3_image"]
+pkg_config = "sdl3-image"
+brew = "sdl3_image"
+apt = "libsdl3-image-dev"
+pacman = "sdl3_image"
+dnf = "SDL3_image-devel"
+depends = ["sdl3"]

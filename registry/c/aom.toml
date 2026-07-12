@@ -1,0 +1,9 @@
+name = "aom"
+description = "AV1 codec library"
+headers = ["aom/aom.h"]
+libs = ["aom"]
+pkg_config = "aom"
+brew = "aom"
+apt = "libaom-dev"
+pacman = "aom"
+dnf = "libaom-devel"

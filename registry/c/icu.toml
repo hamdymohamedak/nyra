@@ -1,0 +1,10 @@
+name = "icu"
+description = "International Components for Unicode"
+headers = ["unicode/ustring.h"]
+libs = ["icuuc", "icui18n", "icudata"]
+pkg_config = "icu-uc"
+brew = "icu4c@78"
+apt = "libicu-dev"
+pacman = "icu"
+dnf = "libicu-devel"
+aliases = ["icu4c"]

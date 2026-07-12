@@ -141,6 +141,8 @@ pub(crate) fn pkg_command(cmd: PkgCommands) -> Result<(), String> {
                 link_lib,
                 include,
                 define,
+                force_include: vec![],
+                cxx: false,
                 output,
                 prefix,
                 export,

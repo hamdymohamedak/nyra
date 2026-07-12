@@ -1,0 +1,9 @@
+name = "libusb"
+description = "USB device access"
+headers = ["libusb-1.0/libusb.h"]
+libs = ["usb-1.0"]
+pkg_config = "libusb-1.0"
+brew = "libusb"
+apt = "libusb-1.0-0-dev"
+pacman = "libusb"
+dnf = "libusb1-devel"

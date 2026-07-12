@@ -1,0 +1,5 @@
+name = "annoy"
+description = "Spotify Annoy approximate nearest neighbors"
+headers = ["annoylib.h"]
+libs = ["m"]
+git = "https://github.com/spotify/annoy.git"

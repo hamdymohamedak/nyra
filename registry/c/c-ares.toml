@@ -1,0 +1,10 @@
+name = "c-ares"
+description = "Async DNS resolver"
+headers = ["ares.h"]
+libs = ["cares"]
+pkg_config = "libcares"
+brew = "c-ares"
+apt = "libc-ares-dev"
+pacman = "c-ares"
+dnf = "c-ares-devel"
+aliases = ["cares"]

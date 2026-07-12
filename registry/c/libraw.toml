@@ -1,0 +1,9 @@
+name = "libraw"
+description = "RAW image processing"
+headers = ["libraw/libraw.h"]
+libs = ["raw"]
+pkg_config = "libraw"
+brew = "libraw"
+apt = "libraw-dev"
+pacman = "libraw"
+dnf = "LibRaw-devel"

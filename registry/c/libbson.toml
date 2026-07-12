@@ -1,0 +1,9 @@
+name = "libbson"
+description = "BSON library (MongoDB)"
+headers = ["bson/bson.h"]
+libs = ["bson-1.0"]
+pkg_config = "libbson-1.0"
+brew = "mongo-c-driver"
+apt = "libbson-dev"
+pacman = "libbson"
+dnf = "libbson-devel"

@@ -1,0 +1,9 @@
+name = "djvulibre"
+description = "DjVu document library"
+headers = ["libdjvu/ddjvuapi.h"]
+libs = ["djvulibre"]
+pkg_config = "ddjvuapi"
+brew = "djvulibre"
+apt = "libdjvulibre-dev"
+pacman = "djvulibre"
+dnf = "djvulibre-devel"

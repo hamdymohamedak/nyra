@@ -1,0 +1,9 @@
+name = "snappy"
+description = "Fast compressor/decompressor"
+headers = ["snappy-c.h"]
+libs = ["snappy"]
+pkg_config = "snappy"
+brew = "snappy"
+apt = "libsnappy-dev"
+pacman = "snappy"
+dnf = "snappy-devel"

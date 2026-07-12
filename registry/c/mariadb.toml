@@ -1,0 +1,10 @@
+name = "mariadb"
+description = "MariaDB / MySQL client library"
+headers = ["mysql.h"]
+libs = ["mariadb"]
+pkg_config = "libmariadb"
+brew = "mariadb-connector-c"
+apt = "libmariadb-dev"
+pacman = "mariadb-libs"
+dnf = "mariadb-connector-c-devel"
+aliases = ["mysql", "libmariadb"]

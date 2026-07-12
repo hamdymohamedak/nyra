@@ -1,0 +1,9 @@
+name = "lcms2"
+description = "Little CMS color management"
+headers = ["lcms2.h"]
+libs = ["lcms2"]
+pkg_config = "lcms2"
+brew = "little-cms2"
+apt = "liblcms2-dev"
+pacman = "lcms2"
+dnf = "lcms2-devel"

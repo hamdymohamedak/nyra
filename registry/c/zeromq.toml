@@ -1,0 +1,10 @@
+name = "zeromq"
+description = "High-performance messaging (ØMQ)"
+headers = ["zmq.h"]
+libs = ["zmq"]
+pkg_config = "libzmq"
+brew = "zeromq"
+apt = "libzmq3-dev"
+pacman = "zeromq"
+dnf = "zeromq-devel"
+aliases = ["zmq", "libzmq"]

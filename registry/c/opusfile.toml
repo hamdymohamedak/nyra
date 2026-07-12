@@ -1,0 +1,10 @@
+name = "opusfile"
+description = "High-level Opus decoding"
+headers = ["opus/opusfile.h"]
+libs = ["opusfile"]
+pkg_config = "opusfile"
+brew = "opusfile"
+apt = "libopusfile-dev"
+pacman = "opusfile"
+dnf = "opusfile-devel"
+depends = ["opus", "libogg"]

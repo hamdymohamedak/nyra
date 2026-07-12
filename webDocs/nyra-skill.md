@@ -2442,7 +2442,7 @@ Nyra does **not** require libraries to be written in Nyra. Pick the pattern:
 
 | Need | Pattern | Example |
 |------|---------|---------|
-| C API (gsl, zlib, sqlite3, …) | Install via brew/apt → `nyra bind NAME` (or manual `nyra bind c HEADER`) | [c-bindgen](https://nyra-lang.github.io/nyra/c-bindgen.html#pkg-c) |
+| C API (gsl, zlib, onnxruntime, llama-cpp, faiss, …) | Install via brew/apt → `nyra bind NAME` (or manual `nyra bind c HEADER`) | [c-bindgen](https://nyra-lang.github.io/nyra/c-bindgen.html#ai-libs) |
 | pip / npm / Maven ecosystem | **Language bridge** — subprocess JSON workers | `stdlib/bridge/mod.ny` |
 | Run system command (exit code) | **Command** — fork/exec MVP | `stdlib/process.ny` |
 | Host calls Nyra | `export fn` + `--cdylib` | NyraPkg registry / `nyra pkg install` |

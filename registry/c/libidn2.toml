@@ -1,0 +1,9 @@
+name = "libidn2"
+description = "Internationalized domain names"
+headers = ["idn2.h"]
+libs = ["idn2"]
+pkg_config = "libidn2"
+brew = "libidn2"
+apt = "libidn2-dev"
+pacman = "libidn2"
+dnf = "libidn2-devel"

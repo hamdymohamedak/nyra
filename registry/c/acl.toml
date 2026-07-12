@@ -1,0 +1,10 @@
+name = "acl"
+description = "POSIX Access Control Lists"
+headers = ["sys/acl.h"]
+libs = ["acl"]
+pkg_config = "libacl"
+brew = "acl"
+apt = "libacl1-dev"
+pacman = "acl"
+dnf = "libacl-devel"
+platforms = ["linux"]

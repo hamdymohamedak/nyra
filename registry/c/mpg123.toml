@@ -1,0 +1,9 @@
+name = "mpg123"
+description = "MPEG audio decoder"
+headers = ["mpg123.h"]
+libs = ["mpg123"]
+pkg_config = "libmpg123"
+brew = "mpg123"
+apt = "libmpg123-dev"
+pacman = "mpg123"
+dnf = "mpg123-devel"

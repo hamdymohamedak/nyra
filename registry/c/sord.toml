@@ -1,0 +1,10 @@
+name = "sord"
+description = "Lightweight RDF store"
+headers = ["sord/sord.h"]
+libs = ["sord-0"]
+pkg_config = "sord-0"
+brew = "sord"
+apt = "libsord-dev"
+pacman = "sord"
+dnf = "sord-devel"
+depends = ["serd"]

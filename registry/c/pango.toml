@@ -1,0 +1,9 @@
+name = "pango"
+description = "Text layout / rendering"
+headers = ["pango/pango.h"]
+libs = ["pango-1.0"]
+pkg_config = "pango"
+brew = "pango"
+apt = "libpango1.0-dev"
+pacman = "pango"
+dnf = "pango-devel"

@@ -1,0 +1,9 @@
+name = "libsrtp"
+description = "Secure RTP (WebRTC)"
+headers = ["srtp2/srtp.h"]
+libs = ["srtp2"]
+pkg_config = "libsrtp2"
+brew = "srtp"
+apt = "libsrtp2-dev"
+pacman = "libsrtp"
+dnf = "libsrtp-devel"

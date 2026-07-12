@@ -1,0 +1,9 @@
+name = "cuda"
+description = "NVIDIA CUDA Toolkit (driver runtime)"
+headers = ["cuda_runtime.h"]
+libs = ["cudart"]
+apt = "nvidia-cuda-toolkit"
+pacman = "cuda"
+dnf = "cuda-toolkit"
+aliases = ["cuda-toolkit"]
+platforms = ["linux"]

@@ -1,0 +1,5 @@
+name = "nuklear"
+description = "Immediate-mode GUI toolkit (header-only)"
+headers = ["nuklear.h"]
+libs = ["m"]
+git = "https://github.com/Immediate-Mode-UI/Nuklear.git"

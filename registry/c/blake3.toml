@@ -1,0 +1,9 @@
+name = "blake3"
+description = "BLAKE3 cryptographic hash"
+headers = ["blake3.h"]
+libs = ["blake3"]
+pkg_config = "libblake3"
+brew = "blake3"
+apt = "libblake3-dev"
+pacman = "blake3"
+dnf = "blake3-devel"

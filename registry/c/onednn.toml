@@ -1,0 +1,9 @@
+name = "onednn"
+description = "oneDNN (DNNL) — CPU deep-learning primitives"
+headers = ["dnnl.h"]
+libs = ["dnnl"]
+brew = "onednn"
+apt = "libdnnl-dev"
+pacman = "onednn"
+dnf = "onednn-devel"
+aliases = ["dnnl", "mkl-dnn"]

@@ -1,0 +1,9 @@
+name = "cfitsio"
+description = "FITS file I/O"
+headers = ["fitsio.h"]
+libs = ["cfitsio"]
+pkg_config = "cfitsio"
+brew = "cfitsio"
+apt = "libcfitsio-dev"
+pacman = "cfitsio"
+dnf = "cfitsio-devel"

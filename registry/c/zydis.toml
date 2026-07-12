@@ -1,0 +1,9 @@
+name = "zydis"
+description = "Fast x86/x86-64 disassembler"
+headers = ["Zydis/Zydis.h"]
+libs = ["Zydis"]
+pkg_config = "zydis"
+brew = "zydis"
+apt = "libzydis-dev"
+pacman = "zydis"
+dnf = "zydis-devel"

@@ -1,0 +1,9 @@
+name = "speex"
+description = "Speex audio codec"
+headers = ["speex/speex.h"]
+libs = ["speex"]
+pkg_config = "speex"
+brew = "speex"
+apt = "libspeex-dev"
+pacman = "speex"
+dnf = "speex-devel"

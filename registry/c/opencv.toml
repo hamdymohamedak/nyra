@@ -1,0 +1,10 @@
+name = "opencv"
+description = "OpenCV computer vision (C API)"
+headers = ["opencv2/core/core_c.h"]
+libs = ["opencv_core", "opencv_imgproc", "opencv_imgcodecs", "opencv_highgui"]
+pkg_config = "opencv4"
+brew = "opencv"
+apt = "libopencv-dev"
+pacman = "opencv"
+dnf = "opencv-devel"
+aliases = ["opencv4"]

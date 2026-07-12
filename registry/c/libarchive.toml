@@ -1,0 +1,10 @@
+name = "libarchive"
+description = "Multi-format archive library"
+headers = ["archive.h"]
+libs = ["archive"]
+pkg_config = "libarchive"
+brew = "libarchive"
+apt = "libarchive-dev"
+pacman = "libarchive"
+dnf = "libarchive-devel"
+aliases = ["archive"]

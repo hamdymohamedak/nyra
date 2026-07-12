@@ -1,0 +1,9 @@
+name = "rtmidi"
+description = "Realtime MIDI I/O"
+headers = ["rtmidi/RtMidi.h"]
+libs = ["rtmidi"]
+pkg_config = "rtmidi"
+brew = "rtmidi"
+apt = "librtmidi-dev"
+pacman = "rtmidi"
+dnf = "rtmidi-devel"

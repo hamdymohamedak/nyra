@@ -1,0 +1,10 @@
+name = "libvorbis"
+description = "Vorbis audio codec"
+headers = ["vorbis/codec.h"]
+libs = ["vorbis", "vorbisenc", "vorbisfile"]
+pkg_config = "vorbis"
+brew = "libvorbis"
+apt = "libvorbis-dev"
+pacman = "libvorbis"
+dnf = "libvorbis-devel"
+depends = ["libogg"]

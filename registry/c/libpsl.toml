@@ -1,0 +1,9 @@
+name = "libpsl"
+description = "Public Suffix List library"
+headers = ["libpsl.h"]
+libs = ["psl"]
+pkg_config = "libpsl"
+brew = "libpsl"
+apt = "libpsl-dev"
+pacman = "libpsl"
+dnf = "libpsl-devel"

@@ -1,0 +1,9 @@
+name = "tensorrt"
+description = "NVIDIA TensorRT inference optimizer"
+headers = ["NvInfer.h"]
+libs = ["nvinfer"]
+apt = "libnvinfer-dev"
+pacman = "tensorrt"
+dnf = "tensorrt-devel"
+depends = ["cuda", "cudnn"]
+platforms = ["linux"]

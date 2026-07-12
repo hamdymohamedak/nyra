@@ -1,0 +1,10 @@
+name = "apr-util"
+description = "APR utilities"
+headers = ["apr-1/apr_uri.h"]
+libs = ["aprutil-1"]
+pkg_config = "apr-util-1"
+brew = "apr-util"
+apt = "libaprutil1-dev"
+pacman = "apr-util"
+dnf = "apr-util-devel"
+depends = ["apr"]

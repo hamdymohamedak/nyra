@@ -1,0 +1,10 @@
+name = "libcap"
+description = "POSIX capabilities (Linux)"
+headers = ["sys/capability.h"]
+libs = ["cap"]
+pkg_config = "libcap"
+brew = "libcap"
+apt = "libcap-dev"
+pacman = "libcap"
+dnf = "libcap-devel"
+platforms = ["linux"]

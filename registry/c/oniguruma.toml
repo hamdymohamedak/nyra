@@ -1,0 +1,9 @@
+name = "oniguruma"
+description = "Modern regular expression library"
+headers = ["oniguruma.h"]
+libs = ["onig"]
+pkg_config = "oniguruma"
+brew = "oniguruma"
+apt = "libonig-dev"
+pacman = "oniguruma"
+dnf = "oniguruma-devel"

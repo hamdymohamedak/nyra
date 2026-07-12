@@ -1,0 +1,9 @@
+name = "libcoap"
+description = "Constrained Application Protocol"
+headers = ["coap3/coap.h"]
+libs = ["coap-3"]
+pkg_config = "libcoap-3"
+brew = "libcoap"
+apt = "libcoap3-dev"
+pacman = "libcoap"
+dnf = "libcoap-devel"

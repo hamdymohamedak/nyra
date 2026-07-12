@@ -1,0 +1,9 @@
+name = "lua"
+description = "Lua embeddable scripting language"
+headers = ["lua.h"]
+libs = ["lua"]
+pkg_config = "lua"
+brew = "lua"
+apt = "liblua5.4-dev"
+pacman = "lua"
+dnf = "lua-devel"

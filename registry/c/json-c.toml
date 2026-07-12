@@ -1,0 +1,9 @@
+name = "json-c"
+description = "JSON parsing library (json-c)"
+headers = ["json-c/json.h"]
+libs = ["json-c"]
+pkg_config = "json-c"
+brew = "json-c"
+apt = "libjson-c-dev"
+pacman = "json-c"
+dnf = "json-c-devel"

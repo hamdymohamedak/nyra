@@ -1,0 +1,10 @@
+name = "libunwind"
+description = "Stack unwinding library"
+headers = ["libunwind.h"]
+libs = ["unwind"]
+pkg_config = "libunwind"
+brew = "libunwind"
+apt = "libunwind-dev"
+pacman = "libunwind"
+dnf = "libunwind-devel"
+platforms = ["linux"]

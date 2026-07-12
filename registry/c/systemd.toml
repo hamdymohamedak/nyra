@@ -1,0 +1,9 @@
+name = "systemd"
+description = "systemd / sd-bus client library"
+headers = ["systemd/sd-bus.h"]
+libs = ["systemd"]
+pkg_config = "libsystemd"
+apt = "libsystemd-dev"
+pacman = "systemd-libs"
+dnf = "systemd-devel"
+platforms = ["linux"]

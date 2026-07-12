@@ -1,0 +1,12 @@
+name = "protobuf"
+description = "Google Protocol Buffers (C++)"
+headers = ["google/protobuf/message_lite.h"]
+libs = ["protobuf"]
+pkg_config = "protobuf"
+brew = "protobuf"
+apt = "libprotobuf-dev"
+pacman = "protobuf"
+dnf = "protobuf-devel"
+aliases = ["libprotobuf"]
+depends = ["abseil"]
+cxx = true

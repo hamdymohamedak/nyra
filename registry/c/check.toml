@@ -1,0 +1,9 @@
+name = "check"
+description = "Unit test framework for C"
+headers = ["check.h"]
+libs = ["check"]
+pkg_config = "check"
+brew = "check"
+apt = "check"
+pacman = "check"
+dnf = "check-devel"

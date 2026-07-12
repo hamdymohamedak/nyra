@@ -1,0 +1,9 @@
+name = "llhttp"
+description = "HTTP parser from Node.js"
+headers = ["llhttp.h"]
+libs = ["llhttp"]
+pkg_config = "libllhttp"
+brew = "llhttp"
+apt = "libllhttp-dev"
+pacman = "llhttp"
+dnf = "llhttp-devel"

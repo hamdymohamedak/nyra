@@ -1,0 +1,10 @@
+name = "freeglut"
+description = "OpenGL Utility Toolkit (free)"
+headers = ["GL/freeglut.h"]
+libs = ["glut"]
+pkg_config = "glut"
+brew = "freeglut"
+apt = "freeglut3-dev"
+pacman = "freeglut"
+dnf = "freeglut-devel"
+aliases = ["glut"]

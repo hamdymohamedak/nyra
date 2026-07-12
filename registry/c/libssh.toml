@@ -1,0 +1,9 @@
+name = "libssh"
+description = "SSH client/server library"
+headers = ["libssh/libssh.h"]
+libs = ["ssh"]
+pkg_config = "libssh"
+brew = "libssh"
+apt = "libssh-dev"
+pacman = "libssh"
+dnf = "libssh-devel"

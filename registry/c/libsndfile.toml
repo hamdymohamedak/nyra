@@ -1,0 +1,9 @@
+name = "libsndfile"
+description = "Audio file read/write"
+headers = ["sndfile.h"]
+libs = ["sndfile"]
+pkg_config = "sndfile"
+brew = "libsndfile"
+apt = "libsndfile1-dev"
+pacman = "libsndfile"
+dnf = "libsndfile-devel"

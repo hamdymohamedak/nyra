@@ -1,0 +1,9 @@
+name = "uriparser"
+description = "Strict URI parse/resolve/escape"
+headers = ["uriparser/Uri.h"]
+libs = ["uriparser"]
+pkg_config = "liburiparser"
+brew = "uriparser"
+apt = "liburiparser-dev"
+pacman = "uriparser"
+dnf = "uriparser-devel"

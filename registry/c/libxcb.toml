@@ -1,0 +1,9 @@
+name = "libxcb"
+description = "X protocol C-language Binding"
+headers = ["xcb/xcb.h"]
+libs = ["xcb"]
+pkg_config = "xcb"
+brew = "libxcb"
+apt = "libxcb1-dev"
+pacman = "libxcb"
+dnf = "libxcb-devel"

@@ -1,0 +1,10 @@
+name = "theora"
+description = "Theora video codec"
+headers = ["theora/theora.h"]
+libs = ["theora"]
+pkg_config = "theora"
+brew = "theora"
+apt = "libtheora-dev"
+pacman = "libtheora"
+dnf = "libtheora-devel"
+depends = ["libogg"]

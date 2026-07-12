@@ -1,0 +1,8 @@
+name = "vulkan-headers"
+description = "Vulkan API headers"
+headers = ["vulkan/vulkan.h"]
+libs = ["vulkan"]
+brew = "vulkan-headers"
+apt = "libvulkan-dev"
+pacman = "vulkan-headers"
+dnf = "vulkan-headers"

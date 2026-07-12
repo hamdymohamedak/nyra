@@ -1,0 +1,9 @@
+name = "gtk4"
+description = "GTK 4 widget toolkit"
+headers = ["gtk/gtk.h"]
+libs = ["gtk-4"]
+pkg_config = "gtk4"
+brew = "gtk4"
+apt = "libgtk-4-dev"
+pacman = "gtk4"
+dnf = "gtk4-devel"

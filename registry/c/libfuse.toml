@@ -1,0 +1,11 @@
+name = "libfuse"
+description = "Filesystem in Userspace"
+headers = ["fuse.h"]
+libs = ["fuse"]
+pkg_config = "fuse"
+brew = "libfuse"
+apt = "libfuse-dev"
+pacman = "fuse2"
+dnf = "fuse-devel"
+aliases = ["fuse"]
+platforms = ["linux"]

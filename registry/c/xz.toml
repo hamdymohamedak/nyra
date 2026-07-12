@@ -1,0 +1,10 @@
+name = "xz"
+description = "LZMA / xz compression"
+headers = ["lzma.h"]
+libs = ["lzma"]
+pkg_config = "liblzma"
+brew = "xz"
+apt = "liblzma-dev"
+pacman = "xz"
+dnf = "xz-devel"
+aliases = ["lzma", "liblzma"]

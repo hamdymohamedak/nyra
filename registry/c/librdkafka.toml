@@ -1,0 +1,10 @@
+name = "librdkafka"
+description = "Apache Kafka C client"
+headers = ["librdkafka/rdkafka.h"]
+libs = ["rdkafka"]
+pkg_config = "rdkafka"
+brew = "librdkafka"
+apt = "librdkafka-dev"
+pacman = "librdkafka"
+dnf = "librdkafka-devel"
+aliases = ["rdkafka"]

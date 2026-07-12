@@ -1,0 +1,9 @@
+name = "argon2"
+description = "Argon2 password hashing"
+headers = ["argon2.h"]
+libs = ["argon2"]
+pkg_config = "libargon2"
+brew = "argon2"
+apt = "libargon2-dev"
+pacman = "argon2"
+dnf = "argon2-devel"

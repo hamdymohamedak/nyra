@@ -1,0 +1,10 @@
+name = "bzip2"
+description = "bzip2 compression"
+headers = ["bzlib.h"]
+libs = ["bz2"]
+pkg_config = "bzip2"
+brew = "bzip2"
+apt = "libbz2-dev"
+pacman = "bzip2"
+dnf = "bzip2-devel"
+aliases = ["bz2"]

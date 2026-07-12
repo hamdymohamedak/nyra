@@ -1,0 +1,9 @@
+name = "sdl3"
+description = "Simple DirectMedia Layer 3"
+headers = ["SDL3/SDL.h"]
+libs = ["SDL3"]
+pkg_config = "sdl3"
+brew = "sdl3"
+apt = "libsdl3-dev"
+pacman = "sdl3"
+dnf = "SDL3-devel"

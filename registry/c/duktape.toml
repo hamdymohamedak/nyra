@@ -1,0 +1,9 @@
+name = "duktape"
+description = "Embeddable JavaScript engine"
+headers = ["duktape.h"]
+libs = ["duktape"]
+pkg_config = "duktape"
+brew = "duktape"
+apt = "libduktape-dev"
+pacman = "duktape"
+dnf = "duktape-devel"

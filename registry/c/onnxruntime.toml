@@ -1,0 +1,10 @@
+name = "onnxruntime"
+description = "ONNX Runtime — cross-framework model inference"
+headers = ["onnxruntime/onnxruntime_c_api.h"]
+libs = ["onnxruntime"]
+pkg_config = "libonnxruntime"
+brew = "onnxruntime"
+apt = "libonnxruntime-dev"
+pacman = "onnxruntime"
+dnf = "onnxruntime-devel"
+aliases = ["onnx-runtime"]

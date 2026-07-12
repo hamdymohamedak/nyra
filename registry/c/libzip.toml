@@ -1,0 +1,9 @@
+name = "libzip"
+description = "ZIP archive library"
+headers = ["zip.h"]
+libs = ["zip"]
+pkg_config = "libzip"
+brew = "libzip"
+apt = "libzip-dev"
+pacman = "libzip"
+dnf = "libzip-devel"

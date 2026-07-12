@@ -1,0 +1,10 @@
+name = "unixodbc"
+description = "ODBC driver manager"
+headers = ["sql.h"]
+libs = ["odbc"]
+pkg_config = "odbc"
+brew = "unixodbc"
+apt = "unixodbc-dev"
+pacman = "unixodbc"
+dnf = "unixODBC-devel"
+aliases = ["odbc"]

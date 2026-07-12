@@ -1,0 +1,5 @@
+name = "milvus"
+description = "Milvus vector database C++ SDK"
+headers = ["milvus/MilvusClient.h"]
+libs = ["milvus"]
+git = "https://github.com/milvus-io/milvus-sdk-cpp.git"

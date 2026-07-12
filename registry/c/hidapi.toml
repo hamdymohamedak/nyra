@@ -1,0 +1,9 @@
+name = "hidapi"
+description = "USB HID device library"
+headers = ["hidapi/hidapi.h"]
+libs = ["hidapi"]
+pkg_config = "hidapi-hidraw"
+brew = "hidapi"
+apt = "libhidapi-dev"
+pacman = "hidapi"
+dnf = "hidapi-devel"

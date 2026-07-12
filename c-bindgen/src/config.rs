@@ -5,6 +5,10 @@ pub struct BindConfig {
     pub header: PathBuf,
     pub includes: Vec<PathBuf>,
     pub defines: Vec<String>,
+    /// Force `#include` these headers first (`clang -include`).
+    pub force_includes: Vec<String>,
+    /// Parse as C++ instead of C.
+    pub cxx: bool,
     pub link_libs: Vec<String>,
     /// Only emit functions whose name starts with this prefix.
     pub function_prefix: Option<String>,

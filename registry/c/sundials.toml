@@ -1,0 +1,9 @@
+name = "sundials"
+description = "SUNDIALS ODE/DAE solvers"
+headers = ["sundials/sundials_types.h"]
+libs = ["sundials_cvode", "sundials_nvecserial"]
+pkg_config = "sundials_cvode"
+brew = "sundials"
+apt = "libsundials-dev"
+pacman = "sundials"
+dnf = "sundials-devel"

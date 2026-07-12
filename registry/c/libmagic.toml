@@ -1,0 +1,10 @@
+name = "libmagic"
+description = "file(1) magic number recognition"
+headers = ["magic.h"]
+libs = ["magic"]
+pkg_config = "libmagic"
+brew = "libmagic"
+apt = "libmagic-dev"
+pacman = "file"
+dnf = "file-devel"
+aliases = ["magic"]

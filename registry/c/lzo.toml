@@ -1,0 +1,9 @@
+name = "lzo"
+description = "LZO real-time compression"
+headers = ["lzo/lzo1x.h"]
+libs = ["lzo2"]
+pkg_config = "lzo2"
+brew = "lzo"
+apt = "liblzo2-dev"
+pacman = "lzo"
+dnf = "lzo-devel"

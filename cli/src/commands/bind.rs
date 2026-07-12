@@ -41,6 +41,8 @@ pub(crate) fn bind_command(cmd: BindCommands) -> Result<(), String> {
             link_lib,
             include,
             define,
+            force_include: vec![],
+            cxx: false,
             output,
             prefix,
             export,

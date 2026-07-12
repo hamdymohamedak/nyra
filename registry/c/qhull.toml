@@ -1,0 +1,9 @@
+name = "qhull"
+description = "Convex hull / Delaunay library"
+headers = ["libqhull_r/libqhull_r.h"]
+libs = ["qhull_r"]
+pkg_config = "qhull_r"
+brew = "qhull"
+apt = "libqhull-dev"
+pacman = "qhull"
+dnf = "qhull-devel"

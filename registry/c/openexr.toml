@@ -1,0 +1,11 @@
+name = "openexr"
+description = "OpenEXR HDR image codec (C API)"
+headers = ["OpenEXR/openexr.h"]
+libs = ["OpenEXRCore"]
+pkg_config = "OpenEXR"
+brew = "openexr"
+apt = "libopenexr-dev"
+pacman = "openexr"
+dnf = "OpenEXR-devel"
+aliases = ["libilm"]
+depends = ["imath"]

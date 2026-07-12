@@ -1,0 +1,9 @@
+name = "jpeg-xl"
+description = "JPEG XL codec"
+headers = ["jxl/decode.h"]
+libs = ["jxl"]
+pkg_config = "libjxl"
+brew = "jpeg-xl"
+apt = "libjxl-dev"
+pacman = "libjxl"
+dnf = "libjxl-devel"

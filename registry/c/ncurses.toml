@@ -1,0 +1,9 @@
+name = "ncurses"
+description = "Terminal UI library"
+headers = ["ncurses.h"]
+libs = ["ncurses"]
+pkg_config = "ncurses"
+brew = "ncurses"
+apt = "libncurses-dev"
+pacman = "ncurses"
+dnf = "ncurses-devel"

@@ -1,0 +1,9 @@
+name = "tcl"
+description = "Tool Command Language"
+headers = ["tcl.h"]
+libs = ["tcl"]
+pkg_config = "tcl"
+brew = "tcl-tk"
+apt = "tcl-dev"
+pacman = "tcl"
+dnf = "tcl-devel"

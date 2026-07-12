@@ -50,6 +50,12 @@ pub fn pkg_add_smart(spec: &str, opts: AddOptions) -> Result<(), String> {
 pub fn c_add(name: &str, opts: AddOptions) -> Result<(), String> {
     let root = opts.project.clone().unwrap_or_else(|| PathBuf::from("."));
     let entry = c_registry::find_entry(name)?;
+    if !entry.supports_host() {
+        return Err(format!(
+            "registry entry '{}': not supported on this OS (platforms: {:?})",
+            entry.name, entry.platforms
+        ));
+    }
     let key = entry.name.clone();
 
     let (header, lib_dirs, includes) = resolve_paths(&entry, &opts)?;
@@ -82,7 +88,9 @@ pub fn c_add(name: &str, opts: AddOptions) -> Result<(), String> {
         project: Some(root.clone()),
         link_lib: link_libs.clone(),
         include: all_includes,
-        define: vec![],
+        define: entry.defines.clone(),
+        force_include: entry.force_include.clone(),
+        cxx: entry.cxx,
         output: Some(root.join(&bindings_rel)),
         prefix: None,
         export: vec![],
@@ -298,6 +306,14 @@ fn resolve_paths(
         return resolve_git_entry(entry, opts, git_url);
     }
 
+    // On macOS prefer an installed Homebrew keg over system SDK pkg-config
+    // (libffi/curl/etc. otherwise resolve to Xcode stubs that bindgen cannot use).
+    if cfg!(target_os = "macos") {
+        if let Ok(resolved) = resolve_macos(entry, opts) {
+            return Ok(resolved);
+        }
+    }
+
     // Prefer pkg-config when available.
     if let Some(pc) = entry.pkg_config.as_deref() {
         if let Ok(resolved) = resolve_via_pkg_config(pc, header_rel) {
@@ -306,6 +322,7 @@ fn resolve_paths(
     }
 
     if cfg!(target_os = "macos") {
+        // resolve_macos already failed above — surface its install hint.
         resolve_macos(entry, opts)
     } else if cfg!(target_os = "linux") {
         resolve_linux(entry, opts)
@@ -372,6 +389,11 @@ fn resolve_dependency_paths(
                 }
             };
             includes.push(prefix.join("include"));
+            for p in nested_pkg_include_dirs(&prefix.join("include")) {
+                if !includes.iter().any(|x| x == &p) {
+                    includes.push(p);
+                }
+            }
             lib_dirs.push(prefix.join("lib").display().to_string());
         } else if cfg!(target_os = "linux") {
             let header_rel = dep.primary_header().unwrap_or("");
@@ -545,25 +567,86 @@ fn resolve_macos(
     };
 
     let include_dir = prefix.join("include");
-    let header = include_dir.join(header_rel);
-    if !header.is_file() {
-        // Fall back to common search roots.
-        if let Some(found) = find_header_in_roots(header_rel, &macos_include_roots()) {
-            let mut includes = macos_include_roots();
-            includes.extend(clang_system_includes()?);
-            let lib_dirs = vec![prefix.join("lib").display().to_string()];
-            return Ok((found, lib_dirs, includes));
+    let header_direct = include_dir.join(header_rel);
+    let (dep_libs, dep_inc) = resolve_dependency_paths(entry, opts)?;
+    let header = if header_direct.is_file() {
+        header_direct
+    } else {
+        // Nested layouts: eigen3/Eigen/Core, opencv4/opencv2/…, onnxruntime/…
+        let mut found = None;
+        for nest in nested_pkg_include_dirs(&include_dir) {
+            let cand = nest.join(header_rel);
+            if cand.is_file() {
+                found = Some(cand);
+                break;
+            }
         }
-        return Err(format!(
-            "header not found: {} (brew --prefix {})",
-            header.display(),
-            formula
-        ));
-    }
-    let lib_dirs = vec![prefix.join("lib").display().to_string()];
-    let mut includes = vec![include_dir];
+        if found.is_none() {
+            for dir in &dep_inc {
+                let cand = dir.join(header_rel);
+                if cand.is_file() {
+                    found = Some(cand);
+                    break;
+                }
+            }
+        }
+        if let Some(h) = found {
+            h
+        } else if let Some(found) = find_header_in_roots(header_rel, &macos_include_roots()) {
+            found
+        } else {
+            return Err(format!(
+                "header not found: {} (brew --prefix {})",
+                header_direct.display(),
+                formula
+            ));
+        }
+    };
+    let lib_dirs_own = vec![prefix.join("lib").display().to_string()];
+    let mut includes = include_dirs_for_prefix(&prefix, &header);
+    includes.extend(dep_inc);
     includes.extend(clang_system_includes()?);
+    let mut lib_dirs = dep_libs;
+    lib_dirs.extend(lib_dirs_own);
     Ok((header, lib_dirs, includes))
+}
+
+fn include_dirs_for_prefix(prefix: &Path, header: &Path) -> Vec<PathBuf> {
+    let include_dir = prefix.join("include");
+    let mut includes = vec![include_dir.clone()];
+    // Do NOT add header.parent() (e.g. …/include/flatbuffers): that makes
+    // `#include <string.h>` resolve to flatbuffers/string.h and break libc++.
+    // Same-dir quotes (`#include "base.h"`) already search the header's directory.
+    let _ = header;
+    for p in nested_pkg_include_dirs(&include_dir) {
+        if !includes.iter().any(|x| x == &p) {
+            includes.push(p);
+        }
+    }
+    includes
+}
+
+fn nested_pkg_include_dirs(include_dir: &Path) -> Vec<PathBuf> {
+    let mut out = Vec::new();
+    for nest in [
+        "apr-1",
+        "glib-2.0",
+        "gtk-3.0",
+        "gtk-4.0",
+        "libxml2",
+        "freetype2",
+        "eigen3",
+        "onnxruntime",
+        "OpenEXR",
+        "Imath",
+        "opencv4",
+    ] {
+        let p = include_dir.join(nest);
+        if p.is_dir() {
+            out.push(p);
+        }
+    }
+    out
 }
 
 fn resolve_linux(
@@ -840,11 +923,13 @@ fn brew_prefix(formula: &str) -> Result<PathBuf, String> {
     if path.is_empty() {
         return Err(format!("empty prefix for {formula}"));
     }
+    let prefix = PathBuf::from(&path);
     // `brew --prefix` succeeds even when the formula is not installed.
-    if !Path::new(&path).join("include").is_dir() {
+    // Accept either a linked include/ tree or a lib/ tree (header-only vs loader-only kegs).
+    if !prefix.join("include").is_dir() && !prefix.join("lib").is_dir() {
         return Err(format!("{formula} not installed"));
     }
-    Ok(PathBuf::from(path))
+    Ok(prefix)
 }
 
 fn prompt_yes_no(question: &str) -> Result<bool, String> {
@@ -1024,6 +1109,8 @@ fn bind_from_nyra_toml(
         link_lib: c.libraries.clone(),
         include: includes,
         define: vec![],
+        force_include: vec![],
+        cxx: false,
         output: Some(root.join(&bindings_rel)),
         prefix: None,
         export: vec![],
@@ -1108,6 +1195,8 @@ fn discover_and_bind(
         link_lib: libs.clone(),
         include: includes,
         define: vec![],
+        force_include: vec![],
+        cxx: false,
         output: Some(root.join(&bindings_rel)),
         prefix: None,
         export: vec![],
@@ -1505,14 +1594,25 @@ mod tests {
 
     #[test]
     fn registry_entries_have_pm_names() {
-        for name in ["zlib", "sqlite3", "gsl", "raylib", "openssl", "curl", "libpng", "sdl2"] {
-            let e = c_registry::find_entry(name).unwrap_or_else(|err| panic!("{name}: {err}"));
+        let names = c_registry::list_names().expect("registry names");
+        assert!(
+            names.len() >= 100,
+            "expected 100+ built-in C libs, got {}",
+            names.len()
+        );
+        for name in names {
+            let e = c_registry::find_entry(&name).unwrap_or_else(|err| panic!("{name}: {err}"));
             assert!(
-                e.pkg_config.is_some() || e.git.is_some(),
-                "{name}: need pkg_config or git"
+                e.pkg_config.is_some()
+                    || e.git.is_some()
+                    || e.brew.is_some()
+                    || e.apt.is_some(),
+                "{name}: need pkg_config, brew, apt, or git"
             );
-            assert!(e.brew.is_some() || e.git.is_some(), "{name}: need brew or git");
-            assert!(e.apt.is_some() || e.git.is_some(), "{name}: need apt or git");
+            assert!(
+                e.brew.is_some() || e.git.is_some() || e.apt.is_some(),
+                "{name}: need brew, apt, or git"
+            );
             assert!(!e.headers.is_empty(), "{name}: headers");
             assert!(!e.libs.is_empty(), "{name}: libs");
         }

@@ -1,0 +1,6 @@
+name = "tokenizers"
+description = "HuggingFace-style tokenizers (C++ API via tokenizers-cpp)"
+headers = ["tokenizers_c.h"]
+libs = ["tokenizers_c"]
+aliases = ["hf-tokenizers"]
+git = "https://github.com/mlc-ai/tokenizers-cpp.git"

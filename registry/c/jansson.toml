@@ -1,0 +1,9 @@
+name = "jansson"
+description = "C library for JSON"
+headers = ["jansson.h"]
+libs = ["jansson"]
+pkg_config = "jansson"
+brew = "jansson"
+apt = "libjansson-dev"
+pacman = "jansson"
+dnf = "jansson-devel"

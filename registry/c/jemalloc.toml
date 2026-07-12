@@ -1,0 +1,9 @@
+name = "jemalloc"
+description = "General-purpose malloc implementation"
+headers = ["jemalloc/jemalloc.h"]
+libs = ["jemalloc"]
+pkg_config = "jemalloc"
+brew = "jemalloc"
+apt = "libjemalloc-dev"
+pacman = "jemalloc"
+dnf = "jemalloc-devel"

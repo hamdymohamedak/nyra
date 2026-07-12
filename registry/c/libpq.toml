@@ -1,0 +1,10 @@
+name = "libpq"
+description = "PostgreSQL client library"
+headers = ["libpq-fe.h"]
+libs = ["pq"]
+pkg_config = "libpq"
+brew = "libpq"
+apt = "libpq-dev"
+pacman = "postgresql-libs"
+dnf = "libpq-devel"
+aliases = ["postgresql", "pq"]

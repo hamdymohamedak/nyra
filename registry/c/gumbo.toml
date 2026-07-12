@@ -1,0 +1,9 @@
+name = "gumbo"
+description = "HTML5 parsing library (Google)"
+headers = ["gumbo.h"]
+libs = ["gumbo"]
+pkg_config = "gumbo"
+brew = "gumbo-parser"
+apt = "libgumbo-dev"
+pacman = "gumbo-parser"
+dnf = "gumbo-parser-devel"

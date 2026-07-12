@@ -1,0 +1,9 @@
+name = "yara"
+description = "Malware identification pattern matching"
+headers = ["yara.h"]
+libs = ["yara"]
+pkg_config = "yara"
+brew = "yara"
+apt = "libyara-dev"
+pacman = "yara"
+dnf = "yara-devel"

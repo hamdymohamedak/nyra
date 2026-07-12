@@ -1,0 +1,9 @@
+name = "proj"
+description = "Cartographic projections"
+headers = ["proj.h"]
+libs = ["proj"]
+pkg_config = "proj"
+brew = "proj"
+apt = "libproj-dev"
+pacman = "proj"
+dnf = "proj-devel"

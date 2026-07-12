@@ -1,0 +1,9 @@
+name = "lightgbm"
+description = "LightGBM gradient boosting (C API)"
+headers = ["LightGBM/c_api.h"]
+libs = ["_lightgbm"]
+brew = "lightgbm"
+apt = "liblightgbm-dev"
+pacman = "lightgbm"
+dnf = "lightgbm-devel"
+cxx = true

@@ -1,0 +1,9 @@
+name = "tree-sitter"
+description = "Incremental parsing library"
+headers = ["tree_sitter/api.h"]
+libs = ["tree-sitter"]
+pkg_config = "tree-sitter"
+brew = "tree-sitter"
+apt = "libtree-sitter-dev"
+pacman = "tree-sitter"
+dnf = "libtree-sitter-devel"

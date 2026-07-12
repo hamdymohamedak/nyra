@@ -1,0 +1,9 @@
+name = "rocm"
+description = "AMD ROCm HIP runtime"
+headers = ["hip/hip_runtime.h"]
+libs = ["amdhip64"]
+apt = "hip-dev"
+pacman = "rocm-hip-runtime"
+dnf = "hip-devel"
+aliases = ["hip"]
+platforms = ["linux"]

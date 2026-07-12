@@ -1,0 +1,9 @@
+name = "ngtcp2"
+description = "QUIC protocol library"
+headers = ["ngtcp2/ngtcp2.h"]
+libs = ["ngtcp2"]
+pkg_config = "libngtcp2"
+brew = "libngtcp2"
+apt = "libngtcp2-dev"
+pacman = "libngtcp2"
+dnf = "libngtcp2-devel"

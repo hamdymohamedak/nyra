@@ -1,0 +1,9 @@
+name = "libmemcached"
+description = "Memcached client library"
+headers = ["libmemcached/memcached.h"]
+libs = ["memcached"]
+pkg_config = "libmemcached"
+brew = "libmemcached"
+apt = "libmemcached-dev"
+pacman = "libmemcached"
+dnf = "libmemcached-devel"

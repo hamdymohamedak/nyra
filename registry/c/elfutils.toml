@@ -1,0 +1,10 @@
+name = "elfutils"
+description = "ELF parsing (libelf)"
+headers = ["libelf.h"]
+libs = ["elf"]
+pkg_config = "libelf"
+brew = "elfutils"
+apt = "libelf-dev"
+pacman = "libelf"
+dnf = "elfutils-libelf-devel"
+platforms = ["linux"]

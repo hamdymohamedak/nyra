@@ -1,0 +1,9 @@
+name = "zstd"
+description = "Zstandard compression"
+headers = ["zstd.h"]
+libs = ["zstd"]
+pkg_config = "libzstd"
+brew = "zstd"
+apt = "libzstd-dev"
+pacman = "zstd"
+dnf = "libzstd-devel"

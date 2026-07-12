@@ -1,0 +1,10 @@
+name = "mpc"
+description = "Complex floating-point (GNU MPC)"
+headers = ["mpc.h"]
+libs = ["mpc"]
+pkg_config = "mpc"
+brew = "libmpc"
+apt = "libmpc-dev"
+pacman = "mpc"
+dnf = "libmpc-devel"
+depends = ["mpfr", "gmp"]

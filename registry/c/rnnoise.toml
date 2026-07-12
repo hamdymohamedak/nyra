@@ -1,0 +1,8 @@
+name = "rnnoise"
+description = "RNNoise — recurrent neural noise suppression"
+headers = ["rnnoise.h"]
+libs = ["rnnoise"]
+apt = "librnnoise-dev"
+pacman = "rnnoise"
+dnf = "rnnoise-devel"
+git = "https://github.com/xiph/rnnoise.git"

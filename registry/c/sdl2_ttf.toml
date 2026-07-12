@@ -1,0 +1,10 @@
+name = "sdl2_ttf"
+description = "SDL2 TrueType fonts"
+headers = ["SDL2/SDL_ttf.h"]
+libs = ["SDL2_ttf"]
+pkg_config = "SDL2_ttf"
+brew = "sdl2_ttf"
+apt = "libsdl2-ttf-dev"
+pacman = "sdl2_ttf"
+dnf = "SDL2_ttf-devel"
+depends = ["sdl2"]

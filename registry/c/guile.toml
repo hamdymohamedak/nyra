@@ -1,0 +1,9 @@
+name = "guile"
+description = "GNU Guile Scheme"
+headers = ["libguile.h"]
+libs = ["guile-3.0"]
+pkg_config = "guile-3.0"
+brew = "guile"
+apt = "guile-3.0-dev"
+pacman = "guile"
+dnf = "guile22-devel"

@@ -1,0 +1,10 @@
+name = "opencl"
+description = "OpenCL ICD loader + headers"
+headers = ["CL/cl.h"]
+libs = ["OpenCL"]
+brew = "opencl-icd-loader"
+apt = "ocl-icd-opencl-dev"
+pacman = "ocl-icd"
+dnf = "ocl-icd-devel"
+aliases = ["ocl"]
+depends = ["opencl-headers"]

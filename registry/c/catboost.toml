@@ -1,0 +1,5 @@
+name = "catboost"
+description = "CatBoost gradient boosting (C API)"
+headers = ["c_api.h"]
+libs = ["catboostmodel"]
+git = "https://github.com/catboost/catboost.git"

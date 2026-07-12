@@ -1,0 +1,10 @@
+name = "libuv"
+description = "Cross-platform async I/O"
+headers = ["uv.h"]
+libs = ["uv"]
+pkg_config = "libuv"
+brew = "libuv"
+apt = "libuv1-dev"
+pacman = "libuv"
+dnf = "libuv-devel"
+aliases = ["uv"]

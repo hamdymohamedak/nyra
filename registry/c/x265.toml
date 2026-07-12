@@ -1,0 +1,9 @@
+name = "x265"
+description = "H.265 / HEVC encoder"
+headers = ["x265.h"]
+libs = ["x265"]
+pkg_config = "x265"
+brew = "x265"
+apt = "libx265-dev"
+pacman = "x265"
+dnf = "x265-devel"

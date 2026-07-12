@@ -1,0 +1,10 @@
+name = "mpfr"
+description = "Multiple-precision floating-point"
+headers = ["mpfr.h"]
+libs = ["mpfr"]
+pkg_config = "mpfr"
+brew = "mpfr"
+apt = "libmpfr-dev"
+pacman = "mpfr"
+dnf = "mpfr-devel"
+depends = ["gmp"]

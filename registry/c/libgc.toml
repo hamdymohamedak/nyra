@@ -1,0 +1,10 @@
+name = "libgc"
+description = "Boehm-Demers-Weiser GC"
+headers = ["gc.h"]
+libs = ["gc"]
+pkg_config = "bdw-gc"
+brew = "bdw-gc"
+apt = "libgc-dev"
+pacman = "gc"
+dnf = "gc-devel"
+aliases = ["bdw-gc"]

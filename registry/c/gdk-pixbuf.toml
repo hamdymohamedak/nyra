@@ -1,0 +1,9 @@
+name = "gdk-pixbuf"
+description = "Image loading for GDK"
+headers = ["gdk-pixbuf/gdk-pixbuf.h"]
+libs = ["gdk_pixbuf-2.0"]
+pkg_config = "gdk-pixbuf-2.0"
+brew = "gdk-pixbuf"
+apt = "libgdk-pixbuf-2.0-dev"
+pacman = "gdk-pixbuf2"
+dnf = "gdk-pixbuf2-devel"

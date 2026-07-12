@@ -1,0 +1,10 @@
+name = "libseccomp"
+description = "High-level seccomp filter interface"
+headers = ["seccomp.h"]
+libs = ["seccomp"]
+pkg_config = "libseccomp"
+brew = "libseccomp"
+apt = "libseccomp-dev"
+pacman = "libseccomp"
+dnf = "libseccomp-devel"
+platforms = ["linux"]

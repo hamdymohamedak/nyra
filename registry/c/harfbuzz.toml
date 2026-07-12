@@ -1,0 +1,9 @@
+name = "harfbuzz"
+description = "Text shaping engine"
+headers = ["harfbuzz/hb.h"]
+libs = ["harfbuzz"]
+pkg_config = "harfbuzz"
+brew = "harfbuzz"
+apt = "libharfbuzz-dev"
+pacman = "harfbuzz"
+dnf = "harfbuzz-devel"

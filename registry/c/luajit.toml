@@ -1,0 +1,9 @@
+name = "luajit"
+description = "LuaJIT tracing JIT compiler"
+headers = ["luajit.h"]
+libs = ["luajit"]
+pkg_config = "luajit"
+brew = "luajit"
+apt = "libluajit-5.1-dev"
+pacman = "luajit"
+dnf = "luajit-devel"

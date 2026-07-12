@@ -1,0 +1,10 @@
+name = "vulkan-loader"
+description = "Vulkan ICD loader"
+headers = ["vulkan/vulkan.h"]
+libs = ["vulkan"]
+pkg_config = "vulkan"
+brew = "vulkan-loader"
+apt = "libvulkan-dev"
+pacman = "vulkan-icd-loader"
+dnf = "vulkan-loader"
+depends = ["vulkan-headers"]

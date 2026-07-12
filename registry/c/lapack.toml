@@ -1,0 +1,9 @@
+name = "lapack"
+description = "Linear Algebra PACKage"
+headers = ["lapack.h"]
+libs = ["lapack"]
+pkg_config = "lapack"
+brew = "lapack"
+apt = "liblapack-dev"
+pacman = "lapack"
+dnf = "lapack-devel"

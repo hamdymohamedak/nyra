@@ -1,0 +1,10 @@
+name = "abseil"
+description = "Abseil C++ common libraries (protobuf dependency)"
+headers = ["absl/strings/ascii.h"]
+libs = ["absl_strings", "absl_base"]
+brew = "abseil"
+apt = "libabsl-dev"
+pacman = "abseil-cpp"
+dnf = "abseil-cpp-devel"
+aliases = ["abseil-cpp", "absl"]
+cxx = true

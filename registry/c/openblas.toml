@@ -1,0 +1,9 @@
+name = "openblas"
+description = "Optimized BLAS"
+headers = ["cblas.h"]
+libs = ["openblas"]
+pkg_config = "openblas"
+brew = "openblas"
+apt = "libopenblas-dev"
+pacman = "openblas"
+dnf = "openblas-devel"

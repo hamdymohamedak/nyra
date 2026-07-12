@@ -1,0 +1,9 @@
+name = "libmodbus"
+description = "Modbus protocol library"
+headers = ["modbus/modbus.h"]
+libs = ["modbus"]
+pkg_config = "libmodbus"
+brew = "libmodbus"
+apt = "libmodbus-dev"
+pacman = "libmodbus"
+dnf = "libmodbus-devel"

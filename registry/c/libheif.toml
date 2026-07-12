@@ -1,0 +1,9 @@
+name = "libheif"
+description = "HEIF / AVIF codec"
+headers = ["libheif/heif.h"]
+libs = ["heif"]
+pkg_config = "libheif"
+brew = "libheif"
+apt = "libheif-dev"
+pacman = "libheif"
+dnf = "libheif-devel"

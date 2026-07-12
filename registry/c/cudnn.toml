@@ -1,0 +1,9 @@
+name = "cudnn"
+description = "NVIDIA cuDNN — deep learning primitives"
+headers = ["cudnn.h"]
+libs = ["cudnn"]
+apt = "libcudnn-dev"
+pacman = "cudnn"
+dnf = "cudnn-devel"
+depends = ["cuda"]
+platforms = ["linux"]

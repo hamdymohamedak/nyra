@@ -1,0 +1,9 @@
+name = "libvpx"
+description = "VP8 / VP9 codec"
+headers = ["vpx/vpx_encoder.h"]
+libs = ["vpx"]
+pkg_config = "vpx"
+brew = "libvpx"
+apt = "libvpx-dev"
+pacman = "libvpx"
+dnf = "libvpx-devel"

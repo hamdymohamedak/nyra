@@ -1,0 +1,9 @@
+name = "libmaxminddb"
+description = "MaxMind DB reader"
+headers = ["maxminddb.h"]
+libs = ["maxminddb"]
+pkg_config = "libmaxminddb"
+brew = "libmaxminddb"
+apt = "libmaxminddb-dev"
+pacman = "libmaxminddb"
+dnf = "libmaxminddb-devel"

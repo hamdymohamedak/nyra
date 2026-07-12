@@ -1,0 +1,9 @@
+name = "keystone"
+description = "Assembler framework"
+headers = ["keystone/keystone.h"]
+libs = ["keystone"]
+pkg_config = "keystone"
+brew = "keystone"
+apt = "libkeystone-dev"
+pacman = "keystone"
+dnf = "keystone-devel"

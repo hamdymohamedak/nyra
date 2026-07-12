@@ -1,0 +1,10 @@
+name = "imagemagick"
+description = "ImageMagick MagickWand API"
+headers = ["MagickWand/MagickWand.h"]
+libs = ["MagickWand", "MagickCore"]
+pkg_config = "MagickWand"
+brew = "imagemagick"
+apt = "libmagickwand-dev"
+pacman = "imagemagick"
+dnf = "ImageMagick-devel"
+aliases = ["magickwand"]

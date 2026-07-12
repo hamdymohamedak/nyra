@@ -1,0 +1,9 @@
+name = "ggml"
+description = "GGML tensor library (llama.cpp foundation)"
+headers = ["ggml.h"]
+libs = ["ggml", "ggml-base"]
+pkg_config = "ggml"
+brew = "ggml"
+apt = "libggml-dev"
+pacman = "ggml"
+dnf = "ggml-devel"

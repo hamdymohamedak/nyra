@@ -1,0 +1,9 @@
+name = "rocksdb"
+description = "RocksDB (C API)"
+headers = ["rocksdb/c.h"]
+libs = ["rocksdb"]
+pkg_config = "rocksdb"
+brew = "rocksdb"
+apt = "librocksdb-dev"
+pacman = "rocksdb"
+dnf = "rocksdb-devel"

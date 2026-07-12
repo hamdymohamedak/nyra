@@ -1,0 +1,10 @@
+name = "minizip"
+description = "zlib zip contrib (minizip)"
+headers = ["minizip/unzip.h"]
+libs = ["minizip"]
+pkg_config = "minizip"
+brew = "minizip"
+apt = "libminizip-dev"
+pacman = "minizip"
+dnf = "minizip-devel"
+depends = ["zlib"]

@@ -1,0 +1,9 @@
+name = "suitesparse"
+description = "Sparse matrix suite (UMFPACK etc.)"
+headers = ["suitesparse/umfpack.h"]
+libs = ["umfpack", "amd", "cholmod", "colamd", "suitesparseconfig"]
+pkg_config = "umfpack"
+brew = "suite-sparse"
+apt = "libsuitesparse-dev"
+pacman = "suitesparse"
+dnf = "suitesparse-devel"

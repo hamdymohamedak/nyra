@@ -1,0 +1,9 @@
+name = "leptonica"
+description = "Image processing / analysis"
+headers = ["leptonica/allheaders.h"]
+libs = ["lept"]
+pkg_config = "lept"
+brew = "leptonica"
+apt = "libleptonica-dev"
+pacman = "leptonica"
+dnf = "leptonica-devel"

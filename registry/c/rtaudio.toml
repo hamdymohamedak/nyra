@@ -1,0 +1,9 @@
+name = "rtaudio"
+description = "Realtime audio I/O"
+headers = ["rtaudio/RtAudio.h"]
+libs = ["rtaudio"]
+pkg_config = "rtaudio"
+brew = "rtaudio"
+apt = "librtaudio-dev"
+pacman = "rtaudio"
+dnf = "rtaudio-devel"

@@ -1,0 +1,9 @@
+name = "liblo"
+description = "Lightweight OSC library"
+headers = ["lo/lo.h"]
+libs = ["lo"]
+pkg_config = "liblo"
+brew = "liblo"
+apt = "liblo-dev"
+pacman = "liblo"
+dnf = "liblo-devel"

@@ -1,0 +1,9 @@
+name = "fluidsynth"
+description = "Software SoundFont synthesizer"
+headers = ["fluidsynth.h"]
+libs = ["fluidsynth"]
+pkg_config = "fluidsynth"
+brew = "fluid-synth"
+apt = "libfluidsynth-dev"
+pacman = "fluidsynth"
+dnf = "fluidsynth-devel"

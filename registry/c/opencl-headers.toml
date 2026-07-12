@@ -1,0 +1,8 @@
+name = "opencl-headers"
+description = "OpenCL C API headers"
+headers = ["CL/cl.h"]
+libs = ["OpenCL"]
+brew = "opencl-headers"
+apt = "opencl-headers"
+pacman = "opencl-headers"
+dnf = "opencl-headers"

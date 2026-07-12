@@ -1,0 +1,9 @@
+name = "chromaprint"
+description = "Audio fingerprinting"
+headers = ["chromaprint.h"]
+libs = ["chromaprint"]
+pkg_config = "libchromaprint"
+brew = "chromaprint"
+apt = "libchromaprint-dev"
+pacman = "chromaprint"
+dnf = "libchromaprint-devel"

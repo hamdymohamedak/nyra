@@ -1,0 +1,9 @@
+name = "libsamplerate"
+description = "Secret Rabbit Code audio resampler"
+headers = ["samplerate.h"]
+libs = ["samplerate"]
+pkg_config = "samplerate"
+brew = "libsamplerate"
+apt = "libsamplerate0-dev"
+pacman = "libsamplerate"
+dnf = "libsamplerate-devel"

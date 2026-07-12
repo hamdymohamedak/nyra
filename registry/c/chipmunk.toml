@@ -1,0 +1,9 @@
+name = "chipmunk"
+description = "2D rigid body physics"
+headers = ["chipmunk/chipmunk.h"]
+libs = ["chipmunk"]
+pkg_config = "chipmunk"
+brew = "chipmunk-physics"
+apt = "libchipmunk-dev"
+pacman = "chipmunk"
+dnf = "Chipmunk-devel"

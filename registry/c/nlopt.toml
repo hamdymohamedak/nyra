@@ -1,0 +1,9 @@
+name = "nlopt"
+description = "Nonlinear optimization library"
+headers = ["nlopt.h"]
+libs = ["nlopt"]
+pkg_config = "nlopt"
+brew = "nlopt"
+apt = "libnlopt-dev"
+pacman = "nlopt"
+dnf = "NLopt-devel"

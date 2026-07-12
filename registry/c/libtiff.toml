@@ -1,0 +1,10 @@
+name = "libtiff"
+description = "TIFF image library"
+headers = ["tiffio.h"]
+libs = ["tiff"]
+pkg_config = "libtiff-4"
+brew = "libtiff"
+apt = "libtiff-dev"
+pacman = "libtiff"
+dnf = "libtiff-devel"
+aliases = ["tiff"]

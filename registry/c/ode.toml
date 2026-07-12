@@ -1,0 +1,9 @@
+name = "ode"
+description = "Open Dynamics Engine"
+headers = ["ode/ode.h"]
+libs = ["ode"]
+pkg_config = "ode"
+brew = "ode"
+apt = "libode-dev"
+pacman = "ode"
+dnf = "ode-devel"

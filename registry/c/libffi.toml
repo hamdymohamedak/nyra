@@ -1,0 +1,9 @@
+name = "libffi"
+description = "Foreign Function Interface"
+headers = ["ffi.h"]
+libs = ["ffi"]
+pkg_config = "libffi"
+brew = "libffi"
+apt = "libffi-dev"
+pacman = "libffi"
+dnf = "libffi-devel"

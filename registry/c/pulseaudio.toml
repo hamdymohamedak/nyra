@@ -1,0 +1,9 @@
+name = "pulseaudio"
+description = "PulseAudio client library"
+headers = ["pulse/simple.h"]
+libs = ["pulse", "pulse-simple"]
+pkg_config = "libpulse"
+brew = "pulseaudio"
+apt = "libpulse-dev"
+pacman = "libpulse"
+dnf = "pulseaudio-libs-devel"

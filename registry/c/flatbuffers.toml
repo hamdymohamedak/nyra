@@ -1,0 +1,10 @@
+name = "flatbuffers"
+description = "FlatBuffers serialization (TFLite etc.)"
+headers = ["flatbuffers/util.h"]
+libs = ["flatbuffers"]
+pkg_config = "flatbuffers"
+brew = "flatbuffers"
+apt = "libflatbuffers-dev"
+pacman = "flatbuffers"
+dnf = "flatbuffers-devel"
+cxx = true

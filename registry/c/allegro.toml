@@ -1,0 +1,9 @@
+name = "allegro"
+description = "Allegro game programming library"
+headers = ["allegro5/allegro.h"]
+libs = ["allegro"]
+pkg_config = "allegro-5"
+brew = "allegro"
+apt = "liballegro5-dev"
+pacman = "allegro"
+dnf = "allegro5-devel"

@@ -1,0 +1,9 @@
+name = "opus"
+description = "Opus interactive audio codec"
+headers = ["opus/opus.h"]
+libs = ["opus"]
+pkg_config = "opus"
+brew = "opus"
+apt = "libopus-dev"
+pacman = "opus"
+dnf = "opus-devel"

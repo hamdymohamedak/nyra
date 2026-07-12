@@ -1,0 +1,10 @@
+name = "pcre2"
+description = "Perl-compatible regular expressions"
+headers = ["pcre2.h"]
+libs = ["pcre2-8"]
+pkg_config = "libpcre2-8"
+brew = "pcre2"
+apt = "libpcre2-dev"
+pacman = "pcre2"
+dnf = "pcre2-devel"
+defines = ["PCRE2_CODE_UNIT_WIDTH=8"]

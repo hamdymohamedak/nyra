@@ -1,0 +1,9 @@
+name = "gdal"
+description = "Geospatial Data Abstraction Library"
+headers = ["gdal.h"]
+libs = ["gdal"]
+pkg_config = "gdal"
+brew = "gdal"
+apt = "libgdal-dev"
+pacman = "gdal"
+dnf = "gdal-devel"

@@ -1,0 +1,9 @@
+name = "expat"
+description = "Stream-oriented XML parser"
+headers = ["expat.h"]
+libs = ["expat"]
+pkg_config = "expat"
+brew = "expat"
+apt = "libexpat1-dev"
+pacman = "expat"
+dnf = "expat-devel"

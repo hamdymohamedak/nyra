@@ -1,0 +1,10 @@
+name = "xgboost"
+description = "XGBoost gradient boosting (C API)"
+headers = ["xgboost/c_api.h"]
+libs = ["xgboost"]
+pkg_config = "xgboost"
+brew = "xgboost"
+apt = "libxgboost-dev"
+pacman = "xgboost"
+dnf = "xgboost-devel"
+cxx = true

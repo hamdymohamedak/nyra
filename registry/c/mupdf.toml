@@ -1,0 +1,9 @@
+name = "mupdf"
+description = "MuPDF lightweight PDF engine"
+headers = ["mupdf/fitz.h"]
+libs = ["mupdf"]
+pkg_config = "mupdf"
+brew = "mupdf"
+apt = "libmupdf-dev"
+pacman = "mupdf"
+dnf = "mupdf-devel"

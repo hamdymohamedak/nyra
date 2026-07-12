@@ -1,0 +1,9 @@
+name = "keyutils"
+description = "Linux key management utilities"
+headers = ["keyutils.h"]
+libs = ["keyutils"]
+pkg_config = "libkeyutils"
+apt = "libkeyutils-dev"
+pacman = "keyutils"
+dnf = "keyutils-libs-devel"
+platforms = ["linux"]

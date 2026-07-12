@@ -1,0 +1,10 @@
+name = "faiss"
+description = "FAISS vector similarity search (C API)"
+headers = ["faiss/c_api/Index_c.h"]
+libs = ["faiss_c"]
+brew = "faiss"
+apt = "libfaiss-dev"
+pacman = "faiss"
+dnf = "faiss-devel"
+aliases = ["libfaiss"]
+force_include = ["stdint.h"]

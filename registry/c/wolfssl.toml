@@ -1,0 +1,9 @@
+name = "wolfssl"
+description = "Portable SSL/TLS library"
+headers = ["wolfssl/ssl.h"]
+libs = ["wolfssl"]
+pkg_config = "wolfssl"
+brew = "wolfssl"
+apt = "libwolfssl-dev"
+pacman = "wolfssl"
+dnf = "wolfssl-devel"

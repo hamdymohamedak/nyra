@@ -32,6 +32,14 @@ def render_toml(spec: CLibRegistrySpec) -> str:
         lines.append(f"depends = {_toml_str_list(spec.depends)}")
     if spec.impl_define:
         lines.append(f'impl_define = "{spec.impl_define}"')
+    if spec.defines:
+        lines.append(f"defines = {_toml_str_list(spec.defines)}")
+    if spec.force_include:
+        lines.append(f"force_include = {_toml_str_list(spec.force_include)}")
+    if spec.cxx:
+        lines.append("cxx = true")
+    if spec.platforms:
+        lines.append(f"platforms = {_toml_str_list(spec.platforms)}")
     lines.append("")
     return "\n".join(lines)
 

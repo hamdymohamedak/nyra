@@ -1,0 +1,10 @@
+name = "glfw"
+description = "OpenGL / Vulkan windowing"
+headers = ["GLFW/glfw3.h"]
+libs = ["glfw"]
+pkg_config = "glfw3"
+brew = "glfw"
+apt = "libglfw3-dev"
+pacman = "glfw"
+dnf = "glfw-devel"
+aliases = ["glfw3"]

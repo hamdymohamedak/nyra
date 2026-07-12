@@ -1,0 +1,9 @@
+name = "libcsv"
+description = "CSV parser library"
+headers = ["csv.h"]
+libs = ["csv"]
+pkg_config = "libcsv"
+brew = "libcsv"
+apt = "libcsv-dev"
+pacman = "libcsv"
+dnf = "libcsv-devel"

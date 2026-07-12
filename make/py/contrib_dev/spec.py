@@ -186,6 +186,10 @@ class CLibRegistrySpec:
     git: str | None = None
     depends: list[str] = field(default_factory=list)
     impl_define: str | None = None
+    platforms: list[str] = field(default_factory=list)
+    defines: list[str] = field(default_factory=list)
+    force_include: list[str] = field(default_factory=list)
+    cxx: bool = False
 
     def __post_init__(self) -> None:
         self.name = self.name.strip().lower().replace(" ", "-")
@@ -203,7 +207,7 @@ class CLibRegistrySpec:
             raise ValueError("at least one link lib is required (e.g. sodium — no lib prefix)")
         self.description = (self.description or "").strip()
         self.pkg_config = _opt_str(self.pkg_config)
-        self.brew = _opt_str(self.brew) or self.name
+        self.brew = _opt_str(self.brew)
         self.apt = _opt_str(self.apt)
         self.pacman = _opt_str(self.pacman)
         self.dnf = _opt_str(self.dnf)
@@ -211,6 +215,15 @@ class CLibRegistrySpec:
         self.impl_define = _opt_str(self.impl_define)
         self.aliases = [a.strip() for a in self.aliases if a and a.strip()]
         self.depends = [d.strip() for d in self.depends if d and d.strip()]
+        self.platforms = [p.strip().lower() for p in self.platforms if p and p.strip()]
+        self.defines = [d.strip() for d in self.defines if d and d.strip()]
+        self.force_include = [h.strip() for h in self.force_include if h and h.strip()]
+        self.cxx = bool(self.cxx)
+        if not self.brew and not self.git and not self.apt:
+            # Default brew formula to the registry name when nothing else is set.
+            self.brew = self.name
+        if not (self.brew or self.apt or self.pacman or self.dnf or self.git):
+            raise ValueError(f"{self.name}: need at least one of brew/apt/pacman/dnf/git")
 
     @property
     def marker(self) -> str:

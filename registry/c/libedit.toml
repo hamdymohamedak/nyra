@@ -1,0 +1,9 @@
+name = "libedit"
+description = "BSD editline (readline-compatible)"
+headers = ["histedit.h"]
+libs = ["edit"]
+pkg_config = "libedit"
+brew = "libedit"
+apt = "libedit-dev"
+pacman = "libedit"
+dnf = "libedit-devel"

@@ -1,0 +1,9 @@
+name = "lmdb"
+description = "Lightning Memory-Mapped Database"
+headers = ["lmdb.h"]
+libs = ["lmdb"]
+pkg_config = "lmdb"
+brew = "lmdb"
+apt = "liblmdb-dev"
+pacman = "lmdb"
+dnf = "lmdb-devel"

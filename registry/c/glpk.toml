@@ -1,0 +1,9 @@
+name = "glpk"
+description = "GNU Linear Programming Kit"
+headers = ["glpk.h"]
+libs = ["glpk"]
+pkg_config = "glpk"
+brew = "glpk"
+apt = "libglpk-dev"
+pacman = "glpk"
+dnf = "glpk-devel"

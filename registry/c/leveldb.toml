@@ -1,0 +1,9 @@
+name = "leveldb"
+description = "Fast key-value store (Google)"
+headers = ["leveldb/c.h"]
+libs = ["leveldb"]
+pkg_config = "leveldb"
+brew = "leveldb"
+apt = "libleveldb-dev"
+pacman = "leveldb"
+dnf = "leveldb-devel"

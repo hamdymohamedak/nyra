@@ -1,0 +1,7 @@
+name = "sqlite-vec"
+description = "SQLite vector search extension (embeddings)"
+headers = ["sqlite-vec.h"]
+libs = ["sqlite_vec"]
+aliases = ["sqlite_vec"]
+git = "https://github.com/asg017/sqlite-vec.git"
+depends = ["sqlite3"]

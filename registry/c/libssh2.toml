@@ -1,0 +1,10 @@
+name = "libssh2"
+description = "SSH2 client library"
+headers = ["libssh2.h"]
+libs = ["ssh2"]
+pkg_config = "libssh2"
+brew = "libssh2"
+apt = "libssh2-1-dev"
+pacman = "libssh2"
+dnf = "libssh2-devel"
+aliases = ["ssh2"]

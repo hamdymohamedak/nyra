@@ -1,0 +1,9 @@
+name = "portmidi"
+description = "Realtime MIDI I/O (PortMidi)"
+headers = ["portmidi.h"]
+libs = ["portmidi"]
+pkg_config = "portmidi"
+brew = "portmidi"
+apt = "libportmidi-dev"
+pacman = "portmidi"
+dnf = "portmidi-devel"

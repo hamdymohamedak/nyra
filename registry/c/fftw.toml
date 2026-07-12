@@ -1,0 +1,9 @@
+name = "fftw"
+description = "Fast Fourier Transforms"
+headers = ["fftw3.h"]
+libs = ["fftw3"]
+pkg_config = "fftw3"
+brew = "fftw"
+apt = "libfftw3-dev"
+pacman = "fftw"
+dnf = "fftw-devel"

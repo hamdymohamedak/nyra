@@ -1,0 +1,10 @@
+name = "sdl2_mixer"
+description = "SDL2 audio mixing"
+headers = ["SDL2/SDL_mixer.h"]
+libs = ["SDL2_mixer"]
+pkg_config = "SDL2_mixer"
+brew = "sdl2_mixer"
+apt = "libsdl2-mixer-dev"
+pacman = "sdl2_mixer"
+dnf = "SDL2_mixer-devel"
+depends = ["sdl2"]

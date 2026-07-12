@@ -1,0 +1,9 @@
+name = "igraph"
+description = "Network analysis library"
+headers = ["igraph/igraph.h"]
+libs = ["igraph"]
+pkg_config = "igraph"
+brew = "igraph"
+apt = "libigraph-dev"
+pacman = "igraph"
+dnf = "igraph-devel"

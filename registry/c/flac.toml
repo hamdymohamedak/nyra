@@ -1,0 +1,9 @@
+name = "flac"
+description = "Free Lossless Audio Codec"
+headers = ["FLAC/stream_decoder.h"]
+libs = ["FLAC"]
+pkg_config = "flac"
+brew = "flac"
+apt = "libflac-dev"
+pacman = "flac"
+dnf = "flac-devel"

@@ -1,0 +1,9 @@
+name = "freetype"
+description = "Font rasterization"
+headers = ["freetype/freetype.h"]
+libs = ["freetype"]
+pkg_config = "freetype2"
+brew = "freetype"
+apt = "libfreetype6-dev"
+pacman = "freetype2"
+dnf = "freetype-devel"

@@ -1,0 +1,9 @@
+name = "protobuf-c"
+description = "Protocol Buffers C runtime"
+headers = ["protobuf-c/protobuf-c.h"]
+libs = ["protobuf-c"]
+pkg_config = "libprotobuf-c"
+brew = "protobuf-c"
+apt = "libprotobuf-c-dev"
+pacman = "protobuf-c"
+dnf = "protobuf-c-devel"

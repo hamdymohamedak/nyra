@@ -1,0 +1,9 @@
+name = "sratom"
+description = "LV2 Atom RDF mapping"
+headers = ["sratom/sratom.h"]
+libs = ["sratom-0"]
+pkg_config = "sratom-0"
+brew = "sratom"
+apt = "libsratom-dev"
+pacman = "sratom"
+dnf = "sratom-devel"

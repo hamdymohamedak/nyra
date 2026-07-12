@@ -1,0 +1,9 @@
+name = "giflib"
+description = "GIF image library"
+headers = ["gif_lib.h"]
+libs = ["gif"]
+pkg_config = "libgif"
+brew = "giflib"
+apt = "libgif-dev"
+pacman = "giflib"
+dnf = "giflib-devel"

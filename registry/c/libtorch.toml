@@ -1,0 +1,10 @@
+name = "libtorch"
+description = "LibTorch — PyTorch C++ / C tensor engine"
+headers = ["torch/torch.h"]
+libs = ["torch", "c10"]
+brew = "pytorch"
+apt = "libtorch-dev"
+pacman = "python-pytorch"
+dnf = "python3-torch-devel"
+aliases = ["pytorch", "torch"]
+cxx = true

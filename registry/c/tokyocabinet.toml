@@ -1,0 +1,9 @@
+name = "tokyocabinet"
+description = "Tokyo Cabinet DBM"
+headers = ["tcutil.h"]
+libs = ["tokyocabinet"]
+pkg_config = "tokyocabinet"
+brew = "tokyo-cabinet"
+apt = "libtokyocabinet-dev"
+pacman = "tokyocabinet"
+dnf = "tokyocabinet-devel"

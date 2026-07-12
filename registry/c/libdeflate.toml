@@ -1,0 +1,9 @@
+name = "libdeflate"
+description = "Fast DEFLATE compressor"
+headers = ["libdeflate.h"]
+libs = ["deflate"]
+pkg_config = "libdeflate"
+brew = "libdeflate"
+apt = "libdeflate-dev"
+pacman = "libdeflate"
+dnf = "libdeflate-devel"

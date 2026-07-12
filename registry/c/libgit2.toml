@@ -1,0 +1,9 @@
+name = "libgit2"
+description = "Git core methods as a library"
+headers = ["git2.h"]
+libs = ["git2"]
+pkg_config = "libgit2"
+brew = "libgit2"
+apt = "libgit2-dev"
+pacman = "libgit2"
+dnf = "libgit2-devel"

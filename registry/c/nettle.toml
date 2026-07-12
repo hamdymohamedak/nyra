@@ -1,0 +1,9 @@
+name = "nettle"
+description = "Low-level crypto library"
+headers = ["nettle/aes.h"]
+libs = ["nettle", "hogweed"]
+pkg_config = "nettle"
+brew = "nettle"
+apt = "nettle-dev"
+pacman = "nettle"
+dnf = "nettle-devel"

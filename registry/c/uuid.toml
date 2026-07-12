@@ -1,0 +1,10 @@
+name = "uuid"
+description = "UUID generation (libuuid / OSSP)"
+headers = ["uuid.h"]
+libs = ["ossp-uuid"]
+pkg_config = "ossp-uuid"
+brew = "ossp-uuid"
+apt = "libossp-uuid-dev"
+pacman = "ossp-uuid"
+dnf = "uuid-devel"
+aliases = ["libuuid", "ossp-uuid"]

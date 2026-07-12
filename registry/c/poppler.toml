@@ -1,0 +1,9 @@
+name = "poppler"
+description = "PDF rendering (poppler-glib)"
+headers = ["poppler/glib/poppler.h"]
+libs = ["poppler-glib"]
+pkg_config = "poppler-glib"
+brew = "poppler"
+apt = "libpoppler-glib-dev"
+pacman = "poppler-glib"
+dnf = "poppler-glib-devel"

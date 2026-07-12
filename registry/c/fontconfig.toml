@@ -1,0 +1,9 @@
+name = "fontconfig"
+description = "Font configuration / matching"
+headers = ["fontconfig/fontconfig.h"]
+libs = ["fontconfig"]
+pkg_config = "fontconfig"
+brew = "fontconfig"
+apt = "libfontconfig-dev"
+pacman = "fontconfig"
+dnf = "fontconfig-devel"

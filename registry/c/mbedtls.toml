@@ -1,0 +1,9 @@
+name = "mbedtls"
+description = "TLS and crypto (Apache / Arm)"
+headers = ["mbedtls/ssl.h"]
+libs = ["mbedtls", "mbedx509", "mbedcrypto"]
+pkg_config = "mbedtls"
+brew = "mbedtls"
+apt = "libmbedtls-dev"
+pacman = "mbedtls"
+dnf = "mbedtls-devel"

@@ -1,0 +1,9 @@
+name = "speexdsp"
+description = "SpeexDSP audio processing (resample / denoise)"
+headers = ["speex/speex_preprocess.h"]
+libs = ["speexdsp"]
+pkg_config = "speexdsp"
+brew = "speexdsp"
+apt = "libspeexdsp-dev"
+pacman = "speexdsp"
+dnf = "speexdsp-devel"

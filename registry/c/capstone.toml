@@ -1,0 +1,9 @@
+name = "capstone"
+description = "Disassembly framework"
+headers = ["capstone/capstone.h"]
+libs = ["capstone"]
+pkg_config = "capstone"
+brew = "capstone"
+apt = "libcapstone-dev"
+pacman = "capstone"
+dnf = "capstone-devel"

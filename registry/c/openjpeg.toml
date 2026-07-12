@@ -1,0 +1,9 @@
+name = "openjpeg"
+description = "JPEG 2000 codec"
+headers = ["openjpeg.h"]
+libs = ["openjp2"]
+pkg_config = "libopenjp2"
+brew = "openjpeg"
+apt = "libopenjp2-7-dev"
+pacman = "openjpeg2"
+dnf = "openjpeg2-devel"

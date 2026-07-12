@@ -1,0 +1,9 @@
+name = "tensorflow"
+description = "TensorFlow C API"
+headers = ["tensorflow/c/c_api.h"]
+libs = ["tensorflow"]
+brew = "libtensorflow"
+apt = "libtensorflow-dev"
+pacman = "tensorflow"
+dnf = "tensorflow-devel"
+aliases = ["libtensorflow", "tf"]

@@ -1,0 +1,9 @@
+name = "dav1d"
+description = "Fast AV1 decoder"
+headers = ["dav1d/dav1d.h"]
+libs = ["dav1d"]
+pkg_config = "dav1d"
+brew = "dav1d"
+apt = "libdav1d-dev"
+pacman = "dav1d"
+dnf = "dav1d-devel"

@@ -178,22 +178,35 @@ Continue? [Y/n]</code></pre>
       <p><code>-y</code> runs the install then binds. <code>--no-install</code> never runs brew/apt.</p>
 
       <h3>Built-in registry (<code>registry/c/</code>)</h3>
-      <p>Only package <em>names</em> — no hard-coded include paths (those come from <code>pkg-config</code>).</p>
+      <p>Only package <em>names</em> — no hard-coded include paths (those come from <code>pkg-config</code>). <strong>270+</strong> libraries across AI/ML, networks, games, GUI, backend, media, crypto, and science.</p>
       <table>
-        <thead><tr><th><code>nyra bind …</code></th><th>Homebrew</th><th>apt</th><th>Import</th></tr></thead>
+        <thead><tr><th>Area</th><th>Examples (<code>nyra bind …</code>)</th></tr></thead>
         <tbody>
-          <tr><td><code>gsl</code></td><td><code>gsl</code></td><td><code>libgsl-dev</code></td><td><code>vendor/bindings/gsl_sf.ny</code></td></tr>
-          <tr><td><code>zlib</code></td><td><code>zlib</code></td><td><code>zlib1g-dev</code></td><td><code>vendor/bindings/zlib.ny</code></td></tr>
-          <tr><td><code>sqlite3</code></td><td><code>sqlite</code></td><td><code>libsqlite3-dev</code></td><td><code>vendor/bindings/sqlite3.ny</code></td></tr>
-          <tr><td><code>openssl</code></td><td><code>openssl</code></td><td><code>libssl-dev</code></td><td><code>vendor/bindings/ssl.ny</code></td></tr>
-          <tr><td><code>curl</code></td><td><code>curl</code></td><td><code>libcurl4-openssl-dev</code></td><td><code>vendor/bindings/curl.ny</code></td></tr>
-          <tr><td><code>libpng</code></td><td><code>libpng</code></td><td><code>libpng-dev</code></td><td><code>vendor/bindings/png.ny</code></td></tr>
-          <tr><td><code>raylib</code></td><td><code>raylib</code></td><td><code>libraylib-dev</code></td><td><code>vendor/bindings/raylib.ny</code></td></tr>
-          <tr><td><code>raygui</code></td><td>GitHub + <code>raylib</code></td><td><code>libraylib-dev</code></td><td><code>vendor/bindings/raygui.ny</code></td></tr>
-          <tr><td><code>sdl2</code></td><td><code>sdl2</code></td><td><code>libsdl2-dev</code></td><td><code>vendor/bindings/SDL.ny</code></td></tr>
+          <tr><td>AI / inference</td><td><code>onnxruntime</code>, <code>llama-cpp</code>, <code>ggml</code>, <code>tensorflow</code>, <code>libtorch</code>, <code>onednn</code>, <code>sentencepiece</code>, <code>tokenizers</code></td></tr>
+          <tr><td>AI / ML &amp; vectors</td><td><code>xgboost</code>, <code>lightgbm</code>, <code>catboost</code>, <code>faiss</code>, <code>hnswlib</code>, <code>annoy</code>, <code>milvus</code>, <code>sqlite-vec</code></td></tr>
+          <tr><td>AI / GPU</td><td><code>cuda</code>, <code>cublas</code>, <code>cudnn</code>, <code>tensorrt</code>, <code>nccl</code>, <code>rocm</code>, <code>miopen</code>, <code>opencl</code>, <code>vulkan-loader</code> <em>(CUDA/ROCm: Linux)</em></td></tr>
+          <tr><td>Networks</td><td><code>curl</code>, <code>libuv</code>, <code>zeromq</code>, <code>librdkafka</code>, <code>hiredis</code>, <code>nghttp2</code></td></tr>
+          <tr><td>Games</td><td><code>raylib</code>, <code>sdl2</code>, <code>sdl3</code>, <code>glfw</code>, <code>box2d</code>, <code>enet</code></td></tr>
+          <tr><td>GUI</td><td><code>gtk3</code>, <code>gtk4</code>, <code>cairo</code>, <code>ncurses</code>, <code>raygui</code></td></tr>
+          <tr><td>Backend</td><td><code>sqlite3</code>, <code>libpq</code>, <code>openssl</code>, <code>libsodium</code>, <code>libxml2</code>, <code>protobuf</code>, <code>flatbuffers</code></td></tr>
+          <tr><td>Media / vision</td><td><code>ffmpeg</code>, <code>opencv</code>, <code>openexr</code>, <code>tesseract</code>, <code>libpng</code>, <code>libjpeg-turbo</code>, <code>libwebp</code></td></tr>
+          <tr><td>Audio</td><td><code>portaudio</code>, <code>libsndfile</code>, <code>opus</code>, <code>flac</code>, <code>speexdsp</code>, <code>rnnoise</code>, <code>fftw</code></td></tr>
+          <tr><td>Science</td><td><code>gsl</code>, <code>openblas</code>, <code>lapack</code>, <code>eigen</code>, <code>hdf5</code>, <code>gdal</code></td></tr>
         </tbody>
       </table>
-      <p>Extend with <code>~/.nyra/registry/c/*.toml</code>.</p>
+      <p>Full list: <code>nyra pkg list</code> · add more via <code>~/.nyra/registry/c/*.toml</code>.</p>
+
+      <h3 id="ai-libs">AI / ML quick start</h3>
+      <p>Install with your system package manager, then bind. Covers local LLMs, ONNX inference, boosting, and vector search:</p>
+      <pre><code>brew install onnxruntime llama.cpp sentencepiece faiss xgboost
+nyra bind onnxruntime
+nyra bind llama-cpp
+nyra bind sentencepiece
+nyra bind faiss
+nyra bind xgboost</code></pre>
+      <pre><code>import "vendor/bindings/onnxruntime.ny"
+# call Ort* APIs from generated bindings</code></pre>
+      <p>GPU stacks (<code>cuda</code>, <code>cudnn</code>, <code>tensorrt</code>, <code>rocm</code>, …) are registered for Linux. C++ libraries (Eigen, protobuf, LibTorch, …) use <code>cxx = true</code> in the registry so bindgen parses as C++17.</p>
 
       <h3 id="bind-c">Manual bind (not on package managers)</h3>
       <pre><code>nyra bind c /path/to/mylib.h --lib mylib --update-mod

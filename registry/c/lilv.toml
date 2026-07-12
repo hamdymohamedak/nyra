@@ -1,0 +1,9 @@
+name = "lilv"
+description = "LV2 plugin library"
+headers = ["lilv/lilv.h"]
+libs = ["lilv-0"]
+pkg_config = "lilv-0"
+brew = "lilv"
+apt = "liblilv-dev"
+pacman = "lilv"
+dnf = "lilv-devel"

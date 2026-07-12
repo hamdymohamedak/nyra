@@ -1,0 +1,5 @@
+name = "sokol"
+description = "Minimal cross-platform libraries (headers)"
+headers = ["sokol_gfx.h"]
+libs = ["m"]
+git = "https://github.com/floooh/sokol.git"

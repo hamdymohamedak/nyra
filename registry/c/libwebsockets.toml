@@ -1,0 +1,10 @@
+name = "libwebsockets"
+description = "Lightweight WebSocket library"
+headers = ["libwebsockets.h"]
+libs = ["websockets"]
+pkg_config = "libwebsockets"
+brew = "libwebsockets"
+apt = "libwebsockets-dev"
+pacman = "libwebsockets"
+dnf = "libwebsockets-devel"
+aliases = ["websockets"]

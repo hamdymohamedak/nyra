@@ -1,0 +1,9 @@
+name = "zookeeper"
+description = "Apache ZooKeeper C client"
+headers = ["zookeeper/zookeeper.h"]
+libs = ["zookeeper"]
+pkg_config = "zookeeper"
+brew = "zookeeper"
+apt = "libzookeeper-mt-dev"
+pacman = "zookeeper"
+dnf = "zookeeper-devel"

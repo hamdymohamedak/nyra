@@ -1,0 +1,9 @@
+name = "nghttp3"
+description = "HTTP/3 C library"
+headers = ["nghttp3/nghttp3.h"]
+libs = ["nghttp3"]
+pkg_config = "libnghttp3"
+brew = "libnghttp3"
+apt = "libnghttp3-dev"
+pacman = "nghttp3"
+dnf = "libnghttp3-devel"

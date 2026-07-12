@@ -1,0 +1,9 @@
+name = "netcdf"
+description = "Network Common Data Form"
+headers = ["netcdf.h"]
+libs = ["netcdf"]
+pkg_config = "netcdf"
+brew = "netcdf"
+apt = "libnetcdf-dev"
+pacman = "netcdf"
+dnf = "netcdf-devel"

@@ -1,0 +1,9 @@
+name = "nng"
+description = "Nanomsg-next-generation messaging"
+headers = ["nng/nng.h"]
+libs = ["nng"]
+pkg_config = "nng"
+brew = "nng"
+apt = "libnng-dev"
+pacman = "nng"
+dnf = "nng-devel"

@@ -1,0 +1,9 @@
+name = "hiredis"
+description = "Minimal Redis C client"
+headers = ["hiredis/hiredis.h"]
+libs = ["hiredis"]
+pkg_config = "hiredis"
+brew = "hiredis"
+apt = "libhiredis-dev"
+pacman = "hiredis"
+dnf = "hiredis-devel"

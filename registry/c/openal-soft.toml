@@ -1,0 +1,10 @@
+name = "openal-soft"
+description = "OpenAL 3D audio"
+headers = ["AL/al.h"]
+libs = ["openal"]
+pkg_config = "openal"
+brew = "openal-soft"
+apt = "libopenal-dev"
+pacman = "openal"
+dnf = "openal-soft-devel"
+aliases = ["openal"]

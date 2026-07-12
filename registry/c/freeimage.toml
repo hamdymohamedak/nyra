@@ -1,0 +1,9 @@
+name = "freeimage"
+description = "Multi-format image support"
+headers = ["FreeImage.h"]
+libs = ["freeimage"]
+pkg_config = "freeimage"
+brew = "freeimage"
+apt = "libfreeimage-dev"
+pacman = "freeimage"
+dnf = "freeimage-devel"

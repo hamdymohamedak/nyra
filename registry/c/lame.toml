@@ -1,0 +1,9 @@
+name = "lame"
+description = "LAME MP3 encoder"
+headers = ["lame/lame.h"]
+libs = ["mp3lame"]
+pkg_config = "lame"
+brew = "lame"
+apt = "libmp3lame-dev"
+pacman = "lame"
+dnf = "lame-devel"

@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::path::PathBuf;
+use std::process::Command;
 
 use clang::{Clang, Entity, EntityKind, Index, Type, TypeKind};
 
@@ -39,12 +41,47 @@ pub fn parse_header(config: &BindConfig) -> Result<BindSpec, String> {
 
     let clang = Clang::new().map_err(|e| format!("libclang not available: {e}"))?;
     let index = Index::new(&clang, false, false);
-    let mut args = vec!["-std=c11".to_string(), "-x".to_string(), "c".to_string()];
+    let mut args = if config.cxx {
+        vec![
+            "-std=c++17".to_string(),
+            "-x".to_string(),
+            "c++".to_string(),
+            "-stdlib=libc++".to_string(),
+        ]
+    } else {
+        vec!["-std=c11".to_string(), "-x".to_string(), "c".to_string()]
+    };
+    // On macOS C++: never put SDK usr/include on -I (it sorts before libc++ and
+    // breaks wrapping headers). Use -isysroot + -isystem so libc++ comes first.
+    if config.cxx {
+        if let Some(sdk) = macos_sdk_path() {
+            args.push("-isysroot".into());
+            args.push(sdk.clone());
+            for inc in cxx_stdlib_includes() {
+                args.push("-isystem".into());
+                args.push(inc.display().to_string());
+            }
+            args.push("-isystem".into());
+            args.push(format!("{sdk}/usr/include"));
+        } else {
+            for inc in cxx_stdlib_includes() {
+                args.push("-isystem".into());
+                args.push(inc.display().to_string());
+            }
+        }
+    }
     for inc in &config.includes {
+        if config.cxx && (is_macos_sdk_usr_include(inc) || is_clang_resource_include(inc)) {
+            continue;
+        }
         args.push(format!("-I{}", inc.display()));
     }
     for def in &config.defines {
         args.push(format!("-D{def}"));
+    }
+    for fi in &config.force_includes {
+        args.push("-include".into());
+        args.push(fi.clone());
     }
 
     let tu = index
@@ -55,7 +92,14 @@ pub fn parse_header(config: &BindConfig) -> Result<BindSpec, String> {
 
     for diag in tu.get_diagnostics() {
         if diag.get_severity() as i32 >= 3 {
-            return Err(format!("clang diagnostic: {}", diag.get_text()));
+            let mut msg = format!("clang diagnostic: {}", diag.get_text());
+            if std::env::var_os("NYRA_BIND_DEBUG").is_some() {
+                msg.push_str("\n  clang args:");
+                for a in &args {
+                    msg.push_str(&format!("\n    {a}"));
+                }
+            }
+            return Err(msg);
         }
     }
 
@@ -80,6 +124,70 @@ pub fn parse_header(config: &BindConfig) -> Result<BindSpec, String> {
         ));
     }
     Ok(spec)
+}
+
+fn macos_sdk_path() -> Option<String> {
+    let out = Command::new("xcrun").args(["--show-sdk-path"]).output().ok()?;
+    if !out.status.success() {
+        return None;
+    }
+    let sdk = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    if sdk.is_empty() {
+        None
+    } else {
+        Some(sdk)
+    }
+}
+
+fn is_macos_sdk_usr_include(path: &PathBuf) -> bool {
+    let s = path.to_string_lossy();
+    s.contains(".sdk/usr/include") || s.ends_with("MacOSX.sdk/usr/include")
+}
+
+fn is_clang_resource_include(path: &PathBuf) -> bool {
+    let s = path.to_string_lossy().replace('\\', "/");
+    s.contains("/lib/clang/") && s.ends_with("/include")
+}
+
+fn cxx_stdlib_includes() -> Vec<PathBuf> {
+    let mut paths = Vec::new();
+    // Prefer a single libc++ tree — mixing Homebrew LLVM with Apple CLT headers
+    // breaks symbols like std::__hash_memory and wrapping <math.h>.
+    if let Ok(out) = Command::new("brew").args(["--prefix", "llvm"]).output() {
+        if out.status.success() {
+            let llvm = String::from_utf8_lossy(&out.stdout).trim().to_string();
+            if !llvm.is_empty() {
+                let root = PathBuf::from(&llvm);
+                let v1 = root.join("include/c++/v1");
+                if v1.is_dir() {
+                    paths.push(v1);
+                    // Clang resource dir supplies builtins; keep after libc++.
+                    let clang_dir = root.join("lib/clang");
+                    if let Ok(entries) = std::fs::read_dir(&clang_dir) {
+                        let mut vers: Vec<_> = entries.filter_map(|e| e.ok()).collect();
+                        vers.sort_by_key(|e| e.file_name());
+                        if let Some(last) = vers.last() {
+                            let res = last.path().join("include");
+                            if res.is_dir() {
+                                paths.push(res);
+                            }
+                        }
+                    }
+                    return paths;
+                }
+            }
+        }
+    }
+    for cand in [
+        "/Library/Developer/CommandLineTools/usr/include/c++/v1",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1",
+    ] {
+        let p = PathBuf::from(cand);
+        if p.is_dir() && !paths.iter().any(|x| x == &p) {
+            paths.push(p);
+        }
+    }
+    paths
 }
 
 fn collect_types(entity: &Entity, ctx: &mut TypeContext) {

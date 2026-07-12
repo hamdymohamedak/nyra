@@ -1,0 +1,10 @@
+name = "paho-mqtt"
+description = "Eclipse Paho MQTT C client"
+headers = ["MQTTClient.h"]
+libs = ["paho-mqtt3c"]
+pkg_config = "libpaho-mqtt3c"
+brew = "libpaho-mqtt"
+apt = "libpaho-mqtt-dev"
+pacman = "libpaho-mqtt-c"
+dnf = "paho-c-devel"
+aliases = ["mqtt", "paho"]

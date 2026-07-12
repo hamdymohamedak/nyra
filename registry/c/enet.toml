@@ -1,0 +1,9 @@
+name = "enet"
+description = "Reliable UDP networking for games"
+headers = ["enet/enet.h"]
+libs = ["enet"]
+pkg_config = "libenet"
+brew = "enet"
+apt = "libenet-dev"
+pacman = "enet"
+dnf = "enet-devel"

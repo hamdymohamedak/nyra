@@ -1,0 +1,9 @@
+name = "libnet"
+description = "Packet construction / injection"
+headers = ["libnet.h"]
+libs = ["net"]
+pkg_config = "libnet"
+brew = "libnet"
+apt = "libnet1-dev"
+pacman = "libnet"
+dnf = "libnet-devel"

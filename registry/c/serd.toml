@@ -1,0 +1,9 @@
+name = "serd"
+description = "Lightweight RDF syntax library"
+headers = ["serd/serd.h"]
+libs = ["serd-0"]
+pkg_config = "serd-0"
+brew = "serd"
+apt = "libserd-dev"
+pacman = "serd"
+dnf = "serd-devel"

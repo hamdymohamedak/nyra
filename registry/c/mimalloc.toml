@@ -1,0 +1,9 @@
+name = "mimalloc"
+description = "Microsoft mimalloc"
+headers = ["mimalloc.h"]
+libs = ["mimalloc"]
+pkg_config = "mimalloc"
+brew = "mimalloc"
+apt = "libmimalloc-dev"
+pacman = "mimalloc"
+dnf = "mimalloc-devel"

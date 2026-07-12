@@ -1,0 +1,9 @@
+name = "cublas"
+description = "NVIDIA cuBLAS — GPU BLAS"
+headers = ["cublas_v2.h"]
+libs = ["cublas"]
+apt = "libcublas-dev"
+pacman = "cuda-tools"
+dnf = "libcublas-devel"
+depends = ["cuda"]
+platforms = ["linux"]

@@ -1,0 +1,9 @@
+name = "vips"
+description = "Fast image processing (libvips)"
+headers = ["vips/vips.h"]
+libs = ["vips"]
+pkg_config = "vips"
+brew = "vips"
+apt = "libvips-dev"
+pacman = "libvips"
+dnf = "vips-devel"

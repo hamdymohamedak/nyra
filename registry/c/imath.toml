@@ -1,0 +1,10 @@
+name = "imath"
+description = "Imath half/float vector math (OpenEXR)"
+headers = ["Imath/half.h"]
+libs = ["Imath"]
+pkg_config = "Imath"
+brew = "imath"
+apt = "libimath-dev"
+pacman = "imath"
+dnf = "Imath-devel"
+cxx = true

@@ -1,0 +1,9 @@
+name = "cairo"
+description = "2D vector graphics"
+headers = ["cairo/cairo.h"]
+libs = ["cairo"]
+pkg_config = "cairo"
+brew = "cairo"
+apt = "libcairo2-dev"
+pacman = "cairo"
+dnf = "cairo-devel"

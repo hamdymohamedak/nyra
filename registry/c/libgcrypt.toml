@@ -1,0 +1,10 @@
+name = "libgcrypt"
+description = "GNU crypto library"
+headers = ["gcrypt.h"]
+libs = ["gcrypt"]
+pkg_config = "libgcrypt"
+brew = "libgcrypt"
+apt = "libgcrypt20-dev"
+pacman = "libgcrypt"
+dnf = "libgcrypt-devel"
+aliases = ["gcrypt"]

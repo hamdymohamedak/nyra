@@ -1,0 +1,10 @@
+name = "libxml2"
+description = "XML parser and toolkit"
+headers = ["libxml/parser.h"]
+libs = ["xml2"]
+pkg_config = "libxml-2.0"
+brew = "libxml2"
+apt = "libxml2-dev"
+pacman = "libxml2"
+dnf = "libxml2-devel"
+aliases = ["xml2"]

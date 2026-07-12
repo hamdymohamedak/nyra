@@ -1,0 +1,7 @@
+name = "torchvision"
+description = "LibTorch Vision helpers (torchvision C++ ops)"
+headers = ["torchvision/vision.h"]
+libs = ["torchvision"]
+git = "https://github.com/pytorch/vision.git"
+depends = ["libtorch"]
+cxx = true

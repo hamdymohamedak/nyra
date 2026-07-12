@@ -1,0 +1,9 @@
+name = "miopen"
+description = "AMD MIOpen — deep learning on ROCm"
+headers = ["miopen/miopen.h"]
+libs = ["MIOpen"]
+apt = "miopen-hip"
+pacman = "miopen"
+dnf = "miopen-devel"
+depends = ["rocm"]
+platforms = ["linux"]

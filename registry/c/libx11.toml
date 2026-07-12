@@ -1,0 +1,10 @@
+name = "libx11"
+description = "X11 client library"
+headers = ["X11/Xlib.h"]
+libs = ["X11"]
+pkg_config = "x11"
+brew = "libx11"
+apt = "libx11-dev"
+pacman = "libx11"
+dnf = "libX11-devel"
+aliases = ["x11"]

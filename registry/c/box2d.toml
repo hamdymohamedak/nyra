@@ -1,0 +1,9 @@
+name = "box2d"
+description = "2D physics engine"
+headers = ["box2d/box2d.h"]
+libs = ["box2d"]
+pkg_config = "box2d"
+brew = "box2d"
+apt = "libbox2d-dev"
+pacman = "box2d"
+dnf = "box2d-devel"

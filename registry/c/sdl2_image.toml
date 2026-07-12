@@ -1,0 +1,10 @@
+name = "sdl2_image"
+description = "SDL2 image loading"
+headers = ["SDL2/SDL_image.h"]
+libs = ["SDL2_image"]
+pkg_config = "SDL2_image"
+brew = "sdl2_image"
+apt = "libsdl2-image-dev"
+pacman = "sdl2_image"
+dnf = "SDL2_image-devel"
+depends = ["sdl2"]

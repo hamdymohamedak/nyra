@@ -1,0 +1,8 @@
+name = "http-parser"
+description = "HTTP request/response parser"
+headers = ["http_parser.h"]
+libs = ["http_parser"]
+apt = "libhttp-parser-dev"
+pacman = "http-parser"
+dnf = "http-parser-devel"
+git = "https://github.com/nodejs/http-parser.git"

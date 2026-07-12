@@ -1,0 +1,9 @@
+name = "unicorn"
+description = "CPU emulator framework"
+headers = ["unicorn/unicorn.h"]
+libs = ["unicorn"]
+pkg_config = "unicorn"
+brew = "unicorn"
+apt = "libunicorn-dev"
+pacman = "unicorn"
+dnf = "unicorn-devel"

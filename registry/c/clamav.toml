@@ -1,0 +1,9 @@
+name = "clamav"
+description = "ClamAV antivirus engine"
+headers = ["clamav.h"]
+libs = ["clamav"]
+pkg_config = "libclamav"
+brew = "clamav"
+apt = "libclamav-dev"
+pacman = "clamav"
+dnf = "clamav-devel"

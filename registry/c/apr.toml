@@ -1,0 +1,9 @@
+name = "apr"
+description = "Apache Portable Runtime"
+headers = ["apr-1/apr_general.h"]
+libs = ["apr-1"]
+pkg_config = "apr-1"
+brew = "apr"
+apt = "libapr1-dev"
+pacman = "apr"
+dnf = "apr-devel"

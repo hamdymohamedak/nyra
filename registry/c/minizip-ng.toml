@@ -1,0 +1,9 @@
+name = "minizip-ng"
+description = "ZIP library (minizip-ng)"
+headers = ["minizip/zip.h"]
+libs = ["minizip"]
+pkg_config = "minizip"
+brew = "minizip-ng"
+apt = "libminizip-dev"
+pacman = "minizip"
+dnf = "minizip-ng-devel"

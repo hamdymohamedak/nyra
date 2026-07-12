@@ -1,0 +1,6 @@
+name = "hnswlib"
+description = "HNSWLIB approximate nearest neighbor (header-only)"
+headers = ["hnswlib/hnswlib.h"]
+libs = ["m"]
+git = "https://github.com/nmslib/hnswlib.git"
+cxx = true

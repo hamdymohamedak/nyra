@@ -1,0 +1,9 @@
+name = "nccl"
+description = "NVIDIA NCCL — multi-GPU collectives"
+headers = ["nccl.h"]
+libs = ["nccl"]
+apt = "libnccl-dev"
+pacman = "nccl"
+dnf = "libnccl-devel"
+depends = ["cuda"]
+platforms = ["linux"]

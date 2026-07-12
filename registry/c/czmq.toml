@@ -1,0 +1,10 @@
+name = "czmq"
+description = "High-level C binding for ZeroMQ"
+headers = ["czmq.h"]
+libs = ["czmq"]
+pkg_config = "libczmq"
+brew = "czmq"
+apt = "libczmq-dev"
+pacman = "czmq"
+dnf = "czmq-devel"
+depends = ["zeromq"]

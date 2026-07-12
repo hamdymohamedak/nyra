@@ -1,0 +1,10 @@
+name = "libwebp"
+description = "WebP image codec"
+headers = ["webp/decode.h"]
+libs = ["webp"]
+pkg_config = "libwebp"
+brew = "webp"
+apt = "libwebp-dev"
+pacman = "libwebp"
+dnf = "libwebp-devel"
+aliases = ["webp"]

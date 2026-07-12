@@ -1,0 +1,11 @@
+name = "libjpeg-turbo"
+description = "SIMD-accelerated JPEG"
+headers = ["jpeglib.h"]
+libs = ["jpeg"]
+pkg_config = "libjpeg"
+brew = "jpeg-turbo"
+apt = "libjpeg-turbo8-dev"
+pacman = "libjpeg-turbo"
+dnf = "libjpeg-turbo-devel"
+aliases = ["jpeg", "libjpeg"]
+force_include = ["stdio.h"]

@@ -1,0 +1,9 @@
+name = "librsync"
+description = "rsync remote-delta algorithm"
+headers = ["librsync.h"]
+libs = ["rsync"]
+pkg_config = "librsync"
+brew = "librsync"
+apt = "librsync-dev"
+pacman = "librsync"
+dnf = "librsync-devel"

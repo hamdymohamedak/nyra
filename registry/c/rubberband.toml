@@ -1,0 +1,9 @@
+name = "rubberband"
+description = "Audio time-stretching / pitch-shifting"
+headers = ["rubberband/rubberband-c.h"]
+libs = ["rubberband"]
+pkg_config = "rubberband"
+brew = "rubberband"
+apt = "librubberband-dev"
+pacman = "rubberband"
+dnf = "rubberband-devel"

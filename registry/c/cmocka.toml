@@ -1,0 +1,9 @@
+name = "cmocka"
+description = "Unit testing framework for C"
+headers = ["cmocka.h"]
+libs = ["cmocka"]
+pkg_config = "cmocka"
+brew = "cmocka"
+apt = "libcmocka-dev"
+pacman = "cmocka"
+dnf = "cmocka-devel"

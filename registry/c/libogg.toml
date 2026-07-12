@@ -1,0 +1,9 @@
+name = "libogg"
+description = "Ogg bitstream library"
+headers = ["ogg/ogg.h"]
+libs = ["ogg"]
+pkg_config = "ogg"
+brew = "libogg"
+apt = "libogg-dev"
+pacman = "libogg"
+dnf = "libogg-devel"

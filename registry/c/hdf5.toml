@@ -1,0 +1,9 @@
+name = "hdf5"
+description = "Hierarchical Data Format 5"
+headers = ["hdf5.h"]
+libs = ["hdf5"]
+pkg_config = "hdf5"
+brew = "hdf5"
+apt = "libhdf5-dev"
+pacman = "hdf5"
+dnf = "hdf5-devel"

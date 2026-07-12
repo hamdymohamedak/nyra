@@ -1,0 +1,9 @@
+name = "libpcap"
+description = "Packet capture library"
+headers = ["pcap.h"]
+libs = ["pcap"]
+pkg_config = "libpcap"
+brew = "libpcap"
+apt = "libpcap-dev"
+pacman = "libpcap"
+dnf = "libpcap-devel"

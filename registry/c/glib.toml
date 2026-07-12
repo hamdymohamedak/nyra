@@ -1,0 +1,9 @@
+name = "glib"
+description = "GLib core utility library"
+headers = ["glib.h"]
+libs = ["glib-2.0", "gobject-2.0"]
+pkg_config = "glib-2.0"
+brew = "glib"
+apt = "libglib2.0-dev"
+pacman = "glib2"
+dnf = "glib2-devel"

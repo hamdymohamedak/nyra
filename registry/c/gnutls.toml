@@ -1,0 +1,9 @@
+name = "gnutls"
+description = "GNU TLS library"
+headers = ["gnutls/gnutls.h"]
+libs = ["gnutls"]
+pkg_config = "gnutls"
+brew = "gnutls"
+apt = "libgnutls28-dev"
+pacman = "gnutls"
+dnf = "gnutls-devel"

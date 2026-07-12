@@ -1,0 +1,9 @@
+name = "libsoxr"
+description = "High quality sample-rate conversion"
+headers = ["soxr.h"]
+libs = ["soxr"]
+pkg_config = "soxr"
+brew = "libsoxr"
+apt = "libsoxr-dev"
+pacman = "libsoxr"
+dnf = "soxr-devel"

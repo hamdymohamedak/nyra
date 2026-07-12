@@ -1,0 +1,9 @@
+name = "msgpack"
+description = "MessagePack C library"
+headers = ["msgpack.h"]
+libs = ["msgpackc"]
+pkg_config = "msgpack"
+brew = "msgpack"
+apt = "libmsgpack-dev"
+pacman = "msgpack-c"
+dnf = "msgpack-devel"

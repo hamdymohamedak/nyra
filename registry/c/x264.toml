@@ -1,0 +1,10 @@
+name = "x264"
+description = "H.264 / AVC encoder"
+headers = ["x264.h"]
+libs = ["x264"]
+pkg_config = "x264"
+brew = "x264"
+apt = "libx264-dev"
+pacman = "x264"
+dnf = "x264-devel"
+force_include = ["stdint.h"]

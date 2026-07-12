@@ -1,0 +1,10 @@
+name = "tidy-html5"
+description = "HTML tidy / corrector"
+headers = ["tidy.h"]
+libs = ["tidy"]
+pkg_config = "tidy"
+brew = "tidy-html5"
+apt = "libtidy-dev"
+pacman = "tidy"
+dnf = "libtidy-devel"
+aliases = ["tidy"]

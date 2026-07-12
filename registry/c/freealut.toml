@@ -1,0 +1,10 @@
+name = "freealut"
+description = "OpenAL Utility Toolkit"
+headers = ["AL/alut.h"]
+libs = ["alut"]
+pkg_config = "freealut"
+brew = "freealut"
+apt = "libalut-dev"
+pacman = "freealut"
+dnf = "freealut-devel"
+depends = ["openal-soft"]

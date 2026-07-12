@@ -1,0 +1,11 @@
+name = "llama-cpp"
+description = "llama.cpp — local LLM inference (C/C++)"
+headers = ["llama.h"]
+libs = ["llama", "ggml", "ggml-base"]
+pkg_config = "llama"
+brew = "llama.cpp"
+apt = "libllama-dev"
+pacman = "llama.cpp"
+dnf = "llama.cpp-devel"
+aliases = ["llama.cpp", "llamacpp"]
+depends = ["ggml"]

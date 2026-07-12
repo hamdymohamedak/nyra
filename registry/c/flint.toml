@@ -1,0 +1,9 @@
+name = "flint"
+description = "Fast Library for Number Theory"
+headers = ["flint/flint.h"]
+libs = ["flint"]
+pkg_config = "flint"
+brew = "flint"
+apt = "libflint-dev"
+pacman = "flint"
+dnf = "flint-devel"

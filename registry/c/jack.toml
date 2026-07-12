@@ -1,0 +1,9 @@
+name = "jack"
+description = "JACK Audio Connection Kit"
+headers = ["jack/jack.h"]
+libs = ["jack"]
+pkg_config = "jack"
+brew = "jack"
+apt = "libjack-dev"
+pacman = "jack"
+dnf = "jack-audio-connection-kit-devel"

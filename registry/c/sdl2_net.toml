@@ -1,0 +1,10 @@
+name = "sdl2_net"
+description = "SDL2 networking"
+headers = ["SDL2/SDL_net.h"]
+libs = ["SDL2_net"]
+pkg_config = "SDL2_net"
+brew = "sdl2_net"
+apt = "libsdl2-net-dev"
+pacman = "sdl2_net"
+dnf = "SDL2_net-devel"
+depends = ["sdl2"]

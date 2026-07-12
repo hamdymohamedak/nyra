@@ -1,0 +1,9 @@
+name = "brotli"
+description = "Brotli compression"
+headers = ["brotli/decode.h"]
+libs = ["brotlidec", "brotlienc", "brotlicommon"]
+pkg_config = "libbrotlidec"
+brew = "brotli"
+apt = "libbrotli-dev"
+pacman = "brotli"
+dnf = "brotli-devel"

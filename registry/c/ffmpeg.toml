@@ -1,0 +1,9 @@
+name = "ffmpeg"
+description = "FFmpeg multimedia libraries"
+headers = ["libavformat/avformat.h"]
+libs = ["avformat", "avcodec", "avutil", "swscale", "swresample"]
+pkg_config = "libavformat"
+brew = "ffmpeg"
+apt = "libavformat-dev"
+pacman = "ffmpeg"
+dnf = "ffmpeg-devel"

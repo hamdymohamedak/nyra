@@ -1,0 +1,9 @@
+name = "nghttp2"
+description = "HTTP/2 C library"
+headers = ["nghttp2/nghttp2.h"]
+libs = ["nghttp2"]
+pkg_config = "libnghttp2"
+brew = "libnghttp2"
+apt = "libnghttp2-dev"
+pacman = "nghttp2"
+dnf = "libnghttp2-devel"

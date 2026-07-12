@@ -1,0 +1,10 @@
+name = "libxslt"
+description = "XSLT processor (with libxml2)"
+headers = ["libxslt/xslt.h"]
+libs = ["xslt"]
+pkg_config = "libxslt"
+brew = "libxslt"
+apt = "libxslt1-dev"
+pacman = "libxslt"
+dnf = "libxslt-devel"
+depends = ["libxml2"]

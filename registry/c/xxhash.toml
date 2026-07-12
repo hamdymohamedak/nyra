@@ -1,0 +1,9 @@
+name = "xxhash"
+description = "Extremely fast hash algorithm"
+headers = ["xxhash.h"]
+libs = ["xxhash"]
+pkg_config = "libxxhash"
+brew = "xxhash"
+apt = "libxxhash-dev"
+pacman = "xxhash"
+dnf = "xxhash-devel"

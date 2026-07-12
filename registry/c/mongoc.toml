@@ -1,0 +1,11 @@
+name = "mongoc"
+description = "MongoDB C driver"
+headers = ["mongoc/mongoc.h"]
+libs = ["mongoc-1.0"]
+pkg_config = "libmongoc-1.0"
+brew = "mongo-c-driver"
+apt = "libmongoc-dev"
+pacman = "mongo-c-driver"
+dnf = "mongo-c-driver-devel"
+aliases = ["mongo-c-driver"]
+depends = ["libbson"]

@@ -1,0 +1,10 @@
+name = "sdl3_ttf"
+description = "SDL3 TrueType fonts"
+headers = ["SDL3_ttf/SDL_ttf.h"]
+libs = ["SDL3_ttf"]
+pkg_config = "sdl3-ttf"
+brew = "sdl3_ttf"
+apt = "libsdl3-ttf-dev"
+pacman = "sdl3_ttf"
+dnf = "SDL3_ttf-devel"
+depends = ["sdl3"]

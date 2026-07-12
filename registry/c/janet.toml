@@ -1,0 +1,9 @@
+name = "janet"
+description = "Janet programming language C API"
+headers = ["janet.h"]
+libs = ["janet"]
+pkg_config = "janet"
+brew = "janet"
+apt = "libjanet-dev"
+pacman = "janet"
+dnf = "janet-devel"

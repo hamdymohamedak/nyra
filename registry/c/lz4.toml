@@ -1,0 +1,9 @@
+name = "lz4"
+description = "Extremely fast compression"
+headers = ["lz4.h"]
+libs = ["lz4"]
+pkg_config = "liblz4"
+brew = "lz4"
+apt = "liblz4-dev"
+pacman = "lz4"
+dnf = "lz4-devel"

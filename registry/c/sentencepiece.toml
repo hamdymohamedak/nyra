@@ -1,0 +1,10 @@
+name = "sentencepiece"
+description = "SentencePiece unsupervised tokenizer"
+headers = ["sentencepiece_processor.h"]
+libs = ["sentencepiece"]
+pkg_config = "sentencepiece"
+brew = "sentencepiece"
+apt = "libsentencepiece-dev"
+pacman = "sentencepiece"
+dnf = "sentencepiece-devel"
+cxx = true

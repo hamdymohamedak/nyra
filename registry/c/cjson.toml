@@ -1,0 +1,10 @@
+name = "cjson"
+description = "Ultralightweight JSON parser"
+headers = ["cjson/cJSON.h"]
+libs = ["cjson"]
+pkg_config = "libcjson"
+brew = "cjson"
+apt = "libcjson-dev"
+pacman = "cjson"
+dnf = "cjson-devel"
+aliases = ["cJSON"]

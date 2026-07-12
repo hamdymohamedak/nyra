@@ -1,0 +1,9 @@
+name = "physfs"
+description = "PhysicsFS virtual filesystem"
+headers = ["physfs.h"]
+libs = ["physfs"]
+pkg_config = "physfs"
+brew = "physfs"
+apt = "libphysfs-dev"
+pacman = "physfs"
+dnf = "physfs-devel"

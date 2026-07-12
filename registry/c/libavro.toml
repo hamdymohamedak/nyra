@@ -1,0 +1,9 @@
+name = "libavro"
+description = "Apache Avro C library"
+headers = ["avro.h"]
+libs = ["avro"]
+pkg_config = "avro-c"
+brew = "avro-c"
+apt = "libavro-dev"
+pacman = "avro-c"
+dnf = "avro-c-devel"

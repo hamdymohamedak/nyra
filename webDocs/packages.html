@@ -390,8 +390,10 @@ fn main() -&gt; void {
 </div><!-- NYRA_SNIPPET_END -->      <p>Implementation: <code>compiler/lint/src/prune.rs</code> · <code>Compiler::prune_project()</code> in the driver · CLI: <code>cli/src/commands/pkg.rs</code>. Tests: <code>cargo test -p lint</code>, <code>cargo test -p compiler --test pkg_prune</code>, fixture <code>tests/fixtures/prune_unused/</code>.</p>
 
       <h2>System C libraries (<code>nyra pkg add</code>)</h2>
-      <p>One command — registry install, auto-detect, or GitHub clone. No manual <code>-I</code> paths:</p>
+      <p>One command — registry install, auto-detect, or GitHub clone. No manual <code>-I</code> paths. The built-in registry has <strong>270+</strong> entries (AI/ML, networks, games, media, science, …):</p>
       <pre><code>nyra pkg add gsl           # brew/apt + bindgen + nyra.mod
+nyra pkg add onnxruntime   # AI inference
+nyra pkg add llama-cpp     # local LLMs
 nyra pkg add zlib
 nyra pkg add https://github.com/org/cool-c-lib
 nyra bind gsl              # already installed? just bind
@@ -399,7 +401,7 @@ nyra pkg c list
 nyra pkg c remove gsl
 
 import "vendor/bindings/gsl_sf.ny"</code></pre>
-      <p>Manifest: <code>vendor/bindings/c-libs.toml</code> · Registry: <code>registry/c/</code>. See <a href="c-bindgen.html">C Bindgen</a>.</p>
+      <p>Manifest: <code>vendor/bindings/c-libs.toml</code> · Registry: <code>registry/c/</code>. AI quick start: <a href="c-bindgen.html#ai-libs">C Bindgen → AI/ML</a>.</p>
 
       <h2>Bind a system C library (manual)</h2>
       <p>Generate <code>extern fn</code> from a system header without a NyraPkg wrapper. Step-by-step: <a href="c-bindgen.html#tutorial-zlib">C Bindgen → zlib</a>.</p>

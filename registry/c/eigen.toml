@@ -1,0 +1,10 @@
+name = "eigen"
+description = "Eigen C++ linear algebra (header-only)"
+headers = ["Eigen/Core"]
+libs = ["m"]
+brew = "eigen"
+apt = "libeigen3-dev"
+pacman = "eigen"
+dnf = "eigen3-devel"
+aliases = ["eigen3"]
+cxx = true

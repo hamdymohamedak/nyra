@@ -1,0 +1,10 @@
+name = "wayland"
+description = "Wayland client library"
+headers = ["wayland-client.h"]
+libs = ["wayland-client"]
+pkg_config = "wayland-client"
+brew = "wayland"
+apt = "libwayland-dev"
+pacman = "wayland"
+dnf = "wayland-devel"
+platforms = ["linux"]
