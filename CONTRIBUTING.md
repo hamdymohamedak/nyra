@@ -125,7 +125,8 @@ High-level path from source to executable (details in [`docs/architecture.md`](d
 | **Fix a stdlib bug (Nyra only)** | `stdlib/**/*.ny` | [`stdlib/README.md`](stdlib/README.md) | `nyra test tests/nyra/…` |
 | **Add C-backed stdlib API** | `stdlib/`, `stdlib/rt/`, `runtime_map.rs` | [Pattern B](#b--extern-fn--c-runtime-typical-for-io-json-crypto) | `nyra test` + `make gen-abi-header` |
 | **Add string method (`.foo()`)** | via `make add-builtin` or `make contribute` → 3 | [`make/py/builtin_dev/README.md`](make/py/builtin_dev/README.md) | `make install-dev` · `nyra test` |
-| **Scaffold stdlib / tests / pkg / syntax** | `make contribute` | [`make/py/contrib_dev/README.md`](make/py/contrib_dev/README.md) | `nyra test` · `make test-contrib-py` |
+| **Scaffold stdlib / tests / pkg / C lib / syntax** | `make contribute` → 1 Add | [`make/py/contrib_dev/README.md`](make/py/contrib_dev/README.md) | `nyra test` · `make test-contrib-py` |
+| **Add `nyra bind` for a system C library** | `make contribute` → 1 → 9 | [`registry/c/README.md`](registry/c/README.md) | `nyra bind <name>` |
 | **Change syntax / types** | `compiler/lexer` … `codegen` | [`docs/architecture.md`](docs/architecture.md) | `cargo test -p compiler` · `make install-dev` |
 | **Fix borrow / ownership error** | `ownership/`, `borrowck/` | contributor-map | `cargo test -p ownership` |
 | **Add CLI flag** | `cli/src/app/args.rs`, `cli/src/commands/` | [`docs/architecture.md`](docs/architecture.md#cli-layout) | `cargo test -p cli` |
@@ -305,10 +306,10 @@ Example: [`make/py/builtin_dev/examples/strip_suffix.json`](make/py/builtin_dev/
 
 ### E — **Contributor hub** (`make contribute`)
 
-Short pointer — patterns A/B/D above. **Full walkthrough:** [Contributor hub guide](#contributor-hub-guide-make-contribute) (menu, every question, example answers, full simulation).
+Short pointer — patterns A/B/D above + **C library registry** (recipe 9). **Full walkthrough:** [Contributor hub guide](#contributor-hub-guide-make-contribute) (main hub → Add → recipes, every question, full simulation).
 
 ```bash
-make contribute                         # interactive menu (add)
+make contribute                         # hub: Add / Remove / List / Patch / Batch / Verify
 make contribute-list                    # show [contrib-dev:…] markers
 make contribute-remove ARGS='-i'        # remove scaffold (skips webDocs by default)
 make contribute-patch ARGS='--marker … --config …'
@@ -316,6 +317,9 @@ make test-contrib-py                    # CI smoke for Python tooling
 
 # Multi-fn stdlib module: put Nyra source in pure_source (see examples/stdlib_module.json)
 make contribute ARGS='add --recipe stdlib-pure --config make/py/contrib_dev/examples/stdlib_module.json --force --no-webdocs'
+
+# System C library → nyra bind <name> (registry/c + c_registry.rs)
+make contribute ARGS='add --recipe c-lib-registry --config make/py/contrib_dev/examples/c_lib_registry.json --no-webdocs'
 ```
 
 Discover skips bulky trees (`target`, `webDocs`, `vendor`, `Apps`) so list/remove stay fast.
@@ -374,14 +378,32 @@ JSON examples: [`make/py/contrib_dev/examples/`](make/py/contrib_dev/examples/).
 ```
 ┌─────────────────────────────────────────────┐
 │             make contribute                 │
-│  Step-by-step monitor — TOOL wires, YOU code│
+│  Single hub — TOOL wires, YOU implement     │
+├─────────────────────────────────────────────┤
+│ 1. Add          stdlib, builtin, C lib, …   │
+│ 2. Remove       undo contrib / builtin wire │
+│ 3. List         all [contrib-dev:…] markers │
+│ 4. Patch        re-scaffold / re-wire       │
+│ 5. Batch        gen-batchN + batch-add      │
+│ 6. Verify       install-dev, tests, gates   │
+│ 0. Exit                                     │
+└─────────────────────────────────────────────┘
+```
+
+**How to choose:** type `1`–`6` (or `0` to exit). Most scaffolds start with **1 Add**.
+
+### Add → recipe submenu (`make contribute` → 1)
+
+```
+┌─────────────────────────────────────────────┐
+│             Add scaffold                    │
 ├─────────────────────────────────────────────┤
 │ 1. Stdlib Pure Function (Pattern A)         │
 │    Nyra fn in stdlib — no new C             │
 │ 2. Stdlib Extern + C (Pattern B)            │
 │    extern fn + rt/*.c + runtime_map         │
 │ 3. Built-in Method (.method)                │
-│    → make add-builtin wizard                │
+│    compiler + C wiring (hub runs internally)│
 │ 4. Test + Example Pair                      │
 │    tests/nyra/* + examples/* (typed pair)   │
 │ 5. NyraPkg Package                          │
@@ -392,10 +414,13 @@ JSON examples: [`make/py/contrib_dev/examples/`](make/py/contrib_dev/examples/).
 │    pass/ or fail/ language contract         │
 │ 8. Syntax / Keyword Scaffold                │
 │    checklist — no auto lexer/parser         │
+│ 9. C Library Registry (registry/c)          │
+│    nyra bind <name> via brew/apt/dnf        │
+│ 0. Back                                     │
 └─────────────────────────────────────────────┘
 ```
 
-**How to choose:** type `1`–`8` at `Select recipe [1-8]:`.
+**How to choose:** type `1`–`9` at `Select recipe [1-9]:` (or `0` to return to the main hub).
 
 | # | Pick when… |
 |---|------------|
@@ -407,6 +432,7 @@ JSON examples: [`make/py/contrib_dev/examples/`](make/py/contrib_dev/examples/).
 | 6 | New `nyra` subcommand or `--flag` |
 | 7 | Stable language contract test |
 | 8 | New keyword/syntax (checklist only) |
+| 9 | Map a system C library for `nyra bind <name>` (Homebrew/apt/dnf/pacman) |
 
 ---
 
@@ -552,6 +578,46 @@ Delegates to `make add-builtin` (same WHY/TOOL/YOU style). See [Pattern D](#d--s
 
 ---
 
+### Option 9 — C Library Registry (`registry/c`)
+
+**When:** You want `nyra bind <name>` for a C library installed by the OS package manager (Homebrew / apt / dnf / pacman). Nyra does **not** install the library — it only maps names for discovery, bindings, and `nyra.mod` links.
+
+| Step | Question | Example answer | WHY (short) |
+|------|----------|----------------|-------------|
+| 1 | Nyra bind name | `libsodium` | What users type after `nyra bind` (prefer brew formula) |
+| 2 | Description | `Modern encryption (NaCl)` or Enter to skip | One-line docs |
+| 3 | Primary header | `sodium.h` | Path under `include/` for bindgen |
+| 4 | Link lib name(s) | `sodium` (no `lib` prefix) | Becomes `link sodium` in `nyra.mod` |
+| 5 | pkg-config module | `libsodium` or Enter to skip | Prefer `pkg-config` when a `.pc` exists |
+| 6 | Homebrew formula | Enter (= same as name) | Must match `brew install …` |
+| 7 | apt package | `libsodium-dev` or Enter to skip | Skip if unknown / not on apt |
+| 8 | dnf package | `libsodium-devel` or Enter to skip | Skip if unknown |
+| 9 | pacman package | `libsodium` or Enter to skip | Skip if unknown |
+| 10 | Aliases | `sodium` or Enter to skip | Extra names that resolve to this entry |
+
+**TOOL creates:** `registry/c/<name>.toml` + wires `cli/src/c_registry.rs` (`BUILTIN` `include_str!`).
+
+**YOU do:** install with your OS PM, then bind — no C code to write.
+
+**Verify:**
+
+```bash
+brew install libsodium          # or apt/dnf/pacman
+nyra bind libsodium
+```
+
+Non-interactive:
+
+```bash
+make contribute ARGS='add --recipe c-lib-registry --config make/py/contrib_dev/examples/c_lib_registry.json --no-webdocs'
+# apt/dnf optional example:
+make contribute ARGS='add --recipe c-lib-registry --config make/py/contrib_dev/examples/c_lib_registry_skip_apt.json --no-webdocs'
+```
+
+See also [`registry/c/README.md`](registry/c/README.md) and [`docs/c-bindgen.md`](docs/c-bindgen.md).
+
+---
+
 ### Full simulation — Option 4 (Test + Example)
 
 What a new contributor sees from start to finish.
@@ -567,7 +633,7 @@ cd nyra
 make contribute
 ```
 
-**2. Menu** — type `4` and Enter.
+**2. Main hub** — type `1` (Add), then at the recipe menu type `4` (Test + Example) and Enter.
 
 **3. Wizard** (each step shows WHY / TOOL / YOU):
 
@@ -954,7 +1020,7 @@ make contribute-patch ARGS='--marker test_example:my_feature --config make/py/co
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | `not found: tests/nyra/greet_user_test.ny` | Wizard cancelled (Ctrl+C) or answered `n` at confirm | Re-run `make contribute`, finish all steps, confirm **Y** |
-| Same, but you saw the menu only | Interrupted at `Select recipe [1-8]:` | No recipe chosen — start again |
+| Same, but you saw the menu only | Interrupted at `Select recipe [1-9]:` (or left Add without picking) | No recipe chosen — start again (`make contribute` → 1 → recipe) |
 | Files exist but `nyra test` fails | Scaffold applied but TODO placeholders remain | Edit test file — replace `assert_eq(1, 1)` |
 | Unsure if scaffold exists | | `make contribute-list` |
 
