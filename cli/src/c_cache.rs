@@ -208,6 +208,19 @@ fn compile_one_source(
 
     for path in &profile.link_search_paths {
         cmd.arg(format!("-I{}", path.display()));
+        // Homebrew kegs use …/lib for -L; C sources often need sibling …/include.
+        if path.file_name().and_then(|n| n.to_str()) == Some("lib") {
+            if let Some(parent) = path.parent() {
+                let include = parent.join("include");
+                if include.is_dir() {
+                    cmd.arg(format!("-I{}", include.display()));
+                }
+            }
+        }
+    }
+    // Header-only shims live next to their `.h` (e.g. raygui_impl.c beside raygui.h).
+    if let Some(parent) = source.parent() {
+        cmd.arg(format!("-I{}", parent.display()));
     }
 
     if !use_mingw_gcc {

@@ -32,6 +32,10 @@ pub struct RegistryEntry {
     /// Registry names that must be installed first (headers + link paths).
     #[serde(default)]
     pub depends: Vec<String>,
+    /// If set, emit a one-file C shim (`#define NAME` + `#include` header) and `link-source` it.
+    /// Example: `RAYGUI_IMPLEMENTATION` for header-only raygui.
+    #[serde(default)]
+    pub impl_define: Option<String>,
 }
 
 impl RegistryEntry {

@@ -18,10 +18,11 @@ use super::{
 };
 use super::util::{
     array_elem_from_ty, array_len_from_ty, assign_target_name, collect_assigned_in_block,
-    escape_string, host_target_triple, is_array_ty, is_string_builtin_method, llvm_arith_rhs, llvm_binop_operand,
-    llvm_cmp_operand, llvm_ptr, llvm_ptr_reg, llvm_storage_ty, llvm_string_len,
-    llvm_struct_size_bytes, llvm_type_ann_resolved, llvm_ty_to_ann, resolve_struct_field_name,
-    struct_name_from_llvm_ty, struct_ptr_type, struct_value_type, is_struct_pointer_type,
+    escape_string, host_target_triple, is_array_ty, is_llvm_numeric_literal, is_string_builtin_method,
+    llvm_arith_rhs, llvm_binop_operand, llvm_cmp_operand, llvm_ptr, llvm_ptr_reg, llvm_storage_ty,
+    llvm_string_len, llvm_struct_size_bytes, llvm_type_ann_resolved, llvm_ty_to_ann,
+    resolve_struct_field_name, struct_name_from_llvm_ty, struct_ptr_type, struct_value_type,
+    is_struct_pointer_type,
 };
 
 impl Codegen {
@@ -479,12 +480,14 @@ impl Codegen {
     pub(super) fn reg_op(&self, v: &ExprValue) -> String {
         if v.reg.starts_with('%') || v.reg.starts_with('@') {
             v.reg.clone()
-        } else if v.reg.chars().all(|c| c.is_ascii_digit() || c == '-')
+        } else if is_llvm_numeric_literal(&v.reg)
             && matches!(
                 v.ty.as_str(),
                 "i1" | "i8" | "i16" | "i32" | "i64" | "i128" | "char" | "float" | "double"
+                    | "f32" | "f64"
             )
         {
+            // Bare int/float constants must not get a `%` prefix (`store double 300.0`, not `%300.0`).
             v.reg.clone()
         } else {
             format!("%{}", v.reg)

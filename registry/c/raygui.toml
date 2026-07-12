@@ -8,3 +8,4 @@ pacman = "raylib"
 dnf = "raylib-devel"
 git = "https://github.com/raysan5/raygui.git"
 depends = ["raylib"]
+impl_define = "RAYGUI_IMPLEMENTATION"

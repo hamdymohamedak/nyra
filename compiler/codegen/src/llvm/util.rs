@@ -139,11 +139,39 @@ pub(super) fn llvm_float_const(n: f64, kind: FloatKind) -> String {
 pub(super) fn llvm_value_operand(reg: &str) -> String {
     if reg.starts_with('%') || reg.starts_with('@') {
         reg.to_string()
-    } else if reg.chars().all(|c| c.is_ascii_digit() || c == '-' || c == '.') {
+    } else if is_llvm_numeric_literal(reg) {
         reg.to_string()
     } else {
         format!("%{reg}")
     }
+}
+
+/// True for bare LLVM integer/float constants (`42`, `-1`, `300.0`, `1.5e-2`).
+pub(super) fn is_llvm_numeric_literal(reg: &str) -> bool {
+    if reg.is_empty() {
+        return false;
+    }
+    let mut chars = reg.chars().peekable();
+    if matches!(chars.peek(), Some('+' | '-')) {
+        chars.next();
+    }
+    let mut saw_digit = false;
+    let mut saw_dot = false;
+    let mut saw_exp = false;
+    while let Some(c) = chars.next() {
+        match c {
+            '0'..='9' => saw_digit = true,
+            '.' if !saw_dot && !saw_exp => saw_dot = true,
+            'e' | 'E' if saw_digit && !saw_exp => {
+                saw_exp = true;
+                if matches!(chars.peek(), Some('+' | '-')) {
+                    chars.next();
+                }
+            }
+            _ => return false,
+        }
+    }
+    saw_digit
 }
 
 /// Nyra `fn` names that collide with libc / libm globals when emitted as LLVM symbols.
@@ -255,6 +283,27 @@ mod escape_tests {
         assert_eq!(super::llvm_ptr_reg("0"), "%0");
         assert_eq!(super::llvm_ptr_reg("%1"), "%1");
         assert_eq!(super::llvm_ptr_reg("null"), "null");
+    }
+
+    #[test]
+    pub(super) fn llvm_value_operand_keeps_float_literals_bare() {
+        assert_eq!(
+            super::llvm_value_operand("300.00000000000000000"),
+            "300.00000000000000000"
+        );
+        assert_eq!(super::llvm_value_operand("40.0"), "40.0");
+        assert_eq!(super::llvm_value_operand("-1.5"), "-1.5");
+        assert_eq!(super::llvm_value_operand("gep.15"), "%gep.15");
+        assert_eq!(super::llvm_value_operand("%tmp"), "%tmp");
+    }
+
+    #[test]
+    pub(super) fn is_llvm_numeric_literal_accepts_floats() {
+        assert!(super::is_llvm_numeric_literal("300.0"));
+        assert!(super::is_llvm_numeric_literal("1.5e-2"));
+        assert!(super::is_llvm_numeric_literal("-42"));
+        assert!(!super::is_llvm_numeric_literal("gep.15"));
+        assert!(!super::is_llvm_numeric_literal(""));
     }
 }
 
