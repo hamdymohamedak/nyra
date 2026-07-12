@@ -900,7 +900,7 @@ impl TypeChecker {
                     return to;
                 }
                 let numeric = |t: &Type| {
-                    types::is_integer(t) || *t == Type::Bool
+                    types::is_integer(t) || *t == Type::Bool || *t == Type::F32 || *t == Type::F64
                 };
                 if numeric(&from) && numeric(&to) {
                     return to;

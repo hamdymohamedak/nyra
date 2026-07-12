@@ -19,7 +19,7 @@ fn main() {
         BeginDrawing()
         ClearBackground(white)
         DrawText("Congrats! Nyra is Drawing Graphics!", 140, 200, 20, red)
-        DrawCircle(400, 300, 50.0, red)
+        DrawCircle(400, 300, 50.0f32, red)
         EndDrawing()
     }
 

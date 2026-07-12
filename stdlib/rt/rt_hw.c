@@ -17,6 +17,8 @@
 #include <CoreGraphics/CoreGraphics.h>
 #include <IOKit/IOKitLib.h>
 #include <IOKit/ps/IOPowerSources.h>
+#include <IOKit/graphics/IOGraphicsLib.h>
+#include <dlfcn.h>
 #elif defined(__linux__)
 #include <unistd.h>
 #include <sys/sysinfo.h>
@@ -686,7 +688,57 @@ int32_t hw_display_brightness_pct(void) {
 #elif defined(_WIN32)
     return -1;
 #elif defined(__APPLE__)
-    return -1;
+    /* Apple Silicon / modern macOS: IODisplay brightness often unavailable.
+       Prefer private DisplayServices, fall back to IODisplayConnect. */
+    {
+        void *h = dlopen(
+            "/System/Library/PrivateFrameworks/DisplayServices.framework/DisplayServices",
+            RTLD_LAZY);
+        if (h) {
+            int (*getb)(CGDirectDisplayID, float *) =
+                (int (*)(CGDirectDisplayID, float *))dlsym(h, "DisplayServicesGetBrightness");
+            float b = 0.f;
+            int rc = getb ? getb(CGMainDisplayID(), &b) : -1;
+            dlclose(h);
+            if (rc == 0) {
+                if (b < 0.f) {
+                    b = 0.f;
+                }
+                if (b > 1.f) {
+                    b = 1.f;
+                }
+                return (int32_t)(b * 100.f + 0.5f);
+            }
+        }
+    }
+    {
+        io_iterator_t it;
+        kern_return_t kr = IOServiceGetMatchingServices(
+            kIOMainPortDefault, IOServiceMatching("IODisplayConnect"), &it);
+        if (kr != KERN_SUCCESS) {
+            return -1;
+        }
+        io_object_t svc;
+        int32_t out = -1;
+        while ((svc = IOIteratorNext(it)) != 0) {
+            float b = 0.f;
+            if (IODisplayGetFloatParameter(svc, kNilOptions, CFSTR(kIODisplayBrightnessKey), &b) ==
+                kIOReturnSuccess) {
+                if (b < 0.f) {
+                    b = 0.f;
+                }
+                if (b > 1.f) {
+                    b = 1.f;
+                }
+                out = (int32_t)(b * 100.f + 0.5f);
+                IOObjectRelease(svc);
+                break;
+            }
+            IOObjectRelease(svc);
+        }
+        IOObjectRelease(it);
+        return out;
+    }
 #else
     return -1;
 #endif

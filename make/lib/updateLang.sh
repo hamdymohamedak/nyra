@@ -136,6 +136,9 @@ fi
 
 NYRA_BIN_DIR="$NYRA_HOME/bin"
 mkdir -p "$NYRA_BIN_DIR"
+# Replace any prior install (including a symlink to cargo's nyra — macOS `cp`
+# errors with "are identical" when src and dest resolve to the same inode).
+rm -f "$NYRA_BIN_DIR/nyra"
 cp -f "$CARGO_NYRA" "$NYRA_BIN_DIR/nyra"
 installed_ver="$("$NYRA_BIN_DIR/nyra" --version 2>/dev/null | sed 's/^nyra //')"
 if [ -n "$installed_ver" ]; then

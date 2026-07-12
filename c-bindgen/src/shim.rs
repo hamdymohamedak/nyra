@@ -85,7 +85,8 @@ fn map_shim_type(ty: &Type, is_param: bool) -> NyraType {
         TypeKind::UShort | TypeKind::UInt => NyraType::Int("u32"),
         TypeKind::Long | TypeKind::LongLong => NyraType::Int("i64"),
         TypeKind::ULong | TypeKind::ULongLong => NyraType::Int("u64"),
-        TypeKind::Float | TypeKind::Double | TypeKind::LongDouble => NyraType::F64,
+        TypeKind::Float => NyraType::F32,
+        TypeKind::Double | TypeKind::LongDouble => NyraType::F64,
         TypeKind::Pointer => {
             let pointee = ty.get_pointee_type();
             if let Some(pt) = pointee {
@@ -112,7 +113,8 @@ fn shim_c_type(ty: &Type) -> &'static str {
         TypeKind::UShort | TypeKind::UInt => "uint32_t",
         TypeKind::Long | TypeKind::LongLong => "int64_t",
         TypeKind::ULong | TypeKind::ULongLong => "uint64_t",
-        TypeKind::Float | TypeKind::Double | TypeKind::LongDouble => "double",
+        TypeKind::Float => "float",
+        TypeKind::Double | TypeKind::LongDouble => "double",
         TypeKind::Pointer => {
             let pointee = ty.get_pointee_type();
             if let Some(pt) = pointee {
@@ -137,7 +139,8 @@ fn shim_c_return_type(ty: &Type) -> String {
         TypeKind::UShort | TypeKind::UInt => "uint32_t".into(),
         TypeKind::Long | TypeKind::LongLong => "int64_t".into(),
         TypeKind::ULong | TypeKind::ULongLong => "uint64_t".into(),
-        TypeKind::Float | TypeKind::Double | TypeKind::LongDouble => "double".into(),
+        TypeKind::Float => "float".into(),
+        TypeKind::Double | TypeKind::LongDouble => "double".into(),
         TypeKind::Pointer => {
             let pointee = ty.get_pointee_type();
             if let Some(pt) = pointee {

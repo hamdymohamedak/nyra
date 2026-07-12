@@ -214,7 +214,9 @@ fn map_type(ty: &Type, is_param: bool, ctx: &TypeContext) -> Result<NyraType, St
         TypeKind::ULong => Ok(NyraType::Int("u64")),
         TypeKind::LongLong => Ok(NyraType::Int("i64")),
         TypeKind::ULongLong => Ok(NyraType::Int("u64")),
-        TypeKind::Float | TypeKind::Double | TypeKind::LongDouble => Ok(NyraType::F64),
+        // C `float` is IEEE-754 binary32 — must stay `f32` for ABI (raylib Vector2, etc.).
+        TypeKind::Float => Ok(NyraType::F32),
+        TypeKind::Double | TypeKind::LongDouble => Ok(NyraType::F64),
         TypeKind::Pointer => {
             let pointee = ty.get_pointee_type().ok_or("pointer without pointee")?;
             let pk = pointee.get_kind();

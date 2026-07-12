@@ -159,31 +159,17 @@ pub(crate) fn pkg_command(cmd: PkgCommands) -> Result<(), String> {
                 include,
                 libs,
             } => {
-                if c_lib::looks_like_git_url(&name) {
-                    c_lib::pkg_add_smart(
-                        &name,
-                        c_lib::AddOptions {
-                            project: path,
-                            no_install,
-                            yes,
-                            header,
-                            include,
-                            libs,
-                        },
-                    )
-                } else {
-                    c_lib::c_add(
-                        &name,
-                        c_lib::AddOptions {
-                            project: path,
-                            no_install,
-                            yes,
-                            header,
-                            include,
-                            libs,
-                        },
-                    )
-                }
+                c_lib::pkg_add_smart(
+                    &name,
+                    c_lib::AddOptions {
+                        project: path,
+                        no_install,
+                        yes,
+                        header,
+                        include,
+                        libs,
+                    },
+                )
             }
             PkgCCommands::Remove { name, path } => c_lib::c_remove(&name, path),
             PkgCCommands::List { path } => c_lib::c_list(path),

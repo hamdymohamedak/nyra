@@ -15,7 +15,7 @@ fn display_refresh_hz() -> i32 {
     return hw_display_refresh_hz()
 }
 
-// 0–100, or -1 if unavailable (common on desktop without backlight sysfs).
+// 0–100, or -1 if unavailable (external display / no backlight API).
 fn display_brightness_percent() -> i32 {
     return hw_display_brightness_pct()
 }

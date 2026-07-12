@@ -117,16 +117,67 @@ impl Codegen {
         size
     }
 
+    /// Darwin arm64 HFA: 1–4 floats or doubles (possibly nested), passed in FP registers.
+    /// Clang lowers these as `[N x float]` / `[N x double]` for params.
+    pub(super) fn repr_c_struct_arm64_hfa(&self, name: &str) -> Option<(String, u32)> {
+        if !self.target_is_arm64_apple() || !self.repr_c_structs.contains(name) {
+            return None;
+        }
+        let mut elems: Vec<&str> = Vec::new();
+        if !self.collect_arm64_hfa_elems(name, &mut elems) {
+            return None;
+        }
+        let count = elems.len() as u32;
+        if !(1..=4).contains(&count) {
+            return None;
+        }
+        let kind = elems[0];
+        if elems.iter().any(|e| *e != kind) {
+            return None;
+        }
+        Some((kind.to_string(), count))
+    }
+
+    fn collect_arm64_hfa_elems<'a>(&'a self, name: &str, out: &mut Vec<&'a str>) -> bool {
+        let Some(fields) = self.struct_fields.get(name) else {
+            return false;
+        };
+        if fields.is_empty() {
+            return false;
+        }
+        for (_, ann) in fields {
+            match ann {
+                TypeAnnotation::F32 => out.push("float"),
+                TypeAnnotation::F64 => out.push("double"),
+                TypeAnnotation::Struct(n) => {
+                    if !self.collect_arm64_hfa_elems(n, out) {
+                        return false;
+                    }
+                }
+                _ => return false,
+            }
+        }
+        true
+    }
+
+    pub(super) fn llvm_arm64_hfa_type(&self, name: &str) -> Option<String> {
+        let (elem, n) = self.repr_c_struct_arm64_hfa(name)?;
+        Some(format!("[{n} x {elem}]"))
+    }
+
     pub(super) fn repr_c_struct_uses_arm64_int_coerce(&self, name: &str) -> bool {
         self.target_is_arm64_apple()
             && self.repr_c_structs.contains(name)
+            && self.repr_c_struct_arm64_hfa(name).is_none()
             && self.repr_c_struct_byte_size(name) <= 8
     }
 
     /// Darwin arm64: structs larger than 16 bytes use sret / indirect pointer (not byval).
+    /// HFAs are never indirect even when nested size would suggest otherwise (count ≤ 4).
     pub(super) fn repr_c_struct_uses_arm64_indirect(&self, name: &str) -> bool {
         self.target_is_arm64_apple()
             && self.repr_c_structs.contains(name)
+            && self.repr_c_struct_arm64_hfa(name).is_none()
             && self.repr_c_struct_byte_size(name) > 16
     }
 
@@ -154,6 +205,9 @@ impl Codegen {
                     "i32".into()
                 }
             }
+            TypeAnnotation::Struct(n) if self.llvm_arm64_hfa_type(n).is_some() => {
+                self.llvm_arm64_hfa_type(n).unwrap()
+            }
             TypeAnnotation::Struct(n) if self.repr_c_struct_uses_arm64_int_coerce(n) => {
                 "i64".into()
             }
@@ -171,6 +225,10 @@ impl Codegen {
 
     pub(super) fn llvm_extern_ret_type_of(&self, ty: &TypeAnnotation) -> String {
         match ty {
+            // HFAs return as the LLVM struct (Clang); FP regs via backend.
+            TypeAnnotation::Struct(n) if self.repr_c_struct_arm64_hfa(n).is_some() => {
+                format!("%{n}")
+            }
             TypeAnnotation::Struct(n) if self.repr_c_struct_uses_arm64_int_coerce(n) => {
                 let sz = self.repr_c_struct_byte_size(n);
                 if sz <= 4 {
@@ -209,9 +267,27 @@ impl Codegen {
             return reg.to_string();
         }
         if from == "double" {
+            if to == "float" {
+                let conv = self.fresh("fptrunc");
+                self.emit(&format!("  %{conv} = fptrunc double {reg} to float"));
+                return format!("%{conv}");
+            }
             if Self::llvm_int_bits(&to).is_some() {
                 let conv = self.fresh("cast");
                 self.emit(&format!("  %{conv} = fptosi double {reg} to {to}"));
+                return format!("%{conv}");
+            }
+            return reg.to_string();
+        }
+        if from == "float" {
+            if to == "double" {
+                let conv = self.fresh("fpext");
+                self.emit(&format!("  %{conv} = fpext float {reg} to double"));
+                return format!("%{conv}");
+            }
+            if Self::llvm_int_bits(&to).is_some() {
+                let conv = self.fresh("cast");
+                self.emit(&format!("  %{conv} = fptosi float {reg} to {to}"));
                 return format!("%{conv}");
             }
             return reg.to_string();
@@ -230,14 +306,9 @@ impl Codegen {
             }
             return format!("%{conv}");
         }
-        if from == "i32" && to == "double" {
+        if Self::llvm_int_bits(&from).is_some() && (to == "float" || to == "double") {
             let conv = self.fresh("sitofp");
-            self.emit(&format!("  %{conv} = sitofp i32 {reg} to double"));
-            return format!("%{conv}");
-        }
-        if from == "i32" && to == "float" {
-            let conv = self.fresh("sitofp");
-            self.emit(&format!("  %{conv} = sitofp i32 {reg} to float"));
+            self.emit(&format!("  %{conv} = sitofp {from} {reg} to {to}"));
             return format!("%{conv}");
         }
         reg.to_string()
@@ -331,6 +402,20 @@ impl Codegen {
         format!("%{loaded}")
     }
 
+    pub(super) fn coerce_struct_slot_to_hfa(&mut self, slot: &str, struct_name: &str) -> String {
+        let hfa_ty = self
+            .llvm_arm64_hfa_type(struct_name)
+            .expect("HFA coerce requires HFA struct");
+        let slot_op = if slot.starts_with('%') {
+            slot.to_string()
+        } else {
+            format!("%{slot}")
+        };
+        let loaded = self.fresh("hfa");
+        self.emit(&format!("  %{loaded} = load {hfa_ty}, ptr {slot_op}"));
+        format!("%{loaded}")
+    }
+
     pub(super) fn store_coerced_extern_struct_ret(
         &mut self,
         struct_ty: &str,
@@ -382,6 +467,11 @@ impl Codegen {
             let ptr = format!("%{}", v.reg.trim_start_matches('%'));
             if is_extern_c {
                 if let Some(n) = struct_name_from_llvm_ty(&v.ty) {
+                    if let Some(hfa_ty) = self.llvm_arm64_hfa_type(&n) {
+                        arg_regs.push(self.coerce_struct_slot_to_hfa(&ptr, &n));
+                        arg_tys.push(hfa_ty);
+                        return;
+                    }
                     if self.repr_c_struct_uses_arm64_int_coerce(&n) {
                         arg_regs.push(self.coerce_struct_slot_to_i64(&ptr, &n));
                         arg_tys.push("i64".into());
@@ -405,6 +495,11 @@ impl Codegen {
             let slot = self.materialize_struct_ssa_slot(v);
             if is_extern_c {
                 if let Some(n) = struct_name_from_llvm_ty(&v.ty) {
+                    if let Some(hfa_ty) = self.llvm_arm64_hfa_type(&n) {
+                        arg_regs.push(self.coerce_struct_slot_to_hfa(&slot, &n));
+                        arg_tys.push(hfa_ty);
+                        return;
+                    }
                     if self.repr_c_struct_uses_arm64_int_coerce(&n) {
                         arg_regs.push(self.coerce_struct_slot_to_i64(&slot, &n));
                         arg_tys.push("i64".into());
@@ -510,6 +605,9 @@ impl Codegen {
             return logical_ret.to_string();
         }
         let name = logical_ret.trim_start_matches('%');
+        if self.repr_c_struct_arm64_hfa(name).is_some() {
+            return format!("%{name}");
+        }
         if self.repr_c_struct_uses_arm64_int_coerce(name) {
             let sz = self.repr_c_struct_byte_size(name);
             if sz <= 4 {

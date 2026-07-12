@@ -472,7 +472,7 @@ pub(crate) enum BindCommands {
         #[arg(long)]
         no_shim: bool,
     },
-    /// Auto-detect a registry / system C library: `nyra bind gsl`
+    /// Bind a system C library (discover via pkg-config / Homebrew / apt): `nyra bind gsl`
     #[command(external_subcommand)]
     Lib(Vec<String>),
 }
@@ -483,9 +483,10 @@ pub(crate) enum PkgCommands {
     Init {
         path: Option<PathBuf>,
     },
-    /// Add a NyraPkg dependency, registry C library, or GitHub C repo.
+    /// Add a NyraPkg dependency, bind a system C library, or clone a GitHub C repo.
     ///
-    /// Examples: `nyra pkg add sqlite3` · `nyra pkg add gsl` ·
+    /// C libs: install with Homebrew/apt/dnf first (or let Nyra prompt), then bind.
+    /// Examples: `nyra pkg add sqlite3` · `nyra bind gsl` ·
     /// `nyra pkg add https://github.com/org/cool-c-lib`
     Add {
         module: String,
@@ -591,17 +592,17 @@ pub(crate) enum PkgToolchainCommands {
 
 #[derive(Subcommand)]
 pub(crate) enum PkgCCommands {
-    /// Add a system C library: install (Homebrew/apt), bind header, update nyra.mod.
+    /// Bind a system C library (Homebrew/apt/dnf/pacman already installed, or prompt to install).
     Add {
         /// Library name (raylib, zlib, sqlite3, gsl, …) or GitHub URL.
         name: String,
         /// Project root (default: current directory).
         #[arg(long)]
         path: Option<PathBuf>,
-        /// Do not run brew/apt install if the library is missing.
+        /// Never run brew/apt/dnf/pacman; fail if the library is missing.
         #[arg(long)]
         no_install: bool,
-        /// Assume yes for install prompts.
+        /// Run the suggested install command without prompting.
         #[arg(long, short = 'y')]
         yes: bool,
         /// Override C header path.

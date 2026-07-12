@@ -6,7 +6,8 @@ const NYRA_RESERVED: &[&str] = &[
     "module", "struct", "impl", "self", "for", "const", "extern", "export", "inst", "enum",
     "match", "spawn", "in", "test", "async", "await", "trait", "macro", "defer", "unsafe", "asm",
     "as", "move", "clone", "void", "bool", "string", "ptr", "char", "type", "out",
-    "i8", "i16", "i32", "i64", "i128", "u8", "u16", "u32", "u64", "u128", "isize", "usize", "f64",
+    "i8", "i16", "i32", "i64", "i128", "u8", "u16", "u32", "u64", "u128", "isize", "usize", "f32",
+    "f64",
 ];
 
 /// Normalize a C parameter or field name for Nyra source.

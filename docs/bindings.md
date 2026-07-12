@@ -106,11 +106,14 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `channel_free` | `void channel_free(void *ch)` | `rt_channel.c` | 0.0.1 | `stdlib/sync/channel.ny` |
 | `channel_new` | `void *channel_new(void)` | `rt_channel.c` | 0.0.1 | `stdlib/sync/channel.ny` |
 | `channel_recv` | `int channel_recv(void *ch)` | `rt_channel.c` | 0.0.1 | `stdlib/sync/channel.ny` |
+| `channel_recv_async` | `int channel_recv_async(void *ch)` | `rt_channel.c` | 0.1.2 | `stdlib/sync/channel.ny` |
 | `channel_send` | `void channel_send(void *ch, int value)` | `rt_channel.c` | 0.0.1 | `stdlib/sync/channel.ny` |
 | `channel_str_free` | `void channel_str_free(void *ch)` | `rt_channel.c` | 0.0.1 | `stdlib/sync/channel.ny` |
 | `channel_str_new` | `void *channel_str_new(void)` | `rt_channel.c` | 0.0.1 | `stdlib/sync/channel.ny` |
 | `channel_str_recv` | `char *channel_str_recv(void *ch)` | `rt_channel.c` | 0.0.1 | `stdlib/sync/channel.ny` |
 | `channel_str_send` | `void channel_str_send(void *ch, const char *value)` | `rt_channel.c` | 0.0.1 | `stdlib/sync/channel.ny` |
+| `channel_try_recv` | `int channel_try_recv(void *ch)` | `rt_channel.c` | 0.1.2 | `stdlib/sync/channel.ny` |
+| `channel_try_value` | `int channel_try_value(void)` | `rt_channel.c` | 0.1.2 | `stdlib/sync/channel.ny` |
 | `char_at` | `int char_at(const char *s, int i)` | `rt_strings.c` | 0.0.1 | `stdlib/gui/buffer.ny`, `stdlib/gui/picker.ny`, `stdlib/gui/syntax.ny`, `stdlib/strings.ny` |
 | `color_ansi` | `const char *color_ansi(const char *spec)` | `rt_io.c` | 0.0.1 | — |
 | `command_exec_capture` | `char *command_exec_capture(const char *program, void *args_handle)` | `rt_process.c` | 0.0.1 | — |
@@ -176,12 +179,12 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `json_has_key` | `int json_has_key(const char *json, const char *key)` | `rt_json.c` | 0.0.1 | `stdlib/json/mod.ny` |
 | `json_has_string` | `int json_has_string(const char *json, const char *key)` | `rt_json.c` | 0.0.1 | `stdlib/json/mod.ny` |
 | `json_join_raw_array` | `char *json_join_raw_array(void *handle)` | `rt_json.c` | 0.0.1 | `stdlib/json/mod.ny` |
+| `json_parse_document` | `char *json_parse_document(const char *input)` | `rt_json.c` | 0.1.1 | `stdlib/json/mod.ny` |
 | `json_raw_get` | `char *json_raw_get(const char *json, const char *key)` | `rt_json.c` | 0.0.1 | `stdlib/json/mod.ny` |
 | `json_split_array_elements` | `void *json_split_array_elements(const char *array_json)` | `rt_json.c` | 0.0.1 | `stdlib/json/jsonl.ny`, `stdlib/json/mod.ny` |
+| `json_stringify_document` | `char *json_stringify_document(const char *input)` | `rt_json.c` | 0.1.1 | `stdlib/json/mod.ny` |
 | `json_top_keys` | `void *json_top_keys(const char *json)` | `rt_json.c` | 0.0.1 | `stdlib/json/mod.ny` |
 | `json_value_kind` | `int json_value_kind(const char *json)` | `rt_json.c` | 0.0.1 | `stdlib/json/mod.ny` |
-| `json_parse_document` | `char *json_parse_document(const char *input)` | `rt_json.c` | 0.1.1 | `stdlib/json/mod.ny` |
-| `json_stringify_document` | `char *json_stringify_document(const char *input)` | `rt_json.c` | 0.1.1 | `stdlib/json/mod.ny` |
 | `list_dir` | `char *list_dir(const char *path)` | `rt_fs.c` | 0.0.1 | `stdlib/fs/file.ny`, `stdlib/gui/picker.ny` |
 | `map_i32_i32_contains` | `int map_i32_i32_contains(void *handle, int key)` | `rt_map.c` | 0.0.1 | `stdlib/map.ny` |
 | `map_i32_i32_free` | `void map_i32_i32_free(void *handle)` | `rt_map.c` | 0.0.1 | `stdlib/map.ny` |
@@ -464,7 +467,6 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `bounds_assert_i32` | `void bounds_assert_i32(int ok)` | `rt_array.c` | 0.0.1 | — |
 | `ceil_f64` | `doubleceil_f64(double x)` | `rt_math.c` | 0.0.1 | `stdlib/math.ny` |
 | `ceil_i32` | `int ceil_i32(int x)` | `rt_math.c` | 1.0.0 | `stdlib/math.ny` |
-| `char_at` | `int char_at(const char *s, int index)` | `rt_strings.c` | 1.0.0 | `stdlib/gui/buffer.ny`, `stdlib/gui/picker.ny`, `stdlib/gui/syntax.ny`, `stdlib/strings.ny` |
 | `clamp_f64` | `doubleclamp_f64(double x, double lo, double hi)` | `rt_math.c` | 0.0.1 | `stdlib/math.ny` |
 | `copysign_f64` | `double copysign_f64(double x, double y)` | `rt_math.c` | 1.0.0 | `stdlib/math.ny` |
 | `count_ones_i32` | `int count_ones_i32(int n)` | `rt_math.c` | 1.0.0 | `stdlib/math.ny` |
@@ -521,7 +523,6 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `hw_power_on_ac` | `int32_t hw_power_on_ac(void)` | `rt_hw.c` | 0.0.1 | `stdlib/os/power.ny` |
 | `hypot_f64` | `doublehypot_f64(double x, double y)` | `rt_math.c` | 0.0.1 | `stdlib/math.ny` |
 | `i32_to_string_radix` | `char * i32_to_string_radix(int n, int base)` | `rt_strings.c` | 1.0.0 | `stdlib/strconv/mod.ny` |
-| `i64_to_string` | `char * i64_to_string(long long n)` | `rt_strings.c` | 1.0.0 | `stdlib/strconv/mod.ny`, `stdlib/strings.ny` |
 | `is_finite_f64` | `int is_finite_f64(double x)` | `rt_math.c` | 1.0.0 | `stdlib/math.ny` |
 | `is_infinite_f64` | `int is_infinite_f64(double x)` | `rt_math.c` | 1.0.0 | `stdlib/math.ny` |
 | `is_nan_f64` | `int is_nan_f64(double x)` | `rt_math.c` | 1.0.0 | `stdlib/math.ny` |
@@ -560,7 +561,6 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `postgres_close` | `void postgres_close(void *handle)` | `rt_db.c` | 0.0.1 | `stdlib/db/postgres.ny` |
 | `postgres_exec` | `int postgres_exec(void *handle, const char *sql)` | `rt_db.c` | 0.0.1 | `stdlib/db/postgres.ny` |
 | `pow_f64` | `doublepow_f64(double base, double exp)` | `rt_math.c` | 0.0.1 | `stdlib/math.ny` |
-| `pow_i32` | `int pow_i32(int base, int exp)` | `rt_math.c` | 1.0.0 | — |
 | `race_clear_access` | `void race_clear_access(void *addr)` | `rt_race.c` | 0.0.1 | `stdlib/race.ny` |
 | `race_runtime_enabled` | `int race_runtime_enabled(void)` | `rt_race.c` | 0.0.1 | `stdlib/race.ny` |
 | `race_runtime_init` | `void race_runtime_init(void)` | `rt_race.c` | 0.0.1 | `stdlib/race.ny` |
@@ -607,13 +607,10 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `sqrt_f64` | `doublesqrt_f64(double x)` | `rt_math.c` | 0.0.1 | `stdlib/math.ny` |
 | `str_after_sep` | `char * str_after_sep(const char *s, const char * sep)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
 | `str_before_sep` | `char *str_before_sep(const char *s, const char * sep)` | `rt_strings.c` | 0.0.1 | `stdlib/strings.ny` |
-| `str_before_sep` | `char * str_before_sep(const char *s, const char * sep)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
 | `str_collapse_ws` | `char * str_collapse_ws(const char *s)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
 | `str_common_prefix_len` | `int str_common_prefix_len(const char *s, const char * other)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
 | `str_compare` | `int str_compare(const char *s, const char * other)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
-| `str_contains` | `int str_contains(const char *s, const char * needle)` | `rt_strings.c` | 1.0.0 | `stdlib/strings/ops.ny`, `stdlib/strings.ny` |
 | `str_count` | `intstr_count(const char *s, const char * needle)` | `rt_strings.c` | 0.0.1 | `stdlib/strings.ny` |
-| `str_ends_with` | `int str_ends_with(const char *s, const char * suffix)` | `rt_strings.c` | 1.0.0 | `stdlib/strings/ops.ny`, `stdlib/strings.ny` |
 | `str_equal_fold` | `int str_equal_fold(const char *s, const char * other)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
 | `str_escape_json` | `char * str_escape_json(const char *s)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
 | `str_fields` | `void *str_fields(const char *s)` | `rt_strings.c` | 0.0.1 | `stdlib/strings.ny` |
@@ -629,27 +626,18 @@ When key and value types match, both appear in the name (e.g. `map_i32_i32_get`)
 | `str_pad_center` | `char * str_pad_center(const char *s, int width, const char * pad)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
 | `str_pad_end` | `char *str_pad_end(const char *s, int width, const char * pad)` | `rt_strings.c` | 0.0.1 | `stdlib/strings.ny` |
 | `str_pad_start` | `char *str_pad_start(const char *s, int width, const char * pad)` | `rt_strings.c` | 0.0.1 | `stdlib/strings.ny` |
-| `str_pop` | `char * str_pop(const char *s)` | `rt_strings.c` | 1.0.0 | `stdlib/gui/buffer.ny`, `stdlib/strings.ny` |
-| `str_push_char` | `char * str_push_char(const char *s, int ch)` | `rt_strings.c` | 1.0.0 | `stdlib/gui/buffer.ny`, `stdlib/strings.ny` |
 | `str_repeat` | `char *str_repeat(const char *s, int count)` | `rt_strings.c` | 0.0.1 | `stdlib/strings.ny` |
-| `str_replace` | `char * str_replace(const char *s, const char * from, const char * to)` | `rt_strings.c` | 1.0.0 | `stdlib/strings/ops.ny`, `stdlib/strings.ny` |
-| `str_replacen` | `char * str_replacen(const char *s, const char * from, const char * to, int count)` | `rt_strings.c` | 1.0.0 | `stdlib/strings/ops.ny`, `stdlib/strings.ny` |
 | `str_reverse` | `char * str_reverse(const char *s)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
 | `str_split_after` | `char * str_split_after(const char *s, const char * sep)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
 | `str_splitn` | `void *str_splitn(const char *s, const char * sep, int n)` | `rt_strings.c` | 0.0.1 | `stdlib/strings.ny` |
-| `str_starts_with` | `int str_starts_with(const char *s, const char * prefix)` | `rt_strings.c` | 1.0.0 | `stdlib/strings/ops.ny`, `stdlib/strings.ny` |
-| `str_strip_ansi` | `char * str_strip_ansi(const char *s)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
 | `str_strip_prefix` | `char *str_strip_prefix(const char *s, const char * prefix)` | `rt_strings.c` | 0.0.1 | `stdlib/strings.ny` |
 | `str_to_bool` | `int str_to_bool(const char * s)` | `rt_strings.c` | 0.0.1 | `stdlib/strconv/mod.ny` |
 | `str_to_f32` | `double str_to_f32(const char * s)` | `rt_strings.c` | 1.0.0 | `stdlib/strconv/mod.ny` |
-| `str_to_f64` | `double str_to_f64(const char * s)` | `rt_strings.c` | 1.0.0 | `stdlib/strconv/mod.ny` |
 | `str_to_i64` | `long long str_to_i64(const char * s)` | `rt_strings.c` | 1.0.0 | `stdlib/strconv/mod.ny` |
 | `str_to_u64` | `long long str_to_u64(const char * s)` | `rt_strings.c` | 1.0.0 | `stdlib/strconv/mod.ny` |
-| `str_trim` | `char * str_trim(const char *s)` | `rt_strings.c` | 1.0.0 | `stdlib/strings/ops.ny` |
 | `str_trim_end` | `char *str_trim_end(const char *s)` | `rt_strings.c` | 0.0.1 | `stdlib/strings.ny` |
 | `str_trim_start` | `char *str_trim_start(const char *s)` | `rt_strings.c` | 0.0.1 | `stdlib/strings.ny` |
 | `str_truncate` | `char * str_truncate(const char *s, int max_len)` | `rt_strings.c` | 1.0.0 | `stdlib/strings.ny` |
-| `substring` | `char * substring(const char *s, int start, int len)` | `rt_strings.c` | 1.0.0 | `stdlib/games/audio.ny`, `stdlib/gui/buffer.ny`, `stdlib/gui/picker.ny`, `stdlib/gui/syntax.ny`, `stdlib/strings.ny`, `stdlib/uuid/mod.ny` |
 | `trailing_zeros_i32` | `int trailing_zeros_i32(int n)` | `rt_math.c` | 1.0.0 | `stdlib/math.ny` |
 | `trunc_f64` | `doubletrunc_f64(double x)` | `rt_math.c` | 0.0.1 | `stdlib/math.ny` |
 | `trunc_i32` | `int trunc_i32(int x)` | `rt_math.c` | 1.0.0 | `stdlib/math.ny` |

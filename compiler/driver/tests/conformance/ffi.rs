@@ -190,27 +190,40 @@ fn main() {
 fn conf_ffi_012_extern_vector2_byval() {
     let out = compile(
         r#"struct Vector2 repr(C) {
-    x: f64
-    y: f64
+    x: f32
+    y: f32
 }
-extern fn CheckCollisionCircles(centerA: Vector2, radiusA: f64, centerB: Vector2, radiusB: f64) -> bool
+extern fn CheckCollisionCircles(centerA: Vector2, radiusA: f32, centerB: Vector2, radiusB: f32) -> bool
 fn main() {
-    let a = Vector2 { x: 0.0 y: 0.0 }
-    let b = Vector2 { x: 10.0 y: 0.0 }
-    let hit = CheckCollisionCircles(a, 5.0, b, 5.0)
+    let a = Vector2 { x: 0.0f32 y: 0.0f32 }
+    let b = Vector2 { x: 10.0f32 y: 0.0f32 }
+    let hit = CheckCollisionCircles(a, 5.0f32, b, 5.0f32)
     if hit { print(1) } else { print(0) }
 }"#,
     );
     assert!(out.type_errors.is_empty(), "{:?}", out.type_errors);
     let ir = out.llvm_ir.expect("ir");
-    assert!(
-        ir.contains("declare i1 @CheckCollisionCircles(%Vector2* byval(%Vector2)"),
-        "expected byval Vector2 extern decl"
-    );
-    assert!(
-        ir.contains("call i1 @CheckCollisionCircles(%Vector2* byval(%Vector2)"),
-        "expected byval Vector2 extern call"
-    );
+    let arm64 = ir.contains("arm64-apple") || ir.contains("aarch64-apple");
+    if arm64 {
+        assert!(
+            ir.contains("declare i1 @CheckCollisionCircles([2 x float]")
+                || ir.contains("declare i1 @CheckCollisionCircles([2 x float],"),
+            "expected HFA Vector2 ([2 x float]) on arm64-apple, got:\n{ir}"
+        );
+        assert!(
+            ir.contains("call i1 @CheckCollisionCircles([2 x float]"),
+            "expected HFA Vector2 extern call on arm64-apple"
+        );
+    } else {
+        assert!(
+            ir.contains("declare i1 @CheckCollisionCircles(%Vector2* byval(%Vector2)"),
+            "expected byval Vector2 extern decl"
+        );
+        assert!(
+            ir.contains("call i1 @CheckCollisionCircles(%Vector2* byval(%Vector2)"),
+            "expected byval Vector2 extern call"
+        );
+    }
 }
 
 #[test]

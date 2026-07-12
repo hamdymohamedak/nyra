@@ -42,7 +42,9 @@ pub fn pkg_add_smart(spec: &str, opts: AddOptions) -> Result<(), String> {
     if looks_like_git_url(spec) {
         return add_from_git(spec, opts);
     }
-    c_add(spec, opts)
+    // Registry libs: discover → bind → link. System PM installs the C package;
+    // Nyra only binds (and may offer to run brew/apt/… if missing).
+    bind_lib(spec, opts)
 }
 
 pub fn c_add(name: &str, opts: AddOptions) -> Result<(), String> {
@@ -107,7 +109,7 @@ pub fn c_add(name: &str, opts: AddOptions) -> Result<(), String> {
 
     let ui = Ui::new();
     let import = bindings_rel.replace('\\', "/");
-    println!("{}", ui.success(&format!("{key} ready")));
+    println!("{}", ui.success(&format!("{key} bound")));
     println!("{}", ui.field("import", &format!("\"{import}\"")));
     println!("{}", ui.field("header", &header.display().to_string()));
     println!("{}", ui.field("link", &link_libs.join(", ")));
@@ -123,20 +125,45 @@ pub fn c_add(name: &str, opts: AddOptions) -> Result<(), String> {
     Ok(())
 }
 
-/// Auto-detect an installed library and bind it (no install by default).
+/// Discover an installed system library and generate bindings + `nyra.mod` links.
+///
+/// Nyra does **not** replace Homebrew/apt/dnf/pacman. If the library is missing,
+/// it prints the exact install command for the detected package manager and —
+/// unless `--no-install` — offers to run it (`-y` skips the prompt).
 pub fn bind_lib(name: &str, opts: AddOptions) -> Result<(), String> {
     let mut opts = opts;
+    let was_no_install = opts.no_install;
     opts.no_install = true;
     match c_add(name, opts.clone()) {
         Ok(()) => Ok(()),
         Err(e) if e.contains("not found") || e.contains("not installed") => {
-            if opts.yes || prompt_yes_no(&format!("Library '{name}' not found.\n\nInstall it?"))? {
-                opts.no_install = false;
-                opts.yes = true;
-                c_add(name, opts)
-            } else {
-                Err(e)
+            if was_no_install {
+                return Err(e);
             }
+            let entry = c_registry::find_entry(name)?;
+            let cmd = install_command(&entry)?;
+            let pm = detected_package_manager().unwrap_or_else(|| "system".into());
+            let ui = Ui::new();
+            eprintln!();
+            eprintln!("{}", ui.bold(&format!("{} is not installed.", entry.name)));
+            eprintln!();
+            eprintln!("  Detected package manager: {}", ui.bold(&pm));
+            eprintln!();
+            eprintln!("  Run:");
+            eprintln!("    {}", ui.cmd(&cmd.join(" ")));
+            eprintln!();
+            let do_install = opts.yes || prompt_yes_no("Continue?")?;
+            if !do_install {
+                return Err(format!(
+                    "aborted — install with your system package manager, then re-run:\n  nyra bind {}",
+                    entry.name
+                ));
+            }
+            opts.no_install = false;
+            opts.yes = true;
+            ensure_installed(&entry, &opts)?;
+            opts.no_install = true;
+            c_add(name, opts)
         }
         Err(e) => Err(e),
     }
@@ -671,18 +698,23 @@ fn ensure_installed(entry: &RegistryEntry, opts: &AddOptions) -> Result<(), Stri
 
     let ui = Ui::new();
     let cmd = install_command(entry)?;
-    eprintln!();
-    eprintln!("{}", ui.bold(&format!("Library '{}' not found.", entry.name)));
-    eprintln!();
-    eprintln!("  Install with: {}", ui.cmd(&cmd.join(" ")));
-    eprintln!();
-
-    let do_install = opts.yes || prompt_yes_no("Install it?")?;
-    if !do_install {
-        return Err(format!(
-            "aborted — install manually: {}",
-            cmd.join(" ")
-        ));
+    // `bind_lib` already showed the install command + Continue? prompt when `-y` is unset.
+    if !opts.yes {
+        let pm = detected_package_manager().unwrap_or_else(|| "system".into());
+        eprintln!();
+        eprintln!("{}", ui.bold(&format!("{} is not installed.", entry.name)));
+        eprintln!();
+        eprintln!("  Detected package manager: {}", ui.bold(&pm));
+        eprintln!();
+        eprintln!("  Run:");
+        eprintln!("    {}", ui.cmd(&cmd.join(" ")));
+        eprintln!();
+        if !prompt_yes_no("Continue?")? {
+            return Err(format!(
+                "aborted — install with your system package manager, then re-run:\n  nyra bind {}",
+                entry.name
+            ));
+        }
     }
 
     eprintln!("{}", ui.dim(&format!("running {} …", cmd.join(" "))));
@@ -702,8 +734,33 @@ fn missing_install_hint(entry: &RegistryEntry) -> String {
         .unwrap_or_else(|_| format!("{} not installed", entry.name))
 }
 
+/// Detect Homebrew / apt / dnf / pacman by checking which binary is on PATH.
+pub fn detected_package_manager() -> Option<String> {
+    if cfg!(target_os = "macos") {
+        return which("brew").then(|| "Homebrew".into());
+    }
+    if cfg!(target_os = "linux") {
+        if which("apt") || which("apt-get") {
+            return Some("apt".into());
+        }
+        if which("dnf") {
+            return Some("dnf".into());
+        }
+        if which("pacman") {
+            return Some("pacman".into());
+        }
+    }
+    None
+}
+
 fn install_command(entry: &RegistryEntry) -> Result<Vec<String>, String> {
     if cfg!(target_os = "macos") {
+        if !which("brew") {
+            return Err(format!(
+                "Homebrew not found — install {} manually, then: nyra bind {}",
+                entry.name, entry.name
+            ));
+        }
         return Ok(vec![
             "brew".into(),
             "install".into(),
@@ -725,19 +782,6 @@ fn install_command(entry: &RegistryEntry) -> Result<Vec<String>, String> {
                 pkg,
             ]);
         }
-        if which("pacman") {
-            let pkg = entry
-                .pacman
-                .clone()
-                .unwrap_or_else(|| entry.name.clone());
-            return Ok(vec![
-                "sudo".into(),
-                "pacman".into(),
-                "-S".into(),
-                "--noconfirm".into(),
-                pkg,
-            ]);
-        }
         if which("dnf") {
             let pkg = entry
                 .dnf
@@ -751,12 +795,29 @@ fn install_command(entry: &RegistryEntry) -> Result<Vec<String>, String> {
                 pkg,
             ]);
         }
+        if which("pacman") {
+            let pkg = entry
+                .pacman
+                .clone()
+                .unwrap_or_else(|| entry.name.clone());
+            return Ok(vec![
+                "sudo".into(),
+                "pacman".into(),
+                "-S".into(),
+                "--noconfirm".into(),
+                pkg,
+            ]);
+        }
         return Err(format!(
-            "no supported package manager found; install {} manually",
-            entry.name
+            "no supported package manager found (apt/dnf/pacman); install {} manually, then: nyra bind {}",
+            entry.name, entry.name
         ));
     }
-    Err("automatic install is not supported on this OS".into())
+    Err(format!(
+        "automatic install is not supported on this OS — install {} manually, then: nyra bind c HEADER.h --lib {} --update-mod",
+        entry.name,
+        entry.libs.first().unwrap_or(&entry.name)
+    ))
 }
 
 fn which(bin: &str) -> bool {
@@ -1409,5 +1470,64 @@ mod tests {
         assert!(should_handle_pkg_add("gsl"));
         assert!(should_handle_pkg_add("https://github.com/a/b"));
         assert!(!should_handle_pkg_add("some.nyra.package"));
+    }
+
+    #[test]
+    fn install_command_matches_platform_pm() {
+        let entry = c_registry::find_entry("zlib").expect("zlib in registry");
+        let cmd = install_command(&entry).expect("install command");
+        assert!(!cmd.is_empty());
+        #[cfg(target_os = "macos")]
+        {
+            assert_eq!(cmd[0], "brew");
+            assert_eq!(cmd[1], "install");
+            assert_eq!(cmd[2], entry.brew_formula());
+        }
+        #[cfg(target_os = "linux")]
+        {
+            // apt | dnf | pacman — whichever is present on the runner.
+            let joined = cmd.join(" ");
+            assert!(
+                joined.contains("apt") || joined.contains("dnf") || joined.contains("pacman"),
+                "unexpected install cmd: {joined}"
+            );
+            assert!(joined.contains("zlib") || joined.contains("zlib1g"));
+        }
+    }
+
+    #[test]
+    fn missing_hint_mentions_install() {
+        let entry = c_registry::find_entry("raylib").expect("raylib in registry");
+        let hint = missing_install_hint(&entry);
+        assert!(hint.contains("not installed"), "{hint}");
+        assert!(hint.contains("raylib") || hint.contains("libraylib"), "{hint}");
+    }
+
+    #[test]
+    fn registry_entries_have_pm_names() {
+        for name in ["zlib", "sqlite3", "gsl", "raylib", "openssl", "curl", "libpng", "sdl2"] {
+            let e = c_registry::find_entry(name).unwrap_or_else(|err| panic!("{name}: {err}"));
+            assert!(
+                e.pkg_config.is_some() || e.git.is_some(),
+                "{name}: need pkg_config or git"
+            );
+            assert!(e.brew.is_some() || e.git.is_some(), "{name}: need brew or git");
+            assert!(e.apt.is_some() || e.git.is_some(), "{name}: need apt or git");
+            assert!(!e.headers.is_empty(), "{name}: headers");
+            assert!(!e.libs.is_empty(), "{name}: libs");
+        }
+    }
+
+    #[test]
+    fn detected_pm_is_known_or_none() {
+        if let Some(pm) = detected_package_manager() {
+            assert!(
+                matches!(
+                    pm.as_str(),
+                    "Homebrew" | "apt" | "dnf" | "pacman"
+                ),
+                "unexpected pm: {pm}"
+            );
+        }
     }
 }

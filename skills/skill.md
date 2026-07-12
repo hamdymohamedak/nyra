@@ -557,23 +557,20 @@ fn id<T>(x: T) -> T {
 - `export fn` — unmangled C symbol for FFI out.
 - `extern fn` — declare C/runtime symbol (not `extern export fn`).
 
-### C Bindgen & `nyra pkg add`
+### C Bindgen & system C libraries
 
-**Recommended:** `nyra pkg add NAME` — registry libs (gsl, zlib, sqlite3, openssl, curl, raylib, sdl2, …) or a GitHub URL. Installs (prompt), full bindgen, `nyra.mod`, `vendor/bindings/c-libs.toml`.
+Nyra is a **binding/linking** tool, not a C package manager. Install with Homebrew/apt/dnf/pacman, then bind:
 
 ```bash
-nyra pkg add gsl
-nyra pkg add zlib
-nyra bind gsl              # already installed — auto-detect headers
+brew install zlib            # or apt/dnf/pacman
+nyra bind zlib               # discover → bindings → nyra.mod
+nyra bind raylib -y          # optional: run suggested install then bind
 nyra pkg add https://github.com/org/cool-c-lib
 nyra pkg c list
 nyra pkg c remove gsl
-nyra pkg add zlib --no-install --path ./myapp
 ```
 
-**Manual bind** (any `.h`): `nyra bind c HEADER --lib foo --update-mod`
-
-Default: all bindable functions in `vendor/bindings/{stem}.ny`. C keyword params → `in_`, `type_`. Optional `--export` to shrink. `--shim` experimental.
+**Manual** (library not on any PM / not in registry): `nyra bind c HEADER.h --lib foo --update-mod`
 
 Docs: [c-bindgen](https://nyra-lang.github.io/nyra/c-bindgen.html)
 ### Template strings
@@ -2445,7 +2442,7 @@ Nyra does **not** require libraries to be written in Nyra. Pick the pattern:
 
 | Need | Pattern | Example |
 |------|---------|---------|
-| C API (gsl, zlib, sqlite3, …) | `nyra pkg add NAME` — one command (or GitHub URL) | [c-bindgen](https://nyra-lang.github.io/nyra/c-bindgen.html#pkg-c) |
+| C API (gsl, zlib, sqlite3, …) | Install via brew/apt → `nyra bind NAME` (or manual `nyra bind c HEADER`) | [c-bindgen](https://nyra-lang.github.io/nyra/c-bindgen.html#pkg-c) |
 | pip / npm / Maven ecosystem | **Language bridge** — subprocess JSON workers | `stdlib/bridge/mod.ny` |
 | Run system command (exit code) | **Command** — fork/exec MVP | `stdlib/process.ny` |
 | Host calls Nyra | `export fn` + `--cdylib` | NyraPkg registry / `nyra pkg install` |

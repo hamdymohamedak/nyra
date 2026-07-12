@@ -4,6 +4,7 @@
 pub enum NyraType {
     Void,
     Int(&'static str),
+    F32,
     F64,
     Bool,
     String,
@@ -17,6 +18,7 @@ impl NyraType {
         match self {
             NyraType::Void => "void".into(),
             NyraType::Int(name) => (*name).into(),
+            NyraType::F32 => "f32".into(),
             NyraType::F64 => "f64".into(),
             NyraType::Bool => "bool".into(),
             NyraType::String => "string".into(),
