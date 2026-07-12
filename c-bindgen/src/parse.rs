@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::collections::HashSet;
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -298,23 +299,66 @@ fn parse_struct(entity: &Entity, name: &str, ctx: &TypeContext) -> Option<CStruc
 }
 
 fn visit_functions(entity: &Entity, config: &BindConfig, ctx: &TypeContext, spec: &mut BindSpec) {
+    visit_functions_inner(entity, config, ctx, spec, &mut HashSet::new());
+}
+
+fn visit_functions_inner(
+    entity: &Entity,
+    config: &BindConfig,
+    ctx: &TypeContext,
+    spec: &mut BindSpec,
+    seen: &mut HashSet<String>,
+) {
+    const CXX_SHIM_CAP: usize = 256;
+
     if entity_from_system_path(entity) {
         return;
     }
+
     if entity.get_kind() == EntityKind::FunctionDecl {
         if let Some(name) = entity.get_name() {
-            if config.matches_export(&name) {
+            if config.matches_export(&name) && !name.starts_with("operator") {
                 match map_function(entity, &name, ctx) {
-                    Ok(f) => spec.functions.push(f),
+                    Ok(f) => {
+                        if config.cxx {
+                            if let Some(shim) = crate::shim::try_cxx_extern_c_function(entity, &name)
+                            {
+                                if seen.insert(shim.nyra_name.clone())
+                                    && spec.shims.len() < CXX_SHIM_CAP
+                                {
+                                    spec.functions.push(CFunction {
+                                        name: shim.nyra_name.clone(),
+                                        params: shim.nyra_params.clone(),
+                                        return_type: shim.nyra_return.clone(),
+                                    });
+                                    spec.shims.push(shim);
+                                }
+                            } else if crate::shim::has_c_linkage(entity) {
+                                if seen.insert(f.name.clone()) {
+                                    spec.functions.push(f);
+                                }
+                            } else if seen.insert(f.name.clone()) {
+                                // Unwrappable C++ symbol — still emit direct bind (may need manual shim).
+                                spec.functions.push(f);
+                            }
+                        } else if seen.insert(f.name.clone()) {
+                            spec.functions.push(f);
+                        }
+                    }
                     Err(reason) => {
-                        if config.generate_shims {
+                        if config.cxx {
+                            // C-style shims misuse C++ display types (string_view, refs, …).
+                            spec.skipped.push(format!("{name}: {reason}"));
+                        } else if config.generate_shims {
                             if let Some(shim) = crate::shim::try_shim_function(entity, &name) {
-                                spec.shims.push(shim.clone());
-                                spec.functions.push(CFunction {
-                                    name: shim.nyra_name.clone(),
-                                    params: shim.nyra_params.clone(),
-                                    return_type: shim.nyra_return.clone(),
-                                });
+                                if seen.insert(shim.nyra_name.clone()) {
+                                    spec.shims.push(shim.clone());
+                                    spec.functions.push(CFunction {
+                                        name: shim.nyra_name.clone(),
+                                        params: shim.nyra_params.clone(),
+                                        return_type: shim.nyra_return.clone(),
+                                    });
+                                }
                             } else {
                                 spec.skipped.push(format!("{name}: {reason}"));
                             }
@@ -326,8 +370,22 @@ fn visit_functions(entity: &Entity, config: &BindConfig, ctx: &TypeContext, spec
             }
         }
     }
+
+    if config.cxx && entity.get_kind() == EntityKind::Method && spec.shims.len() < CXX_SHIM_CAP {
+        if let Some(shim) = crate::shim::try_cxx_extern_c_method(entity) {
+            if config.matches_export(&shim.nyra_name) && seen.insert(shim.nyra_name.clone()) {
+                spec.functions.push(CFunction {
+                    name: shim.nyra_name.clone(),
+                    params: shim.nyra_params.clone(),
+                    return_type: shim.nyra_return.clone(),
+                });
+                spec.shims.push(shim);
+            }
+        }
+    }
+
     for child in entity.get_children() {
-        visit_functions(&child, config, ctx, spec);
+        visit_functions_inner(&child, config, ctx, spec, seen);
     }
 }
 

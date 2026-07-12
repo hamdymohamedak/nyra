@@ -317,6 +317,24 @@ pub fn find_clang() -> String {
         .clone()
 }
 
+/// Prefer `clang++` next to the resolved `clang` (needed for `link-source` `.cpp` shims).
+pub fn find_clangxx() -> String {
+    let clang = find_clang();
+    let clang_path = PathBuf::from(&clang);
+    if let Some(bin_dir) = clang_path.parent() {
+        for name in ["clang++", "clang++-21", "clang++-20", "clang++-19", "clang++-18"] {
+            let candidate = bin_dir.join(name);
+            if tool_runs(&candidate) {
+                return candidate.to_string_lossy().into_owned();
+            }
+        }
+    }
+    if let Some(found) = find_in_dirs("clang++", &llvm_bin_search_paths()) {
+        return found;
+    }
+    find_llvm_tool("clang++").unwrap_or_else(|| "clang++".into())
+}
+
 fn sanitize_env_path(raw: &str) -> String {
     let mut s = raw.trim().trim_end_matches('\r').to_string();
     if s.starts_with('\u{feff}') {

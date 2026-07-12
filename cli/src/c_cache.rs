@@ -14,12 +14,29 @@ pub fn c_objects_cache_dir(work_dir: &Path) -> PathBuf {
     work_dir.join(".nyra-cache").join("c-objs")
 }
 
-fn compile_flags_key(profile: &LinkProfile, spec: &TargetSpec) -> String {
+fn is_cxx_source(source: &Path) -> bool {
+    matches!(
+        source
+            .extension()
+            .and_then(|e| e.to_str())
+            .map(|e| e.to_ascii_lowercase())
+            .as_deref(),
+        Some("cpp" | "cc" | "cxx" | "c++" | "hpp")
+    )
+}
+
+fn compile_flags_key(profile: &LinkProfile, spec: &TargetSpec, source: &Path) -> String {
     let cc = if spec.os == crate::target::TargetOs::Windows
         && cfg!(target_os = "windows")
         && llvm_tools::find_mingw_gcc().is_some()
     {
-        "gcc"
+        if is_cxx_source(source) {
+            "g++"
+        } else {
+            "gcc"
+        }
+    } else if is_cxx_source(source) {
+        "clang++"
     } else {
         "clang"
     };
@@ -73,13 +90,13 @@ pub fn compile_link_sources(
 
     let cache_dir = c_objects_cache_dir(work_dir);
     fs::create_dir_all(&cache_dir).map_err(|e| e.to_string())?;
-    let flags_key = compile_flags_key(profile, spec);
     let mut out = Vec::with_capacity(sources.len());
 
     for source in sources {
         if !source.is_file() {
             return Err(format!("link-source not found: {}", source.display()));
         }
+        let flags_key = compile_flags_key(profile, spec, source);
         let key = source_object_key(source, &flags_key)?;
         let obj = object_path(&cache_dir, source, key);
         if obj.is_file() {
@@ -107,13 +124,13 @@ pub fn compile_link_sources_best_effort(
 
     let cache_dir = c_objects_cache_dir(work_dir);
     fs::create_dir_all(&cache_dir).map_err(|e| e.to_string())?;
-    let flags_key = compile_flags_key(profile, spec);
     let mut out = Vec::with_capacity(sources.len());
 
     for source in sources {
         if !source.is_file() {
             continue;
         }
+        let flags_key = compile_flags_key(profile, spec, source);
         let key = source_object_key(source, &flags_key)?;
         let obj = object_path(&cache_dir, source, key);
         if obj.is_file() {
@@ -143,11 +160,25 @@ fn compile_one_source(
     profile: &LinkProfile,
     spec: &TargetSpec,
 ) -> Result<(), String> {
+    let cxx = is_cxx_source(source);
     let use_mingw_gcc = spec.os == crate::target::TargetOs::Windows
         && cfg!(target_os = "windows")
         && llvm_tools::find_mingw_gcc().is_some();
     let compiler = if use_mingw_gcc {
-        llvm_tools::find_mingw_gcc().unwrap()
+        if cxx {
+            // Prefer g++ beside gcc when compiling C++ shims on Windows.
+            let gcc = llvm_tools::find_mingw_gcc().unwrap();
+            let gxx = gcc.replace("gcc.exe", "g++.exe").replace("gcc", "g++");
+            if Path::new(&gxx).is_file() {
+                gxx
+            } else {
+                gcc
+            }
+        } else {
+            llvm_tools::find_mingw_gcc().unwrap()
+        }
+    } else if cxx {
+        llvm_tools::find_clangxx()
     } else {
         llvm_tools::find_clang()
     };
@@ -156,6 +187,12 @@ fn compile_one_source(
         apply_windows_gcc_compile_flags(&mut cmd);
     } else {
         apply_target_compile_flags(&mut cmd, spec);
+    }
+    if cxx {
+        cmd.arg("-std=c++17");
+        if cfg!(target_os = "macos") {
+            cmd.arg("-stdlib=libc++");
+        }
     }
     cmd.arg("-c").arg(source).arg("-o").arg(obj);
     cmd.arg(profile.opt_level.clang_flag());

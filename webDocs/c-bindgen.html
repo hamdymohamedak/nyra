@@ -206,7 +206,7 @@ nyra bind faiss
 nyra bind xgboost</code></pre>
       <pre><code>import "vendor/bindings/onnxruntime.ny"
 # call Ort* APIs from generated bindings</code></pre>
-      <p>GPU stacks (<code>cuda</code>, <code>cudnn</code>, <code>tensorrt</code>, <code>rocm</code>, …) are registered for Linux. C++ libraries (Eigen, protobuf, LibTorch, …) use <code>cxx = true</code> in the registry so bindgen parses as C++17.</p>
+      <p>GPU stacks (<code>cuda</code>, <code>cudnn</code>, <code>tensorrt</code>, <code>rocm</code>, …) are registered for Linux. C++ libraries (Eigen, protobuf, LibTorch, SentencePiece, …) use <code>cxx = true</code>: bindgen parses as C++17 and emits a stable <code>vendor/bindings/shim.cpp</code> with <code>extern "C"</code> wrappers (compiled via <code>clang++</code>, linked with <code>libc++</code>/<code>libstdc++</code>). Methods become <code>Class_method(self, …)</code>. STL-by-value / references are skipped until a later phase.</p>
 
       <h3 id="bind-c">Manual bind (not on package managers)</h3>
       <pre><code>nyra bind c /path/to/mylib.h --lib mylib --update-mod

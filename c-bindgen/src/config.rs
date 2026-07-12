@@ -22,7 +22,11 @@ pub struct BindConfig {
 
 impl BindConfig {
     pub fn shim_source_path(&self) -> String {
-        "vendor/bindings/shim.c".into()
+        if self.cxx {
+            "vendor/bindings/shim.cpp".into()
+        } else {
+            "vendor/bindings/shim.c".into()
+        }
     }
 
     pub fn matches_export(&self, name: &str) -> bool {

@@ -75,6 +75,17 @@ pacman = "raylib"
 
 Known names: **270+** built-ins including **AI/ML** (`onnxruntime`, `llama-cpp`, `ggml`, `libtorch`, `tensorflow`, `faiss`, `xgboost`, `cuda`/ROCm on Linux, …), plus networks, games, GUI, backend, media, crypto, and science. See [`registry/c/`](../registry/c/) or `nyra pkg list`. Validate with `python3 make/py/test_c_registry.py --bind`.
 
+### C++ libraries (`cxx = true`)
+
+Entries such as `sentencepiece`, `protobuf`, `eigen`, and `libtorch` set `cxx = true`. Then `nyra bind`:
+
+1. Parses headers as **C++17** (`-x c++ -stdlib=libc++`)
+2. Emits `vendor/bindings/shim.cpp` with stable **`extern "C"`** wrappers (free functions + simple public methods as `Class_method(self, …)`)
+3. Adds `link-source vendor/bindings/shim.cpp` and `link c++` (macOS) / `link stdc++` (Linux)
+4. Compiles the shim with **`clang++`** at `nyra build` time
+
+Skipped for now (not FFI-safe yet): STL by-value (`std::string`, `std::vector`), references, private/virtual methods, templates. Prefer C APIs when a library ships both.
+
 Overrides: `~/.nyra/registry/c/*.toml` · `$NYRA_C_REGISTRY` · `./registry/c/`
 
 ## Manual bind (not on any package manager)

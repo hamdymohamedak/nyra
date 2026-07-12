@@ -129,5 +129,31 @@ mod tests {
         let kw = bind_header(&base_config(fixture("keywords.h"))).expect("keywords");
         assert!(kw.bindings_ny.contains("in_: ptr"));
         assert!(kw.bindings_ny.contains("out_: ptr"));
+
+        let mut cxx_cfg = base_config(fixture("cxx_basic.hpp"));
+        cxx_cfg.cxx = true;
+        cxx_cfg.generate_shims = true;
+        let cxx = bind_header(&cxx_cfg).expect("cxx_basic");
+        assert!(cxx.shims >= 1, "expected C++ extern \"C\" shims, got {}", cxx.shims);
+        let shim = cxx.shim_c.as_ref().expect("shim.cpp content");
+        assert!(shim.contains("extern \"C\""));
+        assert!(
+            cxx.bindings_ny.contains("extern fn add(")
+                || cxx.bindings_ny.contains("extern fn Counter_get("),
+            "bindings:\n{}",
+            cxx.bindings_ny
+        );
+        assert!(
+            cxx.mod_lines.iter().any(|l| l.contains("shim.cpp")),
+            "mod lines: {:?}",
+            cxx.mod_lines
+        );
+        assert!(
+            cxx.mod_lines
+                .iter()
+                .any(|l| l == "link c++" || l == "link stdc++"),
+            "expected C++ runtime link, got {:?}",
+            cxx.mod_lines
+        );
     }
 }

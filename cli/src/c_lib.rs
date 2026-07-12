@@ -96,7 +96,7 @@ pub fn c_add(name: &str, opts: AddOptions) -> Result<(), String> {
         export: vec![],
         update_mod: true,
         stdout: false,
-        generate_shims: false,
+        generate_shims: entry.cxx,
     })?;
 
     let primary = link_libs[0].as_str();
