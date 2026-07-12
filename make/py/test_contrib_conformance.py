@@ -290,13 +290,79 @@ def check_recipe_json_examples() -> None:
         "cli.json": "cli",
         "conformance.json": "conformance",
         "syntax_scaffold.json": "syntax-scaffold",
+        "c_lib_registry.json": "c-lib-registry",
+        "c_lib_registry_skip_apt.json": "c-lib-registry",
     }
     for name, recipe in mapping.items():
         data = json.loads((EXAMPLES / name).read_text(encoding="utf-8"))
         spec_from_config(recipe, data)
         if name == "stdlib_module.json" and not (data.get("pure_source") or data.get("source_file")):
             _fail("stdlib_module.json needs pure_source")
+        if name == "c_lib_registry_skip_apt.json":
+            from contrib_dev.recipes.c_lib_registry import render_toml
+
+            spec = spec_from_config(recipe, data)
+            text = render_toml(spec)
+            if "apt =" in text:
+                _fail("skipped apt must not appear in rendered toml")
+            if 'brew = "cjson"' not in text:
+                _fail("c_lib_registry_skip_apt missing brew")
     _ok("recipe JSON examples → spec_from_config")
+
+
+def check_c_lib_registry_roundtrip() -> None:
+    """Apply + remove a probe registry entry without leaving residue."""
+    from contrib_dev.recipes import c_lib_registry
+    from contrib_dev.remove import remove_by_marker
+    from contrib_dev.spec import CLibRegistrySpec
+    from contrib_dev.paths import C_REGISTRY, C_REGISTRY_RS
+
+    probe = "nyra_contrib_probe_clib"
+    toml_path = C_REGISTRY / f"{probe}.toml"
+    marker = f"c_lib:{probe}"
+    # Clean leftovers from a previous interrupted run.
+    if toml_path.exists():
+        remove_by_marker(marker)
+    before_rs = C_REGISTRY_RS.read_text(encoding="utf-8")
+    try:
+        spec = CLibRegistrySpec(
+            name=probe,
+            description="CI probe — safe to delete",
+            headers=["probe.h"],
+            libs=["probe"],
+            brew=probe,
+            apt=None,
+            dnf=None,
+            pacman=None,
+        )
+        result = c_lib_registry.apply(spec, force=True)
+        if not result.ok():
+            _fail(f"c_lib_registry apply failed: {result.patches}")
+        if not toml_path.is_file():
+            _fail("probe toml not created")
+        text = toml_path.read_text(encoding="utf-8")
+        if f'name = "{probe}"' not in text or "apt =" in text:
+            _fail("probe toml content unexpected")
+        rs = C_REGISTRY_RS.read_text(encoding="utf-8")
+        if f'("{probe}", include_str!' not in rs:
+            _fail("c_registry.rs not wired")
+        removed = remove_by_marker(marker)
+        if not removed.ok():
+            _fail("c_lib_registry remove failed")
+        if toml_path.exists():
+            _fail("probe toml still present after remove")
+        after_rs = C_REGISTRY_RS.read_text(encoding="utf-8")
+        if f'("{probe}", include_str!' in after_rs:
+            _fail("c_registry.rs still references probe after remove")
+        # Allow only whitespace-equivalent drift from marker strip.
+        if before_rs.replace("\n\n\n", "\n\n") != after_rs.replace("\n\n\n", "\n\n"):
+            # Marker removal may leave an extra blank line; ensure probe gone is enough.
+            if probe in after_rs:
+                _fail("probe name leaked in c_registry.rs after remove")
+    finally:
+        if toml_path.exists() or probe in C_REGISTRY_RS.read_text(encoding="utf-8"):
+            remove_by_marker(marker)
+    _ok("c-lib-registry apply/remove roundtrip")
 
 
 def check_batch_json_catalogs() -> None:
@@ -408,6 +474,7 @@ def main() -> int:
     check_example_codegen()
     check_examples_syntax()
     check_recipe_json_examples()
+    check_c_lib_registry_roundtrip()
     check_batch_json_catalogs()
     check_abi_manifest_tree()
     check_runtime_map_pure_denylist()

@@ -1,0 +1,11 @@
+{
+  "name": "cjson",
+  "description": "Ultralightweight JSON parser in C",
+  "headers": ["cjson/cJSON.h"],
+  "libs": ["cjson"],
+  "pkg_config": "libcjson",
+  "brew": "cjson",
+  "apt": null,
+  "dnf": null,
+  "pacman": null
+}

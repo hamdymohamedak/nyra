@@ -19,6 +19,8 @@ SCAN_DIRS = (
     ROOT / "docs",
     ROOT / "compiler" / "codegen" / "src",
     ROOT / "grammar",
+    ROOT / "registry" / "c",
+    ROOT / "cli" / "src",
 )
 
 SKIP_DIR_NAMES = {
@@ -58,6 +60,8 @@ def infer_recipe(marker: str) -> str:
         return "conformance"
     if marker.startswith("syntax:"):
         return "syntax-scaffold"
+    if marker.startswith("c_lib:"):
+        return "c-lib-registry"
     if ":" in marker:
         return "stdlib"
     return "unknown"

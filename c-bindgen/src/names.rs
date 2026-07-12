@@ -1,11 +1,12 @@
 //! Sanitize C identifiers for valid Nyra parameter / field names.
 
 /// Nyra keywords and type names that cannot be used as bare identifiers.
+/// Includes lexer type tokens (`bytes`, `string`, …) which are not `Identifier`.
 const NYRA_RESERVED: &[&str] = &[
     "let", "mut", "fn", "if", "else", "while", "return", "true", "false", "print", "import",
     "module", "struct", "impl", "self", "for", "const", "extern", "export", "inst", "enum",
     "match", "spawn", "in", "test", "async", "await", "trait", "macro", "defer", "unsafe", "asm",
-    "as", "move", "clone", "void", "bool", "string", "ptr", "char", "type", "out",
+    "as", "move", "clone", "void", "bool", "string", "bytes", "ptr", "char", "type", "out",
     "i8", "i16", "i32", "i64", "i128", "u8", "u16", "u32", "u64", "u128", "isize", "usize", "f32",
     "f64",
 ];
@@ -48,6 +49,8 @@ mod tests {
         assert_eq!(sanitize_identifier("in"), "in_");
         assert_eq!(sanitize_identifier("out"), "out_");
         assert_eq!(sanitize_identifier("type"), "type_");
+        assert_eq!(sanitize_identifier("bytes"), "bytes_");
+        assert_eq!(sanitize_identifier("string"), "string_");
     }
 
     #[test]

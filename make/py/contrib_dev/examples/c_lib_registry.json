@@ -1,0 +1,12 @@
+{
+  "name": "libsodium",
+  "description": "Modern encryption library (NaCl)",
+  "headers": ["sodium.h"],
+  "libs": ["sodium"],
+  "pkg_config": "libsodium",
+  "brew": "libsodium",
+  "apt": "libsodium-dev",
+  "dnf": "libsodium-devel",
+  "pacman": "libsodium",
+  "aliases": ["sodium"]
+}

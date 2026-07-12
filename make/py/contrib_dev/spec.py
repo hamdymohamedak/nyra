@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
+import re
 
 # Reuse Nyra type parsing from builtin_dev.
 from builtin_dev.spec import ArgSpec, NyraType  # noqa: F401 — re-exported
@@ -166,6 +167,67 @@ class SyntaxSpec:
     @property
     def marker(self) -> str:
         return f"syntax:{self.feature_name}"
+
+
+@dataclass
+class CLibRegistrySpec:
+    """Slim registry/c/*.toml entry — system PM installs; Nyra binds/links."""
+
+    name: str
+    headers: list[str]
+    libs: list[str]
+    description: str = ""
+    pkg_config: str | None = None
+    brew: str | None = None
+    apt: str | None = None
+    pacman: str | None = None
+    dnf: str | None = None
+    aliases: list[str] = field(default_factory=list)
+    git: str | None = None
+    depends: list[str] = field(default_factory=list)
+    impl_define: str | None = None
+
+    def __post_init__(self) -> None:
+        self.name = self.name.strip().lower().replace(" ", "-")
+        if not self.name:
+            raise ValueError("C library name is required")
+        if not re.fullmatch(r"[a-z][a-z0-9_+-]*", self.name):
+            raise ValueError(
+                f"invalid name {self.name!r} — use lowercase letters, digits, _, +, -"
+            )
+        self.headers = [h.strip().lstrip("/") for h in self.headers if h and h.strip()]
+        if not self.headers:
+            raise ValueError("at least one header is required (e.g. sodium.h)")
+        self.libs = [lib.strip() for lib in self.libs if lib and lib.strip()]
+        if not self.libs:
+            raise ValueError("at least one link lib is required (e.g. sodium — no lib prefix)")
+        self.description = (self.description or "").strip()
+        self.pkg_config = _opt_str(self.pkg_config)
+        self.brew = _opt_str(self.brew) or self.name
+        self.apt = _opt_str(self.apt)
+        self.pacman = _opt_str(self.pacman)
+        self.dnf = _opt_str(self.dnf)
+        self.git = _opt_str(self.git)
+        self.impl_define = _opt_str(self.impl_define)
+        self.aliases = [a.strip() for a in self.aliases if a and a.strip()]
+        self.depends = [d.strip() for d in self.depends if d and d.strip()]
+
+    @property
+    def marker(self) -> str:
+        return f"c_lib:{self.name}"
+
+    @property
+    def toml_relpath(self) -> str:
+        return f"registry/c/{self.name}.toml"
+
+
+def _opt_str(value: str | None) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text or text.lower() in {"-", "skip", "none", "n/a"}:
+        return None
+    return text
 
 
 def normalize_ny_module(raw: str) -> str:

@@ -22,6 +22,7 @@ from contrib_dev.monitor import print_list_monitor, print_recipe_menu, print_rec
 from contrib_dev.patch_recipe import patch_apply
 from contrib_dev.remove import remove_by_marker, remove_to_recipe_result
 from contrib_dev.recipes import (
+    c_lib_registry,
     cli_command,
     conformance,
     pkg_package,
@@ -32,6 +33,7 @@ from contrib_dev.recipes import (
 )
 from contrib_dev.wizard import (
     load_json_config,
+    run_c_lib_registry_wizard,
     run_cli_wizard,
     run_conformance_wizard,
     run_pkg_wizard,
@@ -54,6 +56,7 @@ RECIPES = {
     "6": ("cli", "CLI Command / Flag", cli_command.apply),
     "7": ("conformance", "Conformance Test", conformance.apply),
     "8": ("syntax-scaffold", "Syntax / Keyword Scaffold", syntax_scaffold.apply),
+    "9": ("c-lib-registry", "C Library Registry (registry/c)", c_lib_registry.apply),
 }
 
 WIZARDS = {
@@ -64,6 +67,7 @@ WIZARDS = {
     "6": run_cli_wizard,
     "7": run_conformance_wizard,
     "8": run_syntax_wizard,
+    "9": run_c_lib_registry_wizard,
 }
 
 APPLY_BY_SLUG = {
@@ -74,6 +78,7 @@ APPLY_BY_SLUG = {
     "cli": cli_command.apply,
     "conformance": conformance.apply,
     "syntax-scaffold": syntax_scaffold.apply,
+    "c-lib-registry": c_lib_registry.apply,
 }
 
 
@@ -139,7 +144,7 @@ def pick_recipe(interactive: bool, recipe_arg: str | None) -> str | None:
         raise SystemExit("Pass -i for menu or --recipe <slug>")
     print_recipe_menu()
     allow_back = bool(os.environ.get("NYRA_CONTRIBUTE_FROM_HUB"))
-    hint = "1-8, 0=back" if allow_back else "1-8"
+    hint = "1-9, 0=back" if allow_back else "1-9"
     while True:
         choice = input(f"Select recipe [{hint}]: ").strip()
         if choice == "0":
@@ -148,7 +153,7 @@ def pick_recipe(interactive: bool, recipe_arg: str | None) -> str | None:
             raise SystemExit("Cancelled — no files changed.")
         if choice in RECIPES:
             return choice
-        print(f"  Enter a number from 1 to 8{' or 0 to go back' if allow_back else ''}.")
+        print(f"  Enter a number from 1 to 9{' or 0 to go back' if allow_back else ''}.")
 
 
 def resolve_spec(choice: str, config: str | None, interactive: bool):

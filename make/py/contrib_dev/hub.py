@@ -61,7 +61,7 @@ def print_main_hub_banner() -> None:
 
     w = 48
     items = (
-        ("1", "Add", "scaffold", "stdlib, builtin, test, pkg, CLI, syntax…"),
+        ("1", "Add", "scaffold", "stdlib, builtin, C lib registry, test, pkg, CLI…"),
         ("2", "Remove", "scaffold", "undo contrib-dev or builtin-dev wiring"),
         ("3", "List", "wired", "show all [contrib-dev:…] and [builtin-dev:…]"),
         ("4", "Patch", "update", "re-scaffold contrib or re-wire builtin"),

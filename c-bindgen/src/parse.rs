@@ -83,21 +83,31 @@ pub fn parse_header(config: &BindConfig) -> Result<BindSpec, String> {
 }
 
 fn collect_types(entity: &Entity, ctx: &mut TypeContext) {
+    // sodium.h (and friends) pull in libc headers; never emit their records into `.ny`.
+    if entity_from_system_path(entity) {
+        return;
+    }
     match entity.get_kind() {
         EntityKind::StructDecl | EntityKind::UnionDecl => {
-            if let Some(name) = entity.get_name().filter(|n| !n.is_empty()) {
-                if let Some(st) = parse_struct(entity, &name, ctx) {
-                    ctx.structs.insert(name, st);
+            if let Some(raw) = entity.get_name().filter(|n| !n.is_empty()) {
+                if let Some(name) = usable_record_name(&raw) {
+                    if let Some(st) = parse_struct(entity, &name, ctx) {
+                        ctx.structs.insert(name, st);
+                    }
                 }
             }
         }
         EntityKind::TypedefDecl => {
-            if let Some(name) = entity.get_name() {
-                if let Some(underlying) = entity.get_typedef_underlying_type() {
-                    if underlying.get_kind() == TypeKind::Record {
-                        if let Some(decl) = underlying.get_declaration() {
-                            if let Some(st) = parse_struct(&decl, &name, ctx) {
-                                ctx.structs.insert(name, st);
+            if let Some(raw) = entity.get_name() {
+                if let Some(name) = usable_record_name(&raw) {
+                    if let Some(underlying) = entity.get_typedef_underlying_type() {
+                        if underlying.get_kind() == TypeKind::Record {
+                            if let Some(decl) = underlying.get_declaration() {
+                                if entity_from_system_path(&decl) {
+                                    // typedef in user header of a system record — still skip the record body
+                                } else if let Some(st) = parse_struct(&decl, &name, ctx) {
+                                    ctx.structs.insert(name, st);
+                                }
                             }
                         }
                     }
@@ -109,6 +119,49 @@ fn collect_types(entity: &Entity, ctx: &mut TypeContext) {
     for child in entity.get_children() {
         collect_types(&child, ctx);
     }
+}
+
+fn entity_from_system_path(entity: &Entity) -> bool {
+    if entity.is_in_system_header() {
+        return true;
+    }
+    let path = entity
+        .get_location()
+        .and_then(|loc| loc.get_file_location().file)
+        .map(|f| f.get_path())
+        .unwrap_or_default();
+    let p = path.to_string_lossy();
+    p.contains("/usr/include")
+        || p.contains("/usr/lib")
+        || p.contains("MacOSX.sdk")
+        || p.contains("iPhoneOS.sdk")
+        || p.contains("/Xcode.app/")
+        || p.contains("\\Windows Kits\\")
+        || p.contains("/linux/")
+}
+
+/// Accept only identifiers Nyra can parse as a struct name (no clang "unnamed at …").
+fn usable_record_name(raw: &str) -> Option<String> {
+    let stripped = sanitize_type_name(raw);
+    if stripped.is_empty()
+        || stripped.contains("unnamed")
+        || stripped.contains('(')
+        || stripped.contains(' ')
+        || stripped.contains('/')
+        || stripped.contains(':')
+    {
+        return None;
+    }
+    let name = names::sanitize_identifier(&stripped);
+    let mut chars = name.chars();
+    match chars.next() {
+        Some(c) if c == '_' || c.is_ascii_alphabetic() => {}
+        _ => return None,
+    }
+    if !chars.all(|c| c.is_ascii_alphanumeric() || c == '_') {
+        return None;
+    }
+    Some(name)
 }
 
 fn parse_struct(entity: &Entity, name: &str, ctx: &TypeContext) -> Option<CStruct> {
@@ -137,29 +190,30 @@ fn parse_struct(entity: &Entity, name: &str, ctx: &TypeContext) -> Option<CStruc
 }
 
 fn visit_functions(entity: &Entity, config: &BindConfig, ctx: &TypeContext, spec: &mut BindSpec) {
+    if entity_from_system_path(entity) {
+        return;
+    }
     if entity.get_kind() == EntityKind::FunctionDecl {
         if let Some(name) = entity.get_name() {
-            if entity.is_in_system_header() {
-                return;
-            }
-            if !config.matches_export(&name) {
-                return;
-            }
-            match map_function(entity, &name, ctx) {
-                Ok(f) => spec.functions.push(f),
-                Err(reason) => {
-                    if config.generate_shims {
-                        if let Some(shim) = crate::shim::try_shim_function(entity, &name) {
-                            spec.shims.push(shim.clone());
-                            spec.functions.push(CFunction {
-                                name: shim.nyra_name.clone(),
-                                params: shim.nyra_params.clone(),
-                                return_type: shim.nyra_return.clone(),
-                            });
-                            return;
+            if config.matches_export(&name) {
+                match map_function(entity, &name, ctx) {
+                    Ok(f) => spec.functions.push(f),
+                    Err(reason) => {
+                        if config.generate_shims {
+                            if let Some(shim) = crate::shim::try_shim_function(entity, &name) {
+                                spec.shims.push(shim.clone());
+                                spec.functions.push(CFunction {
+                                    name: shim.nyra_name.clone(),
+                                    params: shim.nyra_params.clone(),
+                                    return_type: shim.nyra_return.clone(),
+                                });
+                            } else {
+                                spec.skipped.push(format!("{name}: {reason}"));
+                            }
+                        } else {
+                            spec.skipped.push(format!("{name}: {reason}"));
                         }
                     }
-                    spec.skipped.push(format!("{name}: {reason}"));
                 }
             }
         }
@@ -258,11 +312,11 @@ fn map_type(ty: &Type, is_param: bool, ctx: &TypeContext) -> Result<NyraType, St
 fn record_name(ty: &Type) -> Result<String, String> {
     if let Some(decl) = ty.get_declaration() {
         if let Some(name) = decl.get_name().filter(|n| !n.is_empty()) {
-            return Ok(name);
+            return usable_record_name(&name).ok_or_else(|| "anonymous struct".into());
         }
         if let Some(display) = decl.get_display_name() {
             if !display.is_empty() && display != "unnamed" {
-                return Ok(sanitize_type_name(&display));
+                return usable_record_name(&display).ok_or_else(|| "anonymous struct".into());
             }
         }
     }
@@ -270,7 +324,7 @@ fn record_name(ty: &Type) -> Result<String, String> {
     if display.is_empty() {
         Err("anonymous struct".into())
     } else {
-        Ok(sanitize_type_name(&display))
+        usable_record_name(&display).ok_or_else(|| "anonymous struct".into())
     }
 }
 
@@ -288,5 +342,14 @@ mod tests {
     #[test]
     fn sanitize_strips_struct_prefix() {
         assert_eq!(sanitize_type_name("struct Point"), "Point");
+    }
+
+    #[test]
+    fn rejects_clang_unnamed_records() {
+        assert!(usable_record_name(
+            "struct (unnamed at /Applications/Xcode.app/Contents/Developer/SDKs/MacOSX.sdk/usr/include/sys/wait.h:199:2)"
+        )
+        .is_none());
+        assert_eq!(usable_record_name("Point").as_deref(), Some("Point"));
     }
 }

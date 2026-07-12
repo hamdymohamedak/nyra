@@ -9,6 +9,7 @@ from builtin_dev.spec import ArgSpec, NyraType
 from .spec import (
     CliKind,
     CliSpec,
+    CLibRegistrySpec,
     ConformanceMode,
     ConformanceSpec,
     PkgSpec,
@@ -55,6 +56,17 @@ def prompt_choice(msg: str, choices: dict[str, str]) -> str:
         if raw in valid:
             return raw
         print(f"  Enter one of: {', '.join(sorted(valid))}")
+
+
+def prompt_optional(msg: str, default: str = "") -> str:
+    """Like prompt(), but empty input is allowed (skip). default used only when non-empty Enter."""
+    suffix = f" [{default}]" if default else " [Enter=skip]"
+    raw = input(f"\n→ {msg}{suffix}: ").strip()
+    if not raw:
+        return default
+    if raw.lower() in {"-", "skip", "none", "n/a"}:
+        return ""
+    return raw
 
 
 def confirm_apply(guide: RecipeGuide, answers: dict[str, str]) -> bool:
@@ -256,6 +268,73 @@ def run_syntax_wizard() -> "SyntaxSpec":
     )
 
 
+def run_c_lib_registry_wizard() -> CLibRegistrySpec:
+    g = GUIDES["c-lib-registry"]
+    print_recipe_intro(g)
+    total = len(g.steps)
+
+    print_step(g.steps[0], n=1, total=total)
+    name = prompt(g.steps[0].question, g.steps[0].default or "mylib")
+
+    print_step(g.steps[1], n=2, total=total)
+    description = prompt_optional(g.steps[1].question, g.steps[1].default)
+
+    print_step(g.steps[2], n=3, total=total)
+    headers_raw = prompt(g.steps[2].question, g.steps[2].default or "header.h")
+
+    print_step(g.steps[3], n=4, total=total)
+    libs_raw = prompt(g.steps[3].question, g.steps[3].default or name)
+
+    print_step(g.steps[4], n=5, total=total)
+    pkg_config = prompt_optional(g.steps[4].question, g.steps[4].default)
+
+    print_step(g.steps[5], n=6, total=total)
+    brew = prompt_optional(g.steps[5].question, name)
+
+    print_step(g.steps[6], n=7, total=total)
+    apt = prompt_optional(g.steps[6].question, "")
+
+    print_step(g.steps[7], n=8, total=total)
+    dnf = prompt_optional(g.steps[7].question, "")
+
+    print_step(g.steps[8], n=9, total=total)
+    pacman = prompt_optional(g.steps[8].question, "")
+
+    print_step(g.steps[9], n=10, total=total)
+    aliases_raw = prompt_optional(g.steps[9].question, "")
+
+    headers = [h.strip() for h in headers_raw.replace(";", ",").split(",") if h.strip()]
+    libs = [lib.strip() for lib in libs_raw.replace(";", ",").split(",") if lib.strip()]
+    aliases = [a.strip() for a in aliases_raw.replace(";", ",").split(",") if a.strip()]
+
+    answers = {
+        "name": name,
+        "description": description or "(none)",
+        "headers": ", ".join(headers),
+        "libs": ", ".join(libs),
+        "pkg_config": pkg_config or "(skip)",
+        "brew": brew or name,
+        "apt": apt or "(skip)",
+        "dnf": dnf or "(skip)",
+        "pacman": pacman or "(skip)",
+        "aliases": ", ".join(aliases) if aliases else "(skip)",
+    }
+    if not confirm_apply(g, answers):
+        raise SystemExit("Cancelled — no files changed.")
+    return CLibRegistrySpec(
+        name=name,
+        description=description,
+        headers=headers,
+        libs=libs,
+        pkg_config=pkg_config or None,
+        brew=brew or name,
+        apt=apt or None,
+        dnf=dnf or None,
+        pacman=pacman or None,
+        aliases=aliases,
+    )
+
+
 def run_remove_wizard(*, title: str = "Remove scaffold") -> str:
     from .discover import list_wired_contribs
 
@@ -345,5 +424,33 @@ def spec_from_config(recipe: str, data: dict):
             description=data.get("description", "TODO"),
             needs_expand=data.get("needs_expand", True),
             needs_const_eval=data.get("needs_const_eval", False),
+        )
+    if recipe in ("c-lib-registry", "c-lib", "9"):
+        headers = data.get("headers") or []
+        if isinstance(headers, str):
+            headers = [h.strip() for h in headers.split(",") if h.strip()]
+        libs = data.get("libs") or []
+        if isinstance(libs, str):
+            libs = [lib.strip() for lib in libs.split(",") if lib.strip()]
+        aliases = data.get("aliases") or []
+        if isinstance(aliases, str):
+            aliases = [a.strip() for a in aliases.split(",") if a.strip()]
+        depends = data.get("depends") or []
+        if isinstance(depends, str):
+            depends = [d.strip() for d in depends.split(",") if d.strip()]
+        return CLibRegistrySpec(
+            name=data["name"],
+            description=data.get("description", ""),
+            headers=headers,
+            libs=libs,
+            pkg_config=data.get("pkg_config"),
+            brew=data.get("brew"),
+            apt=data.get("apt"),
+            pacman=data.get("pacman"),
+            dnf=data.get("dnf"),
+            aliases=aliases,
+            git=data.get("git"),
+            depends=depends,
+            impl_define=data.get("impl_define"),
         )
     raise ValueError(f"unknown recipe in config: {recipe}")

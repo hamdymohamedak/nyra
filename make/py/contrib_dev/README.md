@@ -23,7 +23,7 @@ After questions: **PREVIEW + confirm** → then **MONITOR** (TOOL DID / YOU DO /
 │             make contribute                 │
 │  Single hub — TOOL wires, YOU code          │
 ├─────────────────────────────────────────────┤
-│ 1. Add          stdlib, builtin, test, pkg… │
+│ 1. Add          stdlib, builtin, C lib, test… │
 │ 2. Remove       contrib-dev or builtin-dev  │
 │ 3. List         all wired scaffolds         │
 │ 4. Patch        update wiring / re-scaffold │
@@ -45,6 +45,7 @@ After questions: **PREVIEW + confirm** → then **MONITOR** (TOOL DID / YOU DO /
 | 6 | `cli` | Scaffold under `docs/contrib_scaffold/cli_<name>/` | wire in `cli/` |
 | 7 | `conformance` | `tests/conformance/pass/` or `fail/` | contract code |
 | 8 | `syntax-scaffold` | Checklist + tests — **no auto lexer/parser** | full compiler pipeline |
+| 9 | `c-lib-registry` | `registry/c/<name>.toml` + `cli/src/c_registry.rs` | confirm brew/apt names; then `nyra bind <name>` |
 
 ### Batch (menu 5)
 
@@ -99,6 +100,8 @@ These still work for scripts but print a tip to use the hub:
 | `cli.json` | 6 |
 | `conformance.json` | 7 |
 | `syntax_scaffold.json` | 8 |
+| `c_lib_registry.json` | 9 |
+| `c_lib_registry_skip_apt.json` | 9 (optional apt/dnf/pacman omitted) |
 
 ## Related
 

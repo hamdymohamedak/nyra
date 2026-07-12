@@ -106,7 +106,7 @@ def print_recipe_monitor(result: RecipeResult) -> None:
 
 
 def print_recipe_menu() -> None:
-    """Recipe picker (1–8) — no tiger intro; used from hub Add or `contribute add -i`."""
+    """Recipe picker (1–9) — no tiger intro; used from hub Add or `contribute add -i`."""
     color = use_color()
 
     if color:
@@ -127,6 +127,7 @@ def print_recipe_menu() -> None:
         ("6", "CLI Command / Flag", "", "scaffold → manual wire in cli/"),
         ("7", "Conformance Test", "", "pass/ or fail/ language contract"),
         ("8", "Syntax / Keyword Scaffold", "", "checklist — no auto lexer/parser"),
+        ("9", "C Library Registry", "(registry/c)", "nyra bind <name> via brew/apt/dnf"),
         ("0", "Back", "", "return to main hub menu"),
     )
 
@@ -137,8 +138,9 @@ def print_recipe_menu() -> None:
         print(h_row)
     print(box_bottom(width=w, color=color))
     print()
-    print(hint_line("Type 1–8, then answer each question (WHY / TOOL / YOU shown).", color=color))
+    print(hint_line("Type 1–9, then answer each question (WHY / TOOL / YOU shown).", color=color))
     print(hint_line("Naming: Recipe 2 = str_* (C/extern). Recipe 3 = .method name (Nyra code).", color=color))
+    print(hint_line("Recipe 9: OS installs the C lib; Nyra only maps names for bind/link.", color=color))
     print(hint_line("Preview + confirm before any file is written.", color=color))
     print()
 
