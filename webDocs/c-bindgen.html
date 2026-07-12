@@ -215,8 +215,13 @@ Continue? [Y/n]</code></pre>
       </table>
 
       <h3>Prerequisites</h3>
-      <pre><code>brew install llvm          # libclang for bindgen
-# or: nyra toolchain install</code></pre>
+      <p>C bindgen needs <code>libclang</code>. The Nyra installer bundles LLVM under <code>~/.nyra/lib/llvm</code> by default — you do <strong>not</strong> need a separate <code>brew install llvm</code> for normal C libraries.</p>
+      <pre><code># one-time if libclang is missing
+nyra toolchain install --download
+
+# then just install the C library itself
+brew install zlib
+nyra bind zlib</code></pre>
       <h2 id="why-c">Why Nyra + C libraries</h2>
       <p>Nyra targets the same niche as Rust or Go calling native code: <strong>your app logic stays in Nyra</strong>, mature C libraries do the heavy lifting. C Bindgen removes hand-written <code>extern fn</code> boilerplate.</p>
       <table>
@@ -254,7 +259,8 @@ fn main() -&gt; void {
       <p>On Apple Silicon, Homebrew installs zlib as <strong>keg-only</strong> under <code>/opt/homebrew/opt/zlib</code>.</p>
 
       <h3>1 — Prerequisites</h3>
-      <pre><code>brew install zlib llvm
+      <pre><code>brew install zlib
+# libclang comes from Nyra's bundled toolchain (~/.nyra/lib/llvm)
 nyrapkg init
 cd myapp</code></pre>
 

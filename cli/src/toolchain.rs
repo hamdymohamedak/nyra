@@ -41,8 +41,9 @@ pub fn wasi_sysroot_dir(home: &Path) -> PathBuf {
 pub fn env_snippet(home: &Path) -> String {
     let llvm = llvm_bin_dir(home);
     let wasi = wasi_sysroot_dir(home);
-    format!(
-        r#"# Nyra native toolchain
+    let libclang = libclang_dir(home);
+    let mut out = format!(
+        r#"# Nyra native toolchain (bundled under $NYRA_HOME)
 export NYRA_HOME="{home}"
 export NYRA_LLVM_BIN="{llvm}"
 export NYRA_WASI_SYSROOT="{wasi}"
@@ -51,7 +52,157 @@ export PATH="${{NYRA_HOME}}/bin:${{NYRA_LLVM_BIN}}:${{PATH}}"
         home = home.display(),
         llvm = llvm.display(),
         wasi = wasi.display(),
+    );
+    if libclang.is_dir() {
+        out.push_str(&format!(
+            "export LIBCLANG_PATH=\"{libclang}\"\n",
+            libclang = libclang.display()
+        ));
+    }
+    out
+}
+
+pub fn libclang_dir(home: &Path) -> PathBuf {
+    home.join("lib/llvm/lib")
+}
+
+/// Ensure clang tools + libclang are available for `nyra bind c` / builds.
+///
+/// Prefer an existing `$NYRA_HOME/lib/llvm` layout or a system Homebrew/apt LLVM;
+/// otherwise download a prebuilt release. Sets `LIBCLANG_PATH` / `NYRA_LLVM_BIN`
+/// for this process so users do not need a separate `brew install llvm` step.
+pub fn ensure_bindgen_toolchain() -> Result<(), String> {
+    apply_process_toolchain_env();
+    let _ = discover_and_set_system_libclang();
+    if libclang_ready() {
+        return Ok(());
+    }
+
+    eprintln!("toolchain: preparing bundled LLVM/libclang for C bindgen…");
+    match install_toolchain(false, false) {
+        Ok(()) => {
+            apply_process_toolchain_env();
+            if libclang_ready() {
+                return Ok(());
+            }
+        }
+        Err(e) => {
+            eprintln!("toolchain: link system LLVM failed ({e}); trying download…");
+        }
+    }
+
+    install_toolchain(true, false)?;
+    apply_process_toolchain_env();
+    if libclang_ready() {
+        return Ok(());
+    }
+    Err(
+        "libclang still not available after toolchain install — set LIBCLANG_PATH or reinstall Nyra so the bundled toolchain is present"
+            .into(),
     )
+}
+
+fn discover_and_set_system_libclang() -> bool {
+    if let Some(dir) = brew_llvm_lib_dir() {
+        if libclang_exists(&dir) {
+            std::env::set_var("LIBCLANG_PATH", &dir);
+            return true;
+        }
+    }
+    for cand in [
+        "/usr/lib",
+        "/usr/lib64",
+        "/usr/lib/llvm-18/lib",
+        "/usr/lib/llvm-17/lib",
+        "/usr/lib/llvm-16/lib",
+        "/usr/lib/x86_64-linux-gnu",
+        "/usr/lib/aarch64-linux-gnu",
+    ] {
+        let p = Path::new(cand);
+        if libclang_exists(p) {
+            std::env::set_var("LIBCLANG_PATH", p);
+            return true;
+        }
+    }
+    false
+}
+
+fn brew_llvm_lib_dir() -> Option<PathBuf> {
+    let out = Command::new("brew")
+        .args(["--prefix", "llvm"])
+        .output()
+        .ok()?;
+    if !out.status.success() {
+        return None;
+    }
+    let prefix = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    if prefix.is_empty() {
+        return None;
+    }
+    Some(PathBuf::from(prefix).join("lib"))
+}
+
+fn apply_process_toolchain_env() {
+    let home = nyra_home();
+    let bin = llvm_bin_dir(&home);
+    if bin.is_dir() {
+        std::env::set_var("NYRA_LLVM_BIN", &bin);
+    }
+    let lib = libclang_dir(&home);
+    if libclang_exists(&lib) {
+        std::env::set_var("LIBCLANG_PATH", &lib);
+    } else if let Some(discovered) = discover_libclang_near_bin(&bin) {
+        std::env::set_var("LIBCLANG_PATH", &discovered);
+    }
+}
+
+fn libclang_ready() -> bool {
+    if let Ok(p) = std::env::var("LIBCLANG_PATH") {
+        if libclang_exists(Path::new(&p)) {
+            return true;
+        }
+    }
+    libclang_exists(&libclang_dir(&nyra_home()))
+}
+
+fn libclang_exists(dir: &Path) -> bool {
+    if !dir.is_dir() {
+        return false;
+    }
+    let names = [
+        "libclang.dylib",
+        "libclang.so",
+        "libclang.so.18",
+        "libclang.so.17",
+        "libclang.so.16",
+        "libclang.dll",
+        "libclang.lib",
+    ];
+    if names.iter().any(|n| dir.join(n).is_file()) {
+        return true;
+    }
+    // versioned .so.N on Linux
+    if let Ok(entries) = fs::read_dir(dir) {
+        for ent in entries.flatten() {
+            let name = ent.file_name();
+            let s = name.to_string_lossy();
+            if s.starts_with("libclang.so") || s.starts_with("libclang.") {
+                return true;
+            }
+        }
+    }
+    false
+}
+
+fn discover_libclang_near_bin(llvm_bin: &Path) -> Option<PathBuf> {
+    let mut cands = Vec::new();
+    if let Some(prefix) = llvm_bin.parent() {
+        cands.push(prefix.join("lib"));
+        if let Some(up) = prefix.parent() {
+            cands.push(up.join("lib"));
+        }
+    }
+    cands.into_iter().find(|c| libclang_exists(c))
 }
 
 pub fn install_toolchain(download: bool, include_wasi: bool) -> Result<(), String> {
@@ -65,14 +216,53 @@ pub fn install_toolchain(download: bool, include_wasi: bool) -> Result<(), Strin
         link_system_llvm(&bin_dir)?;
     }
 
+    // Always try to wire libclang next to the tools (bindgen + clang-sys).
+    let _ = install_libclang_layout(&home, &bin_dir);
+
     if include_wasi {
         install_wasi_sysroot(&home)?;
     }
 
     write_env_file(&home)?;
+    apply_process_toolchain_env();
     eprintln!("toolchain: installed under {}", home.display());
     eprintln!("toolchain: add to shell — source \"{}/env\"", home.display());
     toolchain_info();
+    Ok(())
+}
+
+fn install_libclang_layout(home: &Path, llvm_bin: &Path) -> Result<(), String> {
+    let dest = libclang_dir(home);
+    fs::create_dir_all(&dest).map_err(|e| e.to_string())?;
+
+    let src = discover_libclang_near_bin(llvm_bin).ok_or_else(|| {
+        "libclang not found next to LLVM bin (bindgen may still use a system copy)".to_string()
+    })?;
+
+    if src.canonicalize().ok() == dest.canonicalize().ok() {
+        return Ok(());
+    }
+
+    let mut linked = 0usize;
+    for entry in fs::read_dir(&src).map_err(|e| e.to_string())? {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let name = entry.file_name();
+        let s = name.to_string_lossy();
+        if !s.starts_with("libclang") {
+            continue;
+        }
+        let dest_file = dest.join(&name);
+        let _ = fs::remove_file(&dest_file);
+        symlink_or_copy(&entry.path(), &dest_file)?;
+        linked += 1;
+    }
+    if linked == 0 {
+        return Err(format!("no libclang* files in {}", src.display()));
+    }
+    eprintln!(
+        "toolchain: linked {linked} libclang artifact(s) → {}",
+        dest.display()
+    );
     Ok(())
 }
 
@@ -230,6 +420,29 @@ fn download_llvm_toolchain(dest_bin: &Path) -> Result<(), String> {
         symlink_or_copy(&entry.path(), &dest)?;
     }
 
+    // Official clang+llvm tarballs ship libclang next to bin/.
+    if let Some(extracted_lib) = extracted_bin.parent().map(|p| p.join("lib")) {
+        if libclang_exists(&extracted_lib) {
+            let home = nyra_home();
+            let dest_lib = libclang_dir(&home);
+            fs::create_dir_all(&dest_lib).map_err(|e| e.to_string())?;
+            for entry in fs::read_dir(&extracted_lib).map_err(|e| e.to_string())? {
+                let entry = entry.map_err(|e| e.to_string())?;
+                let name = entry.file_name();
+                let s = name.to_string_lossy();
+                if !s.starts_with("libclang") {
+                    continue;
+                }
+                let dest = dest_lib.join(&name);
+                let _ = fs::remove_file(&dest);
+                // Prefer copy for extracted archives so tmp cleanup is safe.
+                fs::copy(entry.path(), &dest)
+                    .map_err(|e| format!("copy libclang {}: {e}", entry.path().display()))?;
+            }
+            eprintln!("toolchain: installed libclang → {}", dest_lib.display());
+        }
+    }
+
     let _ = fs::remove_dir_all(&tmp);
     eprintln!(
         "toolchain: installed LLVM binaries from {} → {}",
@@ -301,6 +514,28 @@ mod tests {
         let s = env_snippet(Path::new("/tmp/nyra-test"));
         assert!(s.contains("NYRA_HOME="));
         assert!(s.contains("NYRA_LLVM_BIN="));
+    }
+
+    #[test]
+    fn env_snippet_includes_libclang_when_present() {
+        let root = std::env::temp_dir().join(format!("nyra-tc-test-{}", std::process::id()));
+        let lib = root.join("lib/llvm/lib");
+        fs::create_dir_all(&lib).unwrap();
+        fs::write(lib.join("libclang.dylib"), b"").unwrap();
+        let s = env_snippet(&root);
+        assert!(s.contains("LIBCLANG_PATH="), "{s}");
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn libclang_exists_detects_dylib() {
+        let root = std::env::temp_dir().join(format!("nyra-lc-test-{}", std::process::id()));
+        let lib = root.join("lib");
+        fs::create_dir_all(&lib).unwrap();
+        assert!(!libclang_exists(&lib));
+        fs::write(lib.join("libclang.dylib"), b"").unwrap();
+        assert!(libclang_exists(&lib));
+        let _ = fs::remove_dir_all(&root);
     }
 
     #[test]

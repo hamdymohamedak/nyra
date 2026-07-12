@@ -507,10 +507,11 @@ nyra bind rust serde_json@^1.0</code></pre>
       <p><code>bind c</code> uses libclang (see above). <code>bind rust</code> wraps a crates.io crate as a C-ABI + <code>.ny</code> stubs for calling from Nyra.</p>
 
       <h2 id="toolchain"><code>nyra toolchain</code></h2>
-      <p><strong>Job:</strong> Install or inspect the native LLVM/clang toolchain under <code>$NYRA_HOME</code> (zig-cc–style layout).</p>
-      <pre><code>nyra toolchain info       # print clang / opt / lld paths and Nyra home
-nyra toolchain install    # link or download LLVM into $NYRA_HOME/lib/llvm</code></pre>
-      <p>After install, ensure <code>NYRA_HOME</code> and <code>PATH</code> point at your Nyra root — see <a href="install.html">Installation</a>.</p>
+      <p><strong>Job:</strong> Install or inspect the native LLVM/clang toolchain under <code>$NYRA_HOME</code> (zig-cc–style layout). The public installer enables this by default so C bindgen works without a separate <code>brew install llvm</code>.</p>
+      <pre><code>nyra toolchain info              # print clang / opt / lld paths and Nyra home
+nyra toolchain install           # link system/Homebrew LLVM → $NYRA_HOME/lib/llvm
+nyra toolchain install --download  # fetch official LLVM if none on the machine</code></pre>
+      <p>After install, ensure <code>NYRA_HOME</code> and <code>PATH</code> point at your Nyra root — see <a href="install.html">Installation</a>. <code>LIBCLANG_PATH</code> is written into <code>$NYRA_HOME/env</code> for bindgen.</p>
 
       <h2 id="cc"><code>nyra cc</code></h2>
       <p><strong>Job:</strong> Drive LLVM clang for C/C++ sources (vendor shims, mixed projects) with the same target flags as <code>nyra build</code>.</p>

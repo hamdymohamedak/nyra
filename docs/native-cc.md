@@ -18,7 +18,8 @@ Nyra already compiles to **LLVM IR** and links with **clang**. `nyra cc` exposes
 | `nyra toolchain install` — LLVM under `$NYRA_HOME/lib/llvm` | ✅ |
 | `nyra toolchain install --download` — official LLVM release | ✅ |
 | **Nyra C Bindgen** — `nyra bind c header.h` (libclang → `extern fn`) | ✅ |
-| Bundled LLVM inside release `.tar.gz` (no separate install) | 🔜 |
+| Bundled LLVM via installer default (`install.sh`, `~/.nyra/lib/llvm`) | ✅ |
+| Bundled LLVM inside release `.tar.gz` payload | 🔜 |
 
 ## Usage
 
@@ -47,15 +48,20 @@ $NYRA_HOME/
   lib/sysroot/…          # per-target headers + crt (Phase 3)
 ```
 
-Until bundling ships in release tarballs, install the toolchain locally:
+Until the release tarball ships LLVM inside the archive, the **installer enables the toolchain by default**:
 
 ```bash
+# curl | sh  →  installs nyra + links/downloads LLVM into ~/.nyra/lib/llvm
+curl -fsSL …/scripts/install.sh | sh
+
 nyra toolchain install              # symlink Homebrew/system LLVM → ~/.nyra/lib/llvm
-nyra toolchain install --download   # fetch official LLVM 18 release
+nyra toolchain install --download   # fetch official LLVM 18 release (fallback)
 nyra toolchain install --wasi       # + WASI sysroot for wasm builds
 nyra toolchain info
-source ~/.nyra/env                  # NYRA_LLVM_BIN, NYRA_WASI_SYSROOT
+source ~/.nyra/env                  # NYRA_HOME, NYRA_LLVM_BIN, LIBCLANG_PATH
 ```
+
+Opt out of the bundled toolchain: `…/install.sh | sh -s -- --no-toolchain` (not recommended for C bindgen).
 
 Or: `./scripts/install-llvm-toolchain.sh [--download] [--wasi]`
 

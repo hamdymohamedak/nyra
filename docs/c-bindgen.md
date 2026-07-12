@@ -113,7 +113,9 @@ If discovery fails, use the manual command above on the cloned header.
 | pointers | `ptr` |
 | struct (safe fields) | `repr(C) struct …` |
 
-Needs **libclang**: `brew install llvm` or `nyra toolchain install`.
+Needs **libclang** for bindgen. The Nyra installer bundles it under `~/.nyra/lib/llvm` by default (`nyra toolchain install` / `install.sh`). You do **not** need a separate `brew install llvm` just to use C libraries — only install the C package itself (e.g. `brew install zlib`).
+
+If bindgen cannot find libclang: `nyra toolchain install --download`.
 
 ## Examples
 

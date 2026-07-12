@@ -65,6 +65,12 @@ pub fn bind_rust(
 }
 
 pub fn bind_c(opts: CBindOptions) -> Result<(), String> {
+    crate::toolchain::ensure_bindgen_toolchain().map_err(|e| {
+        format!(
+            "{e}\n  tip: nyra toolchain install --download   # one-time; then brew/apt install the C lib only"
+        )
+    })?;
+
     let project_root = opts.project.unwrap_or_else(|| PathBuf::from("."));
     let header = if opts.header.is_absolute() {
         opts.header

@@ -19,15 +19,17 @@ Usage:
 Options:
   --version VER       Release tag (0.1.0) or "latest" (default)
   --install-dir DIR   Install root (default: ~/.nyra)
-  --with-toolchain    Run nyra toolchain install (LLVM under lib/llvm)
+  --with-toolchain    Install LLVM under lib/llvm (default: on)
+  --no-toolchain      Skip bundled LLVM (not recommended; C bindgen needs libclang)
   --keep-dev          Keep cargo-installed nyra (~/.cargo/bin/nyra) instead of removing it
   --help              Show this help
 
-Requires: curl, tar (clang optional if --with-toolchain succeeds)
+Requires: curl, tar
+  LLVM/clang: installed automatically into ~/.nyra/lib/llvm unless --no-toolchain
 EOF
 }
 
-WITH_TOOLCHAIN=0
+WITH_TOOLCHAIN=1
 KEEP_DEV=0
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -41,6 +43,10 @@ while [ $# -gt 0 ]; do
       ;;
     --with-toolchain)
       WITH_TOOLCHAIN=1
+      shift
+      ;;
+    --no-toolchain)
+      WITH_TOOLCHAIN=0
       shift
       ;;
     --keep-dev)
@@ -77,16 +83,16 @@ json_field() {
   printf '%s' "$2" | sed -n "s/.*\"${field}\": \"\\([^\"]*\\)\".*/\\1/p" | head -n 1
 }
 
+# clang is optional up front when we will install the bundled toolchain.
 if ! command -v clang >/dev/null 2>&1; then
   if [ "$WITH_TOOLCHAIN" -eq 0 ] && [ ! -x "${INSTALL_DIR}/lib/llvm/bin/clang" ]; then
     die "clang not found.
 
-Install a C toolchain:
-  macOS:  xcode-select --install  OR  brew install llvm && nyra toolchain install
+Install a C toolchain, or re-run without --no-toolchain so Nyra can
+download/link LLVM under ~/.nyra/lib/llvm:
+  macOS:  xcode-select --install
   Debian/Ubuntu:  sudo apt install clang
-  Fedora:  sudo dnf install clang
-
-Or re-run with --with-toolchain after installing LLVM (brew install llvm)."
+  Fedora:  sudo dnf install clang"
   fi
 fi
 
@@ -197,8 +203,13 @@ fi
 
 export NYRA_HOME="$INSTALL_DIR"
 if [ "$WITH_TOOLCHAIN" -eq 1 ]; then
-  info "Installing native LLVM toolchain under $INSTALL_DIR/lib/llvm ..."
-  "$INSTALL_DIR/bin/nyra" toolchain install --wasi || info "note: toolchain install skipped (install llvm manually)"
+  info "Installing bundled LLVM toolchain under $INSTALL_DIR/lib/llvm ..."
+  if ! "$INSTALL_DIR/bin/nyra" toolchain install --wasi; then
+    info "System LLVM not found — downloading official LLVM release…"
+    if ! "$INSTALL_DIR/bin/nyra" toolchain install --download --wasi; then
+      warn "bundled toolchain install failed — C bindgen may need: nyra toolchain install --download"
+    fi
+  fi
 fi
 
 remove_cargo_nyra() {
@@ -283,18 +294,20 @@ print_next_steps() {
       info "     which nyra"
       info "     nyra --version"
       info ""
-      info "3. Install a C linker if you have not already (required to run programs):"
+      info "3. C linker (Apple clang from Xcode CLT is enough to run programs):"
       info "     xcode-select --install"
-      info "   Or with Homebrew:"
-      info "     brew install llvm"
       info ""
-      info "4. Optional — install LLVM/WASI under ${INSTALL_DIR}:"
-      info "     nyra toolchain install --wasi"
+      info "4. LLVM/libclang for C bindgen is bundled under ${INSTALL_DIR}/lib/llvm"
+      info "   (re-run: nyra toolchain install --download  if missing)."
+      info "   You do NOT need a separate brew install llvm for normal C libs."
       info ""
       info "5. Create your first project:"
       info "     mkdir myapp && cd myapp"
       info "     nyra pkg init"
       info "     nyra run ."
+      info ""
+      info "6. Use a system C library:"
+      info "     brew install zlib && nyra bind zlib"
       ;;
     Linux)
       info "Linux"
@@ -306,22 +319,25 @@ print_next_steps() {
       info "     which nyra"
       info "     nyra --version"
       info ""
-      info "3. Install clang if you have not already (required to run programs):"
+      info "3. Install a system linker if needed:"
       info "     Debian/Ubuntu:  sudo apt update && sudo apt install -y clang"
       info "     Fedora/RHEL:    sudo dnf install -y clang"
       info "     Arch:           sudo pacman -S clang"
       info ""
-      info "4. Optional — install LLVM/WASI under ${INSTALL_DIR}:"
-      info "     nyra toolchain install --wasi"
+      info "4. LLVM/libclang for C bindgen is bundled under ${INSTALL_DIR}/lib/llvm"
+      info "   (re-run: nyra toolchain install --download  if missing)."
       info ""
       info "5. Create your first project:"
       info "     mkdir myapp && cd myapp"
       info "     nyra pkg init"
       info "     nyra run ."
+      info ""
+      info "6. Use a system C library:"
+      info "     sudo apt install zlib1g-dev && nyra bind zlib"
       ;;
     *)
       info "1. Reload your shell, then run: nyra --version"
-      info "2. Install clang/LLVM for your OS (required to link programs)."
+      info "2. LLVM for bindgen lives under ${INSTALL_DIR}/lib/llvm when installed with the default toolchain."
       info "3. mkdir myapp && cd myapp && nyra pkg init"
       ;;
   esac

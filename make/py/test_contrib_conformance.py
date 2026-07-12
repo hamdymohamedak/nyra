@@ -27,6 +27,7 @@ AUTOMATION_GLOBS = (
     MAKE_PY / "contribute.py",
     MAKE_PY / "builtin-dev.py",
     MAKE_PY / "test_contrib_conformance.py",
+    MAKE_PY / "test_install_sh.py",
     MAKE_PY / "test_contrib_dev.py",
     MAKE_PY / "builtin_dev" / "*.py",
     MAKE_PY / "contrib_dev" / "*.py",
@@ -480,8 +481,17 @@ def main() -> int:
     check_runtime_map_pure_denylist()
     check_manifest_dedupe_idempotent()
     check_batch_add_dry_run()
+    check_install_sh_defaults()
     print("CONF-CONTRIB-PY: all checks passed")
     return 0
+
+
+def check_install_sh_defaults() -> None:
+    script = MAKE_PY / "test_install_sh.py"
+    rc = subprocess.call([sys.executable, str(script)], cwd=str(ROOT))
+    if rc != 0:
+        _fail("test_install_sh.py")
+    _ok("install.sh bundled-toolchain defaults")
 
 
 if __name__ == "__main__":
